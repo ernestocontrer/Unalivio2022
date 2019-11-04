@@ -1,23 +1,22 @@
-import React from 'react'
-import { Link } from 'gatsby'
+import React from "react";
+import {createMemoryHistory} from "history";
+import {Route, Router, Switch} from "react-router-dom";
 
-import Layout from '../components/layout'
-import FetchingExample from '../containers/FetchingExample'
-import SignOut from '../containers/SignOut'
+import "assets/scss/material-kit-react.scss?v=1.4.0";
+import 'typeface-roboto';
+import 'typeface-roboto-slab';
+// pages for this product
+//import Components from "./Components/Components.jsx";
+import LandingPage from "./LandingPage/LandingPage.jsx";
+//import ProfilePage from "./ProfilePage/ProfilePage.jsx";
+//import LoginPage from "./LoginPage/LoginPage.jsx";
 
-const IndexPage = () => (
-  <Layout>
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby Firebase Starter.</p>
-    <p>Now go build something great with gatsby + firebase.</p>
-    <p>
-      See example data fetcehed from firebase: in{' '}
-      <code>FetchingExample.js</code>
-    </p>
-    <FetchingExample />
-    <Link to="/page-2/">Go to page 2</Link>
-    <SignOut />
-  </Layout>
-)
+let hist = createMemoryHistory();
 
-export default IndexPage
+export default () => (
+  <Router history={hist}>
+    <Switch>
+      <Route path="/" component={LandingPage} />
+    </Switch>
+  </Router>
+);
