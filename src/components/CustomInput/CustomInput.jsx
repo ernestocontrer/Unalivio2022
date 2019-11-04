@@ -21,6 +21,7 @@ function CustomInput({ ...props }) {
     labelText,
     id,
     labelProps,
+    inputSelections,
     inputProps,
     error,
     white,
@@ -65,16 +66,16 @@ function CustomInput({ ...props }) {
           {labelText}
         </InputLabel>
       ) : null}
-      {(inputProps.type === "select")? <Select
+      {(inputSelections !== undefined)? <Select
         classes={{
-          //input: inputClasses,
+          input: inputClasses,
           root: marginTop,
           disabled: classes.disabled,
           underline: underlineClasses
         }}
         id={id}
         {...inputProps}
-      >{inputProps.selections.map(option => (
+      >{inputSelections.map(option => (
         <MenuItem value={option.value}>{option.name}</MenuItem>
       ))}</Select> : <Input
         classes={{
@@ -96,6 +97,7 @@ CustomInput.propTypes = {
   labelProps: PropTypes.object,
   id: PropTypes.string,
   inputProps: PropTypes.object,
+  inputSelections: PropTypes.array,
   formControlProps: PropTypes.object,
   inputRootCustomClasses: PropTypes.string,
   error: PropTypes.bool,

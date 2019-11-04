@@ -95,18 +95,17 @@ class ProductSection extends React.Component {
                       formControlProps={{
                         fullWidth: true
                       }}
+                      inputSelections={[ // this will be prefetched from firebase
+                        {name: "Digitel", value: 1},
+                        {name: "Movistar", value: 2},
+                        {name: "Movilnet", value: 3},
+                        {name: "Digitel línea fija", value: 4},
+                        {name: "Digitel internet", value: 5},
+                        {name: "Movistar línea fija", value: 6},
+                        {name: "Movistar internet", value: 7},
+                        {name: "Movistar prepago", value: 8},
+                      ]}
                       inputProps={{
-                        type:"select",
-                        selections: [ // this will be prefetched from firebase
-                          {name: "Digitel", value: 1},
-                          {name: "Movistar", value: 2},
-                          {name: "Movilnet", value: 3},
-                          {name: "Digitel línea fija", value: 4},
-                          {name: "Digitel internet", value: 5},
-                          {name: "Movistar línea fija", value: 6},
-                          {name: "Movistar internet", value: 7},
-                          {name: "Movistar prepago", value: 8},
-                        ],
                         endAdornment: (
                           <InputAdornment position="end">
                             <Category className={classes.inputIconsColor} />
@@ -120,13 +119,12 @@ class ProductSection extends React.Component {
                       formControlProps={{
                         fullWidth: true
                       }}
+                      inputSelections={[ // this will be prefetched from firebase
+                        {name: "Tarjeta (Débito o Crédito)", value: 0},
+                        {name: "Transferencia (SPEI)", value: 1},
+                        {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 2},
+                      ]}
                       inputProps={{
-                        type:"select",
-                        selections: [ // this will be prefetched from firebase
-                          {name: "Tarjeta (Débito o Crédito)", value: 0},
-                          {name: "Transferencia (SPEI)", value: 1},
-                          {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 2},
-                        ],
                         endAdornment: (
                           <InputAdornment position="end">
                             <Payment className={classes.inputIconsColor} />
