@@ -26,9 +26,64 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 
+
+
+// JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
 class ProductSection extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
+  state = {
+    from: '',
+    to: '',
+    amount: '',
+    product: '',
+    method: '',
+    error: ''
+  }
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value })
+  }
+  
+  clickSubmit = () => {
+    const jwt = auth.isAuthenticated()
+    const {
+      from,
+      to,
+      amount,
+      product,
+      method
+    } = this.state;
+    const order = {
+      from,
+      to,
+      amount,
+      product,
+      method
+    };
+
+    // when reload
+    // then payment details form is shown
+    // with button confirm
+    
+
+    create({
+      userId: jwt.user._id
+    }, {
+      t: jwt.token
+    }, organization).then((data) => {
+      if (data.error) {
+        this.setState({error: data.error})
+      } else {
+        this.setState({error: '', redirect: true})
+      }
+    })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -49,7 +104,7 @@ class ProductSection extends React.Component {
                   <CardBody>
                     <CustomInput
                       labelText="email_de@contacto.com"
-                      id="email"
+                      id="from"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -65,7 +120,7 @@ class ProductSection extends React.Component {
                     />
                     <CustomInput
                       labelText="0412-1234567"
-                      id="phone"
+                      id="to"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -91,7 +146,7 @@ class ProductSection extends React.Component {
                     />
                     <CustomInput
                       labelText="Compañia"
-                      id="phone"
+                      id="product"
                       formControlProps={{
                         fullWidth: true
                       }}
