@@ -43,6 +43,7 @@ class ProductSection extends React.Component {
     amount: '',
     product: '',
     method: '',
+    rate: 50000,
     error: ''
   }
 
@@ -199,7 +200,7 @@ class ProductSection extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <h2 className={classes.title}>Por cada 100 pesos</h2>
-              <h1 className={classes.title}>recargas 100 000 bolívares!</h1>
+              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> bolívares!</h1>
               <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 5min.</h5>
             </GridItem>
           </GridContainer>

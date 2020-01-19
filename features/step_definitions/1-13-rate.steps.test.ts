@@ -1,21 +1,21 @@
 import { defineFeature, loadFeature } from 'jest-cucumber';
-import { Builder, /*ThenableWebDriver, WebElement,*/ By/*, WebElementPromise*/ } from 'selenium-webdriver';
+import { Builder, /*ThenableWebDriver, WebElement,*/ By/*, WebElementPromise*/, until, ThenableWebDriver } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome'
-import firefox from 'selenium-webdriver/firefox'
+//import firefox from 'selenium-webdriver/firefox'
 import fetch from 'node-fetch';
 
 const feature = loadFeature('./features/1-13-rate.feature');
 const SITE_URL = process.env.SITE_URL || 'http://localhost:8080';
 
 defineFeature(feature, scenario => {
-  let driver;
+  let driver : ThenableWebDriver;
   
   beforeAll(async () => {
-    driver = new Builder()
-    .forBrowser('chrome')
-    .setChromeOptions(new chrome.Options())
-    .setFirefoxOptions(new firefox.Options())
-    .build();
+    driver = new Builder().
+      forBrowser('chrome').
+      setChromeOptions(new chrome.Options().headless()).
+    //.setFirefoxOptions(new firefox.Options().headless())
+      build();
   }, 10000);
  
   afterAll(async () => {
@@ -35,11 +35,11 @@ defineFeature(feature, scenario => {
     });
     
     when('Ana visits the site,', async () => {
-      await driver.navigate().to(SITE_URL);
+      await driver.get(SITE_URL);
     });
     
-    then('she can check the conversion at the side.', () => {
-      const rate = driver.findElement(By.id('rate'));
+    then('she can check the conversion at the side.', async () => {
+      const rate = (await (driver.wait(until.elementLocated(By.id('rate')), 10000)).getText())*1;
       expect(rate).toBeGreaterThan(0);
     });
   });
