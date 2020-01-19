@@ -4,4 +4,4 @@ Feature: Rate and comission computing
   Scenario: Rate conversion at portal
     Given that BitRefill is online,
     When Ana visits the site,
-    Then she can check the conversion at the side
+    Then she can check the conversion at the side.
