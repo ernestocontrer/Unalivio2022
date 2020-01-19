@@ -2,6 +2,7 @@ import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import PropTypes from 'prop-types'
 
 // @material-ui/icons
 import ContactMail from '@material-ui/icons/ContactMail';
@@ -50,7 +51,7 @@ class ProductSection extends React.Component {
   }
   
   clickSubmit = () => {
-    const jwt = auth.isAuthenticated()
+    //const jwt = auth.isAuthenticated()
     const {
       from,
       to,
@@ -71,17 +72,17 @@ class ProductSection extends React.Component {
     // with button confirm
     
 
-    create({
-      userId: jwt.user._id
-    }, {
-      t: jwt.token
-    }, organization).then((data) => {
-      if (data.error) {
-        this.setState({error: data.error})
-      } else {
-        this.setState({error: '', redirect: true})
-      }
-    })
+    // create({
+    //   //userId: jwt.user._id
+    // }, {
+    //   //t: jwt.token
+    // }, organization).then((data) => {
+    //   if (data.error) {
+    //     this.setState({error: data.error})
+    //   } else {
+    //     this.setState({error: '', redirect: true})
+    //   }
+    // })
   }
 
   render() {
