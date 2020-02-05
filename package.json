@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "gatsby clean",
     "build": "gatsby build",
-    "develop": "gatsby develop --port 8080",
+    "develop": "gatsby develop --port 8008",
     "format": "prettier --write src/**/*.{js,jsx}",
     "start": "npm run develop",
     "serve": "gatsby serve",
