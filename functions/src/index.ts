@@ -1,3 +1,3 @@
-import * as _getPrice from './getPrice'
+import {main as _fetchPrice} from './fetchPrice'
 
-export const getPrice = _getPrice.main;
+export const fetchPrice = _fetchPrice;
