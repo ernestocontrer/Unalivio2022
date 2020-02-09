@@ -2,6 +2,7 @@ import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import PropTypes from 'prop-types'
 
 // @material-ui/icons
 import ContactMail from '@material-ui/icons/ContactMail';
@@ -26,9 +27,65 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 
+
+
+// JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
 class ProductSection extends React.Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
+  state = {
+    from: '',
+    to: '',
+    amount: '',
+    product: '',
+    method: '',
+    rate: 50000,
+    error: ''
+  }
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value })
+  }
+  
+  clickSubmit = () => {
+    //const jwt = auth.isAuthenticated()
+    const {
+      from,
+      to,
+      amount,
+      product,
+      method
+    } = this.state;
+    const order = {
+      from,
+      to,
+      amount,
+      product,
+      method
+    };
+
+    // when reload
+    // then payment details form is shown
+    // with button confirm
+    
+
+    // create({
+    //   //userId: jwt.user._id
+    // }, {
+    //   //t: jwt.token
+    // }, organization).then((data) => {
+    //   if (data.error) {
+    //     this.setState({error: data.error})
+    //   } else {
+    //     this.setState({error: '', redirect: true})
+    //   }
+    // })
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -49,7 +106,7 @@ class ProductSection extends React.Component {
                   <CardBody>
                     <CustomInput
                       labelText="email_de@contacto.com"
-                      id="email"
+                      id="from"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -65,7 +122,7 @@ class ProductSection extends React.Component {
                     />
                     <CustomInput
                       labelText="0412-1234567"
-                      id="phone"
+                      id="to"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -91,7 +148,7 @@ class ProductSection extends React.Component {
                     />
                     <CustomInput
                       labelText="Compañia"
-                      id="phone"
+                      id="product"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -143,7 +200,7 @@ class ProductSection extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <h2 className={classes.title}>Por cada 100 pesos</h2>
-              <h1 className={classes.title}>recargas 100 000 bolívares!</h1>
+              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> bolívares!</h1>
               <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 5min.</h5>
             </GridItem>
           </GridContainer>
