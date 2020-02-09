@@ -11,7 +11,7 @@ const options = {
     timeoutSeconds: 540
   } as functions.RuntimeOptions,
   browser: {
-    headless: false,
+    headless: true,
     args: [
       '--incognito',
       '--sandbox', 
