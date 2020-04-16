@@ -1,12 +1,12 @@
 const config = {
-  apiKey: "AIzaSyAkvloEt1pfB7ihmh9l-SN3EP68TG--q-c",
-  authDomain: "aliviame-mvp.firebaseapp.com",
-  databaseURL: "https://aliviame-mvp.firebaseio.com",
-  projectId: "aliviame-mvp",
-  storageBucket: "aliviame-mvp.appspot.com",
-  messagingSenderId: "1017861162472",
-  appId: "1:1017861162472:web:d3e5b173fa30a8a4f2905d",
-  measurementId: "G-1Y0N8RC58T"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
 let firebaseCache
