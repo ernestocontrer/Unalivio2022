@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 
@@ -16,7 +16,6 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 //import GridContainer from "components/Grid/GridContainer.jsx";
 //import GridItem from "components/Grid/GridItem.jsx";
 import SEO from "components/SEO/SEO.jsx";
-
 
 const dashboardRoutes = [];
 
@@ -39,11 +38,12 @@ const MasterPage = ({classes, children, seo, ...rest}) => (<div>
     changeColorOnScroll={false}
     {...rest}
   />
-  <div style={{marginTop: 40}} className={classNames(classes.mainTransparent)}>
-    <div className={classes.container}>
-      {children}
+    {/* {authenticated ? this.props.children : <SignIn />} */}
+    <div style={{marginTop: 40}} className={classNames(classes.mainTransparent)}>
+      <div className={classes.container}>
+        {children}
+      </div>
     </div>
-  </div>
   <script>
     var vid = document.getElementById("bg-video");
     vid.playbackRate = 0.3; 
