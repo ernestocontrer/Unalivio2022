@@ -1,8 +1,8 @@
 const config = {
-  api_key = process.env.CONEKTA_PUBLIC_KEY,
-  api_base = 'https://api.conekta.io',
-  api_version = '2.0.0',
-  locale = 'en'
+  api_key: process.env.CONEKTA_PUBLIC_KEY,
+  api_base: 'https://api.conekta.io',
+  api_version: '2.0.0',
+  locale: 'en'
 }
 
 let conektaCache
