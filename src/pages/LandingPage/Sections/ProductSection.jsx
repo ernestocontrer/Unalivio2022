@@ -6,10 +6,11 @@ import PropTypes from 'prop-types'
 
 // @material-ui/icons
 import ContactMail from '@material-ui/icons/ContactMail';
-import People from "@material-ui/icons/People";
+//import People from "@material-ui/icons/People";
 import Category from '@material-ui/icons/Category';
 import PhoneForwarded from '@material-ui/icons/PhoneForwarded';
 import Payment from '@material-ui/icons/Payment';
+
 
 
 
@@ -19,7 +20,7 @@ import {FaFacebook, FaTwitter, FaGooglePlusG } from 'react-icons/fa';
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import InfoArea from "components/InfoArea/InfoArea.jsx";
+//import InfoArea from "components/InfoArea/InfoArea.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
@@ -27,6 +28,8 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 
+// Firebase
+//import { withFirebase } from 'components/FirebaseContext/FirebaseContext';
 
 
 // JSX
@@ -51,6 +54,17 @@ class ProductSection extends React.Component {
     this.setState({ [name]: event.target.value })
   }
   
+  componentWillMount = () => {
+    //voa uamar a firebase
+    this.init()
+  }
+
+  init = (params) => {
+    // tengo que conectarme a firebase
+    // e ahí jalo la tasa
+    // y la pongo en el state
+  }
+
   clickSubmit = () => {
     //const jwt = auth.isAuthenticated()
     const {
