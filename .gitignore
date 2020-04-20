@@ -203,3 +203,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/osx,node,code,react,linux,windows
+.env.production
+.env.development
