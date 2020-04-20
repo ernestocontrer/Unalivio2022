@@ -10,13 +10,14 @@ import 'typeface-roboto-slab';
 import LandingPage from "./LandingPage/LandingPage.jsx";
 //import ProfilePage from "./ProfilePage/ProfilePage.jsx";
 //import LoginPage from "./LoginPage/LoginPage.jsx";
+import FirebaseProvider from "components/FirebaseProvider/FirebaseProvider.jsx"
 
 let hist = createMemoryHistory();
 
-export default () => (
+export default () => (<FirebaseProvider>
   <Router history={hist}>
     <Switch>
       <Route path="/" component={LandingPage} />
     </Switch>
   </Router>
-);
+</FirebaseProvider>);

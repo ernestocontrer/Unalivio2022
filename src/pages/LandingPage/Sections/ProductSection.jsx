@@ -6,10 +6,11 @@ import PropTypes from 'prop-types'
 
 // @material-ui/icons
 import ContactMail from '@material-ui/icons/ContactMail';
-import People from "@material-ui/icons/People";
+//import People from "@material-ui/icons/People";
 import Category from '@material-ui/icons/Category';
 import PhoneForwarded from '@material-ui/icons/PhoneForwarded';
 import Payment from '@material-ui/icons/Payment';
+
 
 
 
@@ -19,7 +20,7 @@ import {FaFacebook, FaTwitter, FaGooglePlusG } from 'react-icons/fa';
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
-import InfoArea from "components/InfoArea/InfoArea.jsx";
+//import InfoArea from "components/InfoArea/InfoArea.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 import Card from "components/Card/Card.jsx";
 import CardBody from "components/Card/CardBody.jsx";
@@ -27,6 +28,8 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
 
+// Firebase
+import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 
 
 // JSX
@@ -43,7 +46,8 @@ class ProductSection extends React.Component {
     amount: '',
     product: '',
     method: '',
-    rate: 50000,
+    rate: 100/25,
+    base: 100,
     error: ''
   }
 
@@ -51,6 +55,35 @@ class ProductSection extends React.Component {
     this.setState({ [name]: event.target.value })
   }
   
+  componentWillMount = () => {
+    //voa uamar a firebase
+    this.init();
+
+    if (this.props.firebase.apps.length == 0)
+      console.error("ALV")
+    else {
+      const db = this.props.firebase.firestore()
+      const rates = db.collection('rates');
+
+      rates.orderBy('time', 'desc').where('pair', '==', db.doc('pairs/USDMXN')).limit(1)
+         .get().then(snap => {
+           snap.forEach(doc => {
+            const price = doc.data().price
+            const rate = Math.round((this.state.base/price + Number.EPSILON) * 100)/100
+            this.setState({rate})
+           })
+         }).catch(console.error)
+    }
+  }
+
+
+
+  init = (params) => {
+    // tengo que conectarme a firebase
+    // e ahí jalo la tasa
+    // y la pongo en el state
+  }
+
   clickSubmit = () => {
     //const jwt = auth.isAuthenticated()
     const {
@@ -191,7 +224,7 @@ class ProductSection extends React.Component {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button color="primary" size="lg">
+                    <Button color="primary" size="lg" >
                       Recargar
                     </Button>
                   </CardFooter>
@@ -199,8 +232,8 @@ class ProductSection extends React.Component {
               </Card>
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
-              <h2 className={classes.title}>Por cada 100 pesos</h2>
-              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> bolívares!</h1>
+              <h2 className={classes.title}>Por cada <span id="base">{this.state.base}</span> pesos</h2>
+              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> dólares!</h1>
               <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 5min.</h5>
             </GridItem>
           </GridContainer>
@@ -210,4 +243,4 @@ class ProductSection extends React.Component {
   }
 }
 
-export default withStyles(productStyle)(ProductSection);
+export default withStyles(productStyle)(withFirebase((ProductSection)));

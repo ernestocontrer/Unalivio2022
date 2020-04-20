@@ -106,6 +106,8 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.production
+.env.development
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -201,3 +203,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/osx,node,code,react,linux,windows
+.env.production
+.env.development
