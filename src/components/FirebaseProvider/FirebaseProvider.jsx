@@ -1,10 +1,19 @@
-import React,{useState, useEffect} from 'react'
-import app from '@firebase/app'
+import React,{useState, useEffect, Component} from 'react'
+import app from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/functions'
 import getFirebase from 'db/firebase'
 
 const FirebaseContext = React.createContext(null)
 
-export {FirebaseContext}
+const withFirebase = Component => props => (
+  <FirebaseContext.Consumer>
+    {firebase => <Component {...props} firebase={firebase} />}
+  </FirebaseContext.Consumer>
+)
+
+export {FirebaseContext, withFirebase}
+
 
 export default ({ children }) => {  
   const [state, setState] = useState({
@@ -15,7 +24,9 @@ export default ({ children }) => {
     //const app = require('firebase/app')
     //const auth = require('firebase/auth')
     //const database = require('firebase/database')
+    require('firebase/firestore')
 
+    console.log('Initializing firebase')
     const firebase = getFirebase(app)
     setState({ firebase })
   }
