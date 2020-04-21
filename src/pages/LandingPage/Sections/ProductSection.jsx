@@ -55,25 +55,9 @@ class ProductSection extends React.Component {
     this.setState({ [name]: event.target.value })
   }
   
-  componentWillMount = () => {
+  componentDidMount = () => {
     //voa uamar a firebase
     this.init();
-
-    if (this.props.firebase.apps.length == 0)
-      console.error("ALV")
-    else {
-      const db = this.props.firebase.firestore()
-      const rates = db.collection('rates');
-
-      rates.orderBy('time', 'desc').where('pair', '==', db.doc('pairs/USDMXN')).limit(1)
-         .get().then(snap => {
-           snap.forEach(doc => {
-            const price = doc.data().price
-            const rate = Math.round((this.state.base/price + Number.EPSILON) * 100)/100
-            this.setState({rate})
-           })
-         }).catch(console.error)
-    }
   }
 
 
@@ -82,6 +66,35 @@ class ProductSection extends React.Component {
     // tengo que conectarme a firebase
     // e ahí jalo la tasa
     // y la pongo en el state
+  }
+
+  refreshRate = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app")
+    else {
+      const db = this.props.firebase.firestore()
+      db.collection('rates')
+        .orderBy('time', 'desc')
+        .where('pair', '==', db.doc('pairs/USDMXN'))
+        .limit(1)
+        .get().then(snap => {
+           snap.forEach(doc => {
+            const price = doc.data().price
+            const rate = this.formatRate(this.state.base / price)
+            this.setState({rate})
+           })
+         }).catch(console.error)
+    }
+  }
+
+  formatRate =  rate => Math.round((rate + Number.EPSILON) * 100) / 100
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   clickSubmit = () => {
@@ -200,7 +213,9 @@ class ProductSection extends React.Component {
                           <InputAdornment position="end">
                             <Category className={classes.inputIconsColor} />
                           </InputAdornment>
-                        )
+                        ),
+                        onChange: this.handleChange("product"),
+                        value: this.state.product
                       }}
                     />
                     <CustomInput
@@ -210,16 +225,18 @@ class ProductSection extends React.Component {
                         fullWidth: true
                       }}
                       inputSelections={[ // this will be prefetched from firebase
-                        {name: "Tarjeta (Débito o Crédito)", value: 0},
-                        {name: "Transferencia (SPEI)", value: 1},
-                        {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 2},
+                        {name: "Tarjeta (Débito o Crédito)", value: 1},
+                        {name: "Transferencia (SPEI)", value: 2},
+                        {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
                       ]}
                       inputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
                             <Payment className={classes.inputIconsColor} />
                           </InputAdornment>
-                        )
+                        ),
+                        onChange: this.handleChange("method"),
+                        value: this.state.method
                       }}
                     />
                   </CardBody>
