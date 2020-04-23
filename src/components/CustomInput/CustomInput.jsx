@@ -75,8 +75,8 @@ function CustomInput({ ...props }) {
         }}
         id={id}
         {...inputProps}
-      >{inputSelections.map(option => (
-        <MenuItem value={option.value}>{option.name}</MenuItem>
+      >{inputSelections.map((option, key) => (
+        <MenuItem value={option.value} key={key}>{option.name}</MenuItem>
       ))}</Select> : <Input
         classes={{
           input: inputClasses,

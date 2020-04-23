@@ -21,11 +21,6 @@ export default ({ children }) => {
   })
 
   const init = () => {
-    //const app = require('firebase/app')
-    //const auth = require('firebase/auth')
-    //const database = require('firebase/database')
-    require('firebase/firestore')
-
     console.log('Initializing firebase')
     const firebase = getFirebase(app)
     setState({ firebase })
