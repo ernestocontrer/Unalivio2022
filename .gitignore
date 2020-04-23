@@ -1,6 +1,9 @@
 public
 logs
 data
+.env.*
+/.env
+/.env.*
 
 
 # Created by https://www.gitignore.io/api/osx,node,code,react,linux,windows
