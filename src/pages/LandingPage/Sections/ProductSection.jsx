@@ -11,9 +11,6 @@ import Category from '@material-ui/icons/Category';
 import PhoneForwarded from '@material-ui/icons/PhoneForwarded';
 import Payment from '@material-ui/icons/Payment';
 
-
-
-
 // React icons
 import {FaFacebook, FaTwitter, FaGooglePlusG } from 'react-icons/fa';
 
@@ -27,6 +24,7 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
+import CustomModal from "components/CustomModal/CustomModal.jsx";
 
 // Firebase
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
@@ -40,33 +38,62 @@ class ProductSection extends React.Component {
     classes: PropTypes.object.isRequired
   }
 
-  state = {
+  defaultState = {
     from: '',
     to: '',
     amount: '',
     product: '',
+    products: [ // this will be prefetched from firebase
+      {name: "Digitel", value: 1},
+      {name: "Movistar", value: 2},
+      {name: "Movilnet", value: 3},
+      {name: "Digitel línea fija", value: 4},
+      {name: "Digitel internet", value: 5},
+      {name: "Movistar línea fija", value: 6},
+      {name: "Movistar internet", value: 7},
+      {name: "Movistar prepago", value: 8},
+    ],
     method: '',
+    methods: [ // this will be prefetched from firebase
+      {name: "Tarjeta (Débito o Crédito)", value: 1},
+      {name: "Transferencia (SPEI)", value: 2},
+      {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
+    ],
     rate: 100/25,
     base: 100,
-    error: ''
+    error: '',
+    paymentContent: classes => (<div></div>),
+    paymentActions: classes => (<Button onClick={this.closeModal}>REGRESAR</Button>),
+    paymentModal: false
   }
+
+  state = this.defaultState
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value })
   }
   
+  currentMonth = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${date.getMonth() + 1}`;
+  }
+
   componentDidMount = () => {
     //voa uamar a firebase
     this.init();
   }
-
-
 
   init = (params) => {
     // tengo que conectarme a firebase
     // e ahí jalo la tasa
     // y la pongo en el state
   }
+
+  fetchPaymentMethods = (firebase) => {
+    
+  }
+
+
 
   refreshRate = () => {
     if (this.props.firebase.apps.length == 0)
@@ -78,16 +105,156 @@ class ProductSection extends React.Component {
         .where('pair', '==', db.doc('pairs/USDMXN'))
         .limit(1)
         .get().then(snap => {
-           snap.forEach(doc => {
+          snap.forEach(doc => {
             const price = doc.data().price
             const rate = this.formatRate(this.state.base / price)
             this.setState({rate})
-           })
-         }).catch(console.error)
+          })
+        }).catch(console.error)
     }
   }
 
   formatRate =  rate => Math.round((rate + Number.EPSILON) * 100) / 100
+
+  getPaymentName = (code) => {
+    const currentPayment = this.state.methods
+      .filter(_ => _.value == code);
+
+    return (currentPayment.length == 0)? "Selecciona un método de pago primero" : currentPayment[0].name;
+  }
+
+  getProductName = (code) => {
+    const currentProducts = this.state.products
+      .filter(_ => _.value == code);
+
+    return (currentProducts.length == 0)? "Selecciona un producto primero" : currentProducts[0].name;
+  }
+
+  showModal = () => this.setState({paymentModal: true})
+
+  closeModal = () => this.setState({paymentModal: false})
+
+  renderCheckout = (method) => {
+    switch(this.state.method) {
+      case(1): {
+        this.setState({
+          paymentContent: classes => (<div>
+            <CustomInput
+              labelText="Nombre del titular"
+              id="card-name"
+              formControlProps={{
+                fullWidth: true
+              }}
+              inputProps={{
+                type: "text",
+                required: true,
+                placeholder: "JUAN L PEREZ GODINEZ",
+                helperText: 'Tal y como viene en la tarjeta',
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <ContactMail className={classes.inputIconsColor} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <CustomInput
+              labelText="Número de la tarjeta"
+              id="card-number"
+              formControlProps={{
+                fullWidth: true
+              }}
+              inputProps={{
+                type: "text",
+                placeholder: "1234 5678 9012 3456",
+                helperText: '16 números del frente',
+                required: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <ContactMail className={classes.inputIconsColor} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <CustomInput
+              labelText="CVC"
+              id="card-cvc"
+              formControlProps={{
+                fullWidth: true
+              }}
+              inputProps={{
+                type: "number",
+                required: true,
+                helperText: '3 números de atrás',
+                placeholder: 123,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <ContactMail className={classes.inputIconsColor} />
+                  </InputAdornment>
+                )
+              }}
+            />
+            <CustomInput
+              labelText="Válido hasta"
+              id="card-month"
+              formControlProps={{
+                fullWidth: true
+              }}
+              inputProps={{
+                type: "month",
+                required: true,
+                min: this.currentMonth(),
+                helperText: 'Mes y año',
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <ContactMail className={classes.inputIconsColor} />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </div>),
+          paymentActions: classes => (<div>
+            <Button >RECARGAR</Button>
+          </div>)
+        })
+        break;
+      }
+      case(2): {
+        this.setState({
+          paymentContent: classes => <div>checkout spei</div>
+        })
+        paymentActions: classes => (<div>
+          <Button >DESCARGAR</Button>
+        </div>)
+        break;
+      }
+      case(3): {
+        this.setState({
+          paymentContent: classes => <div>checkout oxxo</div>
+        })
+        paymentActions: classes => (<div>
+          <Button >DESCARGAR</Button>
+        </div>)
+        break;
+      }
+      default: {
+        this.setState({
+          paymentContent: classes => <div></div>
+        })
+        break;
+      }
+    }
+  }
+
+  checkout = () => {
+    // call a firebase function 
+    // generarCheckout
+    this.generateCheckout()
+    this.showModal()
+  }
+
+  generateOrder = () => {
+    
+  }
 
   componentDidMount() {
     this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
@@ -104,14 +271,17 @@ class ProductSection extends React.Component {
       to,
       amount,
       product,
-      method
+      method,
+      payment
     } = this.state;
+
     const order = {
       from,
       to,
       amount,
       product,
-      method
+      method,
+      payment,
     };
 
     // when reload
@@ -198,16 +368,7 @@ class ProductSection extends React.Component {
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputSelections={[ // this will be prefetched from firebase
-                        {name: "Digitel", value: 1},
-                        {name: "Movistar", value: 2},
-                        {name: "Movilnet", value: 3},
-                        {name: "Digitel línea fija", value: 4},
-                        {name: "Digitel internet", value: 5},
-                        {name: "Movistar línea fija", value: 6},
-                        {name: "Movistar internet", value: 7},
-                        {name: "Movistar prepago", value: 8},
-                      ]}
+                      inputSelections={this.state.products}
                       inputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -224,11 +385,7 @@ class ProductSection extends React.Component {
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputSelections={[ // this will be prefetched from firebase
-                        {name: "Tarjeta (Débito o Crédito)", value: 1},
-                        {name: "Transferencia (SPEI)", value: 2},
-                        {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
-                      ]}
+                      inputSelections={this.state.methods}
                       inputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -241,10 +398,18 @@ class ProductSection extends React.Component {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button color="primary" size="lg" >
+                    <Button color="primary" size="lg" onClick={this.checkout} >
                       Recargar
                     </Button>
                   </CardFooter>
+                  <CustomModal
+                    id="payment"
+                    title={this.getPaymentName(this.state.method)}
+                    content={this.state.paymentContent(classes)}
+                    actions={this.state.paymentActions(classes)}
+                    open={this.state.paymentModal}
+                    onClose={this.closeModal}
+                  />
                 </form>
               </Card>
             </GridItem>

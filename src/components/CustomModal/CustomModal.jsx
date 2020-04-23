@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from "prop-types";
+
 // material-ui components
 import withStyles from "@material-ui/core/styles/withStyles";
 import Fade from "@material-ui/core/Fade";
@@ -10,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 // core components
-import customModalStyle from "assets/jss/material-dashboard-pro-react/modalStyle.js";
+import customModalStyle from "assets/jss/material-kit-react/modalStyle.jsx";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />;
@@ -27,9 +29,10 @@ function CustomModal({...props}) {
     actionsProps,
     open,
     onClose,
+    classes,
   } = props;
 
-  const classes = useStyles();
+  //const classes = useStyles();
 
   return (
     <Dialog
@@ -78,7 +81,8 @@ function CustomModal({...props}) {
   );
 }
 
-CustomInput.propTypes = {
+CustomModal.propTypes = {
+  classes: PropTypes.object.isRequired,
   id: PropTypes.string,
   title: PropTypes.node,
   titleProps: PropTypes.object,
@@ -87,7 +91,7 @@ CustomInput.propTypes = {
   actions: PropTypes.node,
   actionsProps: PropTypes.object,
   open: PropTypes.bool,
-  onClose: PropTypes.function,
+  onClose: PropTypes.func,
 };
 
 export default withStyles(customModalStyle)(CustomModal);
