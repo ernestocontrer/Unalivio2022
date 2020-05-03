@@ -11,13 +11,16 @@ import LandingPage from "./LandingPage/LandingPage.jsx";
 //import ProfilePage from "./ProfilePage/ProfilePage.jsx";
 //import LoginPage from "./LoginPage/LoginPage.jsx";
 import FirebaseProvider from "components/FirebaseProvider/FirebaseProvider.jsx"
+import MercadoPagoProvider from "components/MercadoPagoProvider/MercadoPagoProvider.jsx"
 
 let hist = createMemoryHistory();
 
 export default () => (<FirebaseProvider>
-  <Router history={hist}>
-    <Switch>
-      <Route path="/" component={LandingPage} />
-    </Switch>
-  </Router>
+  <MercadoPagoProvider>
+    <Router history={hist}>
+      <Switch>
+        <Route path="/" component={LandingPage} />
+      </Switch>
+    </Router>
+  </MercadoPagoProvider>
 </FirebaseProvider>);
