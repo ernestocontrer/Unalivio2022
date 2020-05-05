@@ -10,17 +10,20 @@ import 'typeface-roboto-slab';
 import LandingPage from "./LandingPage/LandingPage.jsx";
 //import ProfilePage from "./ProfilePage/ProfilePage.jsx";
 //import LoginPage from "./LoginPage/LoginPage.jsx";
+
 import FirebaseProvider from "components/FirebaseProvider/FirebaseProvider.jsx"
-import MercadoPagoProvider from "components/MercadoPagoProvider/MercadoPagoProvider.jsx"
+
+import '@stripe/stripe-js';
+import StripeProvider from "components/StripeProvider/StripeProvider.jsx"
 
 let hist = createMemoryHistory();
 
 export default () => (<FirebaseProvider>
-  <MercadoPagoProvider>
+  <StripeProvider>
     <Router history={hist}>
       <Switch>
         <Route path="/" component={LandingPage} />
       </Switch>
     </Router>
-  </MercadoPagoProvider>
+  </StripeProvider>
 </FirebaseProvider>);

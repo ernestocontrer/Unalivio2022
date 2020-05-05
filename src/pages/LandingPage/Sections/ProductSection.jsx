@@ -28,10 +28,13 @@ import CustomModal from "components/CustomModal/CustomModal.jsx";
 
 // Firebase
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
-
+import { withMercadoPago } from 'components/MercadoPagoProvider/MercadoPagoProvider.jsx';
 
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
+
+// dates
+const dateFormat = require('date-fns/format')
 
 class ProductSection extends React.Component {
   static propTypes = {
@@ -56,14 +59,20 @@ class ProductSection extends React.Component {
     method: '',
     methods: [ // this will be prefetched from firebase
       {name: "Tarjeta (Débito o Crédito)", value: 1},
-      {name: "Transferencia (SPEI)", value: 2},
-      {name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
+      //{name: "Transferencia (SPEI)", value: 2},
+      //{name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
     ],
     rate: 100/25,
     base: 100,
     error: '',
     paymentContent: classes => (<div></div>),
     paymentActions: classes => (<Button onClick={this.closeModal}>REGRESAR</Button>),
+    paymentObject: {
+      number: "0000000000000000", 
+      name: "FULANITO PEREZ",
+      cvc: "123",
+      exp_my: undefined,
+    },
     paymentModal: false
   }
 
@@ -72,10 +81,33 @@ class ProductSection extends React.Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.value })
   }
-  
+
+  handlePaymentChange = name  =>  event => {
+    let payment = this.state.paymentObject;
+    payment[name] = event.target.value;
+    this.setState({paymentObject: payment})
+  }
+
+  handleCardMonthChange = event => {
+    let payment = this.state.paymentObject;
+    payment.exp_month = event.target.value.getMonth() + 1;
+    payment.exp_year = event.target.value.getFullYear();
+    this.setState({
+      paymentObject: payment
+    })
+  }
+
+  handleCardNumberChange = event => {
+    let payment = this.state.paymentObject;
+    
+  }
+
   currentMonth = () => {
-    const date = new Date();
-    return `${date.getFullYear()}-${date.getMonth() + 1}`;
+    
+  }
+
+  currentYear = () => {
+    
   }
 
   componentDidMount = () => {
@@ -150,6 +182,7 @@ class ProductSection extends React.Component {
                 required: true,
                 placeholder: "JUAN L PEREZ GODINEZ",
                 helperText: 'Tal y como viene en la tarjeta',
+                onChange: this.handlePaymentChange("name"),
                 endAdornment: (
                   <InputAdornment position="end">
                     <ContactMail className={classes.inputIconsColor} />
@@ -157,60 +190,7 @@ class ProductSection extends React.Component {
                 )
               }}
             />
-            <CustomInput
-              labelText="Número de la tarjeta"
-              id="card-number"
-              formControlProps={{
-                fullWidth: true
-              }}
-              inputProps={{
-                type: "text",
-                placeholder: "1234 5678 9012 3456",
-                helperText: '16 números del frente',
-                required: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <ContactMail className={classes.inputIconsColor} />
-                  </InputAdornment>
-                )
-              }}
-            />
-            <CustomInput
-              labelText="CVC"
-              id="card-cvc"
-              formControlProps={{
-                fullWidth: true
-              }}
-              inputProps={{
-                type: "number",
-                required: true,
-                helperText: '3 números de atrás',
-                placeholder: 123,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <ContactMail className={classes.inputIconsColor} />
-                  </InputAdornment>
-                )
-              }}
-            />
-            <CustomInput
-              labelText="Válido hasta"
-              id="card-month"
-              formControlProps={{
-                fullWidth: true
-              }}
-              inputProps={{
-                type: "month",
-                required: true,
-                min: this.currentMonth(),
-                helperText: 'Mes y año',
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <ContactMail className={classes.inputIconsColor} />
-                  </InputAdornment>
-                )
-              }}
-            />
+            
           </div>),
           paymentActions: classes => (<div>
             <Button >RECARGAR</Button>
@@ -229,11 +209,11 @@ class ProductSection extends React.Component {
       }
       case(3): {
         this.setState({
-          paymentContent: classes => <div>checkout oxxo</div>,
+          paymentContent: classes => <div>checkout spei</div>,
           paymentActions: classes => (<div>
-            <Button >DESCARGAR</Button>
+            <Button >DESCARGAR E IR A PAGAR</Button>
           </div>)
-        })
+        });
         break;
       }
       default: {
@@ -256,11 +236,11 @@ class ProductSection extends React.Component {
     
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     clearInterval(this.interval);
   }
 
@@ -425,4 +405,4 @@ class ProductSection extends React.Component {
   }
 }
 
-export default withStyles(productStyle)(withFirebase((ProductSection)));
+export default withStyles(productStyle)(withMercadoPago(withFirebase((ProductSection))));

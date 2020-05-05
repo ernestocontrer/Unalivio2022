@@ -1,13 +1,20 @@
-import React,{useState, useEffect, Component} from 'react'
+import React,{useState, useEffect} from 'react'
 
 import MercadoPago from 'mercadopago'
 import getMercadoPago from 'services/mercadopago'
+import { Helmet } from "react-helmet"
 
 const MercadoPagoContext = React.createContext(null)
 
 const withMercadoPago = Component => props => (
   <MercadoPagoContext.Consumer>
-    {mercadopago => <Component {...props} mercadopago={mercadopago} />}
+    {mercadopago => <>
+      <Helmet>
+      <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+      </Helmet>
+      <Component {...props} mercadopago={mercadopago} />
+    </>
+    }
   </MercadoPagoContext.Consumer>
 )
 
@@ -32,7 +39,7 @@ export default ({ children }) => {
     }
   }, [/* input */])
   
-  if (!app.apps.length || !state.mercadopago) {
+  if (!state.mercadopago) {
     return null
   }  return (<MercadoPagoContext.Provider value={ state.mercadopago }>
     { children }

@@ -11,6 +11,7 @@ import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
+import { KeyboardDatePicker } from "@material-ui/pickers";
 
 import customInputStyle from "assets/jss/material-kit-react/components/customInputStyle.jsx";
 
@@ -55,6 +56,46 @@ function CustomInput({ ...props }) {
   } else {
     formControlClasses = classes.formControl;
   }
+
+
+
+  const renderInput = () => {
+    if (inputProps.hasOwnKey('type')) {
+      const {type, ...otherInputProps} = inputProps;
+      const defaultInputProps = {
+        classes: {
+          input: inputClasses,
+          root: marginTop,
+          disabled: classes.disabled,
+          underline: underlineClasses
+        },
+        id: id,
+        ...otherInputProps
+      } 
+
+      switch(inputProps.type) {
+        case("month"):
+          return (<KeyboardDatePicker
+            variant="inline"
+            openTo="year"
+            views={["year", "month"]}
+            {...defaultInputProps}
+          />)
+          break;
+
+        default:
+          return (<Input
+            type={type}
+            {...defaultInputProps}
+          />)
+          break;
+      }
+    }
+    return (<Input
+      {...inputProps}
+    />);
+  }
+
   return (
     <FormControl {...formControlProps} className={formControlClasses}>
       {labelText !== undefined ? (
@@ -77,16 +118,7 @@ function CustomInput({ ...props }) {
         {...inputProps}
       >{inputSelections.map((option, key) => (
         <MenuItem value={option.value} key={key}>{option.name}</MenuItem>
-      ))}</Select> : <Input
-        classes={{
-          input: inputClasses,
-          root: marginTop,
-          disabled: classes.disabled,
-          underline: underlineClasses
-        }}
-        id={id}
-        {...inputProps}
-      />}
+      ))}</Select> : renderInput()}
     </FormControl>
   );
 }
