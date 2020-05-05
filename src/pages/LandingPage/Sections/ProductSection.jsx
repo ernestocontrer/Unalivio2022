@@ -220,20 +220,20 @@ class ProductSection extends React.Component {
       }
       case(2): {
         this.setState({
-          paymentContent: classes => <div>checkout spei</div>
+          paymentContent: classes => <div>checkout spei</div>,
+          paymentActions: classes => (<div>
+            <Button >DESCARGAR</Button>
+          </div>)
         })
-        paymentActions: classes => (<div>
-          <Button >DESCARGAR</Button>
-        </div>)
         break;
       }
       case(3): {
         this.setState({
-          paymentContent: classes => <div>checkout oxxo</div>
+          paymentContent: classes => <div>checkout oxxo</div>,
+          paymentActions: classes => (<div>
+            <Button >DESCARGAR</Button>
+          </div>)
         })
-        paymentActions: classes => (<div>
-          <Button >DESCARGAR</Button>
-        </div>)
         break;
       }
       default: {
