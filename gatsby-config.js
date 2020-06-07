@@ -5,7 +5,7 @@ module.exports = {
     titleTemplate: '%s | ALIVIAME - Recarga teléfonos venezolanos desde México fácil y seguro.',
     description:
       "Aliviame es la forma más fácil, económica y segura de enviar recargas telefónicas de México a Venezuela",
-    url: "https://aliviame.io",
+    url: "https://unalivio.com",
     image: "/card.png",
     facebookUsername: 'aliviameya'
   },
@@ -16,10 +16,18 @@ module.exports = {
     'gatsby-plugin-sass',
     'gatsby-plugin-material-ui',
     {
+      resolve: `gatsby-plugin-recaptcha`,
+      options: {
+          async: false,
+          defer: false,
+          args: `?render=${process.env.RECAPTCHA_KEY}` // `?onload=onloadCallback&render=explicit`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: 'gatsby-starter-default',
-        short_name: 'starter',
+        name: 'ALIVIAME',
+        short_name: 'aliviame',
         start_url: '/',
         background_color: '#663399',
         theme_color: '#663399',
