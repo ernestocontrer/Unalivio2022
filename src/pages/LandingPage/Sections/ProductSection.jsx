@@ -9,10 +9,8 @@ import ContactMail from '@material-ui/icons/ContactMail';
 //import People from "@material-ui/icons/People";
 import Category from '@material-ui/icons/Category';
 import PhoneForwarded from '@material-ui/icons/PhoneForwarded';
-import Payment from '@material-ui/icons/Payment';
+// import Payment from '@material-ui/icons/Payment';
 
-// React icons
-import {FaFacebook, FaTwitter, FaGooglePlusG } from 'react-icons/fa';
 
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
@@ -24,29 +22,36 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
-import CustomModal from "components/CustomModal/CustomModal.jsx";
+//import CustomModal from "components/CustomModal/CustomModal.jsx";
 
-// Firebase
+import {CardElement} from '@stripe/react-stripe-js';
+
+
+// Consumers
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
-import { withMercadoPago } from 'components/MercadoPagoProvider/MercadoPagoProvider.jsx';
+import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
+//import { withGoogleRecaptcha } from 'react-google-recaptcha-v3';
+import { withSnackbar } from 'notistack'
+
+import orders from 'services/orders';
 
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
 // dates
-const dateFormat = require('date-fns/format')
+
+import { destroyCookie } from "nookies";
+
+
 
 class ProductSection extends React.Component {
-  static propTypes = {
-    classes: PropTypes.object.isRequired
-  }
-
   defaultState = {
     from: '',
     to: '',
     amount: '',
     product: '',
     products: [ // this will be prefetched from firebase
+      {name: "DirectTV prepago", value: 9},
       {name: "Digitel", value: 1},
       {name: "Movistar", value: 2},
       {name: "Movilnet", value: 3},
@@ -62,18 +67,9 @@ class ProductSection extends React.Component {
       //{name: "Transferencia (SPEI)", value: 2},
       //{name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
     ],
-    rate: 100/25,
+    rate: 4.23,
     base: 100,
-    error: '',
-    paymentContent: classes => (<div></div>),
-    paymentActions: classes => (<Button onClick={this.closeModal}>REGRESAR</Button>),
-    paymentObject: {
-      number: "0000000000000000", 
-      name: "FULANITO PEREZ",
-      cvc: "123",
-      exp_my: undefined,
-    },
-    paymentModal: false
+    error: ''
   }
 
   state = this.defaultState
@@ -82,7 +78,7 @@ class ProductSection extends React.Component {
     this.setState({ [name]: event.target.value })
   }
 
-  handlePaymentChange = name  =>  event => {
+  handlePaymentChange = name => event => {
     let payment = this.state.paymentObject;
     payment[name] = event.target.value;
     this.setState({paymentObject: payment})
@@ -97,19 +93,6 @@ class ProductSection extends React.Component {
     })
   }
 
-  handleCardNumberChange = event => {
-    let payment = this.state.paymentObject;
-    
-  }
-
-  currentMonth = () => {
-    
-  }
-
-  currentYear = () => {
-    
-  }
-
   componentDidMount = () => {
     //voa uamar a firebase
     this.init();
@@ -120,12 +103,6 @@ class ProductSection extends React.Component {
     // e ahí jalo la tasa
     // y la pongo en el state
   }
-
-  fetchPaymentMethods = (firebase) => {
-    
-  }
-
-
 
   refreshRate = () => {
     if (this.props.firebase.apps.length == 0)
@@ -162,79 +139,115 @@ class ProductSection extends React.Component {
     return (currentProducts.length == 0)? "Selecciona un producto primero" : currentProducts[0].name;
   }
 
-  showModal = () => this.setState({paymentModal: true})
+  checkout = (event) => {
+    event.preventDefault()
+    this.props.enqueueSnackbar('Procesando...', {
+      variant: 'info',
+      persist: false
+    });
+    const {stripe, elements, firebase} = this.props
 
-  closeModal = () => this.setState({paymentModal: false})
-
-  renderCheckout = (method) => {
-    switch(this.state.method) {
-      case(1): {
-        this.setState({
-          paymentContent: classes => (<div>
-            <CustomInput
-              labelText="Nombre del titular"
-              id="card-name"
-              formControlProps={{
-                fullWidth: true
-              }}
-              inputProps={{
-                type: "text",
-                required: true,
-                placeholder: "JUAN L PEREZ GODINEZ",
-                helperText: 'Tal y como viene en la tarjeta',
-                onChange: this.handlePaymentChange("name"),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <ContactMail className={classes.inputIconsColor} />
-                  </InputAdornment>
-                )
-              }}
-            />
-            
-          </div>),
-          paymentActions: classes => (<div>
-            <Button >RECARGAR</Button>
-          </div>)
-        })
-        break;
-      }
-      case(2): {
-        this.setState({
-          paymentContent: classes => <div>checkout spei</div>,
-          paymentActions: classes => (<div>
-            <Button >DESCARGAR</Button>
-          </div>)
-        })
-        break;
-      }
-      case(3): {
-        this.setState({
-          paymentContent: classes => <div>checkout spei</div>,
-          paymentActions: classes => (<div>
-            <Button >DESCARGAR E IR A PAGAR</Button>
-          </div>)
-        });
-        break;
-      }
-      default: {
-        this.setState({
-          paymentContent: classes => <div></div>
-        })
-        break;
-      }
+    if (!stripe || !elements || !firebase) {
+      // Stripe.js and Firebase services have not yet loaded.
+      // Make  sure to disable form submission until they're loaded.
+      console.error("Services not loaded yet")
+      this.props.enqueueSnackbar('Por favor verifica tu conexión', {
+        variant: 'warning',
+        persist: false
+      });
+      return;
     }
-  }
 
-  checkout = () => {
+    if (firebase.apps.length == 0) {
+      // Make sure this Firebase app is loaded
+      console.error("Error fetching Firebase app")
+      this.props.enqueueSnackbar('Por favor recarga la página de nuevo', {
+        variant: 'warning',
+        persist: false
+      });
+      return;
+    }
+
     // call a firebase function 
-    // generarCheckout
-    this.generateCheckout()
-    this.showModal()
+    this.generateOrder(firebase).then(result => {
+      console.log(Object.keys(result))
+      console.log(result)
+      if (!result.data) {
+        console.error('Respuesta sin intent!')
+        this.props.enqueueSnackbar('Por favor intenta de nuevo', {
+          variant: 'error',
+          persist: false
+        });
+        return
+      }
+
+      const intent = result.data
+      if (!intent.client_secret) {
+        console.error('Intent sin client secret')
+        this.props.enqueueSnackbar('Por favor intenta de nuevo', {
+          variant: 'error',
+          persist: false
+        });
+        return
+      }
+
+      const secret = intent.client_secret
+      /*this.handlePayment(intent.client_secret, stripe, elements)*/
+      const card = elements.getElement(CardElement)
+
+      stripe.confirmCardPayment(secret, {
+        payment_method: { card }
+      }).then(result  => {
+        if (result.error) {
+          // Show error to your customer (e.g., insufficient funds)
+          this.props.enqueueSnackbar(result.error.message, {
+            variant: 'error',
+            persist: false
+          });
+        } else {
+          // The payment has been processed!
+          if (result.paymentIntent.status === 'succeeded') {
+            // Show a success message to your customer
+            // There's a risk of the customer closing the window before callback
+            // execution. Set up a webhook or plugin to listen for the
+            // payment_intent.succeeded event that handles any business critical
+            // post-payment actions.
+            this.props.enqueueSnackbar('Recarga en curso!', {
+              variant: 'success',
+              persist: false
+            });
+          }
+
+          destroyCookie(null, "paymentIntentId");
+          card.clear()
+          this.setState(this.defaultState)
+        }
+      }).catch(console.error);
+    }).catch(error => {
+      this.props.enqueueSnackbar(error.message, {
+        variant: 'error',
+        persist: false
+      });
+    });
   }
 
-  generateOrder = () => {
-    
+  generateOrder = (firebase) => {
+    const {product, amount, from, to} = this.state;
+    return orders(firebase).create({
+      product,
+      amount,
+      from,
+      to
+    });
   }
+  
+  handlePayment =  (secret, stripe, elements) => {
+    return stripe.confirmCardPayment(secret, {
+      payment_method: {
+        card: elements.getElement(CardElement)
+      }
+    })
+  };
 
   componentDidMount = () => {
     this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
@@ -242,44 +255,6 @@ class ProductSection extends React.Component {
 
   componentWillUnmount = () => {
     clearInterval(this.interval);
-  }
-
-  clickSubmit = () => {
-    //const jwt = auth.isAuthenticated()
-    const {
-      from,
-      to,
-      amount,
-      product,
-      method,
-      payment
-    } = this.state;
-
-    const order = {
-      from,
-      to,
-      amount,
-      product,
-      method,
-      payment,
-    };
-
-    // when reload
-    // then payment details form is shown
-    // with button confirm
-    
-
-    // create({
-    //   //userId: jwt.user._id
-    // }, {
-    //   //t: jwt.token
-    // }, organization).then((data) => {
-    //   if (data.error) {
-    //     this.setState({error: data.error})
-    //   } else {
-    //     this.setState({error: '', redirect: true})
-    //   }
-    // })
   }
 
   render() {
@@ -295,7 +270,7 @@ class ProductSection extends React.Component {
           <GridContainer>
             <GridItem xs={12} sm={12} md={6}>
               <Card >
-                <form className={classes.form}>
+                <form className={classes.form} onSubmit={this.checkout}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Es muy fácil, rápido y seguro</h4>
                   </CardHeader>
@@ -313,7 +288,9 @@ class ProductSection extends React.Component {
                           <InputAdornment position="end">
                             <ContactMail className={classes.inputIconsColor} />
                           </InputAdornment>
-                        )
+                        ),
+                        onChange: this.handleChange("from"),
+                        value: this.state.from
                       }}
                     />
                     <CustomInput
@@ -323,12 +300,16 @@ class ProductSection extends React.Component {
                         fullWidth: true
                       }}
                       inputProps={{
-                        type: "text",
+                        type: "tel",
+                        pattern: '[0-9]{4}-[0-9]{7}', 
+                        required: true,
                         endAdornment: (
                           <InputAdornment position="end">
                             <PhoneForwarded className={classes.inputIconsColor} />
                           </InputAdornment>
-                        )
+                        ),
+                        onChange: this.handleChange("to"),
+                        value: this.state.to
                       }}
                     />
                     <CustomInput
@@ -339,7 +320,13 @@ class ProductSection extends React.Component {
                       }}
                       inputProps={{
                         type: "number",
-                        endAdornment: "MXN"
+                        endAdornment: "MXN",
+                        required: true,
+                        min: 10,
+                        max: 5000,
+                        step: 0.01,
+                        onChange: this.handleChange("amount"),
+                        value: this.state.amount
                       }}
                     />
                     <CustomInput
@@ -359,37 +346,13 @@ class ProductSection extends React.Component {
                         value: this.state.product
                       }}
                     />
-                    <CustomInput
-                      labelText="Forma de pago"
-                      id="method"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputSelections={this.state.methods}
-                      inputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Payment className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        ),
-                        onChange: this.handleChange("method"),
-                        value: this.state.method
-                      }}
-                    />
+                    <CardElement />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button color="primary" size="lg" onClick={this.checkout} >
+                    <Button type="submit" color="primary" size="lg" >
                       Recargar
                     </Button>
                   </CardFooter>
-                  <CustomModal
-                    id="payment"
-                    title={this.getPaymentName(this.state.method)}
-                    content={this.state.paymentContent(classes)}
-                    actions={this.state.paymentActions(classes)}
-                    open={this.state.paymentModal}
-                    onClose={this.closeModal}
-                  />
                 </form>
               </Card>
             </GridItem>
@@ -405,4 +368,15 @@ class ProductSection extends React.Component {
   }
 }
 
-export default withStyles(productStyle)(withMercadoPago(withFirebase((ProductSection))));
+
+ProductSection.propTypes = {
+  classes: PropTypes.object.isRequired,
+  stripe: PropTypes.object.isRequired,
+  firebase: PropTypes.object.isRequired,
+  enqueueSnackbar: PropTypes.func.isRequired
+};
+
+
+
+
+export default withStyles(productStyle)((withSnackbar(withFirebase(withStripe(ProductSection)))));
