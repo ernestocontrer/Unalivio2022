@@ -5,15 +5,21 @@ const config = {
   locale: 'en'
 }
 
+const initialize = (conekta, config) => {
+  conekta.api_key = config.api_key;
+  conekta.api_base = config.api_base;
+  conekta.api_version = config.api_version;
+  conekta.locale = config;
+  return conekta;
+}
+
 let conektaCache
 
 const getConekta = conekta => {
   if (conektaCache) return conektaCache;
 
-  conekta.api_key = config.api_key;
-  conekta.api_base = config.api_base;
-  conekta.api_version = config.api_version;
-  conekta.locale = config;
+  conekta = initialize(conekta, config);
+  conektaCache = conekta;
   return conekta;
 }
 
