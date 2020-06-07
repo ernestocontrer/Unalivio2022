@@ -25,7 +25,7 @@ const MasterPage = ({classes, children, seo, ...rest}) => (<div>
     <div className={classes.background}></div> : <video 
       id="bg-video"
       className={classes.background} 
-      poster="/bg.jpg" playsinline autoPlay muted loop>
+      poster="/bg.jpg" playsInline autoPlay muted loop>
       <source src="/bg.mp4" type="video/mp4" />
     </video>
   )}</div>}
