@@ -1,14 +1,17 @@
-// import nodemailer (after npm install nodemailer)
 import * as nodemailer from 'nodemailer';
+import * as functions from 'firebase-functions';
+
+
+
+// import nodemailer (after npm install nodemailer)
+
 
 // config for mailserver and mail
 const config = {
-  host: 'smtp.ethereal.email',
-  port: 587,
-  secure: false,
+  service: 'gmail',
   auth: {
-    user: 'yutfggtgifd7ixet@ethereal.email',
-    pass: 'tX29P4QNadD7kAG7x5'
+    user: functions.config().gmail.user,
+    pass: functions.config().gmail.pass // naturally, replace both with your real credentials or an application-specific password
   }
 };
 
@@ -26,3 +29,6 @@ const sendmail = async (mail: any) => {
 };
 
 export default sendmail;
+
+
+
