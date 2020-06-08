@@ -3,7 +3,7 @@ import * as functions from 'firebase-functions';
 
 import Stripe from 'stripe';
 import {verifyApp} from './orders/verify.app';
-//import sendmail from './sendmail';
+import sendmail from './sendmail';
 
 const config: Stripe.StripeConfig = {
   'apiVersion': '2020-03-02',
@@ -38,9 +38,7 @@ export const generate = functions.https.onCall(async (order, context) => {
       to,
       method: db.doc('methods/card'),
       intent: intent.id,
-      status: db.doc('status/incomplete'),
-      created: timestamp,
-      updated: timestamp
+      created: timestamp
     });
     
     return intent;
@@ -53,55 +51,106 @@ export const generate = functions.https.onCall(async (order, context) => {
 
 export const verify = functions.https.onRequest(verifyApp(stripe, {
   'payment_intent.succeeded': async (intent: Stripe.PaymentIntent) => {
-    // TODO: actualiza la orden con status paying
-    
+    const timestamp = new Date();
+    const snap = await db.collection('orders').where('intent', '==', intent.id).get();
+
+    snap.forEach(doc => (doc.ref.update({
+      succeeded: timestamp
+    })));
+
     console.log("Succeeded:", intent.id);
   },
   'payment_intent.payment_failed': async (intent: Stripe.PaymentIntent) => {
+    const timestamp = new Date();
     const message = intent.last_payment_error && intent.last_payment_error.message;
+    const snap = await db.collection('orders').where('intent', '==', intent.id).get();
+
+    snap.forEach(doc => (doc.ref.set({
+      failed: timestamp,
+      reason: message
+    })));
+
     console.error('Failed:', intent.id, message);
   }
 }));
 
-export const notifyCreation = functions.firestore.document('orders/{orderId}').onCreate((snap, context) => {
-  // If we set `/users/marie/incoming_messages/134` to {body: "Hello"} then
-  // context.params.userId == "marie";
-  // context.params.messageCollectionId == "incoming_messages";
-  // context.params.messageId == "134";
-  // ... and ...
-  // change.after.data() == {body: "Hello"}
+export const notifyCreation = functions.firestore.document('orders/{orderId}').onCreate(async (snap, context) => {
+  const order = snap.data();
 
-  console.log(snap.data());
-  // const {
-  //   paymentIntent
-  // } = snap.data();
+  if (!order) {
+    console.error('Orden vacía')
+    return
+  }
 
+  const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/USDMXN')).orderBy('time', 'desc').limit(1).get();
 
-  if (!!snap.data()) {
+  const rate = ratesQuery.docs[0].data()
+
+  if (!rate) {
+    console.error('Tasa vacía')
+    return
+  }
+
+  const price = order.amount / rate.price
+
+  await snap.ref.update({price});
+
+  const mail = {
+    from: functions.config().gmail.user,
+    to: order.from,
+    bcc: functions.config().unalivio.bcc,
+    subject: 'Gracias por usar Alíviame! ',
+    html: `<div>
+      <h1>Muy bien!</h1>
+      <br />
+      <p>Hemos recibido tu pago:</p>
+      <ul>
+        <li>tel: ${order.to}</li>
+        <li>mxn: ${order.amount}</li>
+      </ul>
+      <br />
+      <p>Que a la tasa ${rate.price} (al ${rate.time}) recargas:</p>
+      <ul>
+        <li>usd: ${price}</li>
+      </ul>
+      <br />
+      <p>Y te avisaremos cuando esté lista.</p>
+    </div>`
+  }
+
+  await sendmail(mail)
+});
+
+export const notifyUpdate = functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
+  const order = change.after.data();
+
+  if (!order) {
     return
     //const up = new Error()
   }
 
-  const mail =  {
-    from: 'contacto@unalivio.com',
-    to: 'enrique@unalivio.com',//snap.data().from,
-    cco: 'ernes.contreras@gmail.com',
-    subject: 'Gracias por usar Un Alivio!',
-    text: `Pronto haremos la recarga a tu mamá`
+  if (order.succeeded) {
+    const mail = {
+      from: functions.config().gmail.user,
+      to: order.from,
+      bcc: functions.config().unalivio.bcc,
+      subject: `Tu recarga de ${order.amount} a ${order.to} fué exitosa!`,
+      html: `<div>
+        <h1>Muy bien!</h1>
+        <br />
+        <p>Confirmamos la recarga (al ${order.succeeded}) por:</p>
+        <ul>
+          <li>tel: ${order.to}</li>
+          <li>usd: ${order.price}</li>
+        </ul>
+        <br />
+        <h6>Si algo salió mal por favor dínoslo.</h6>
+        <br />
+        <p>Gracias y cómpartelo para que más personas puedan recibir Un Alivio.</p>
+      </div>`
+    }
+
+    await sendmail(mail)
   }
-  console.log(mail)
-  // mandarle mail al cliente avisando
-  // orderId
-  // teléfono
-  // cantidad
-  // producto
-
-  // mandarle mail a Ernesto con
-  // paymentIntent de stripe
-  // order ref
-
 });
 
-//export const notifyUpdate = functions.firestore.document('orders/{orderId}').onCreate((snap, context) => {
-//  
-//})

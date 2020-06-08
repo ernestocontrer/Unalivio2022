@@ -25,6 +25,7 @@ data
 
 ### Firebase Patch ###
 .runtimeconfig.json
+.runtimeconfig-develop.json
 .firebase/
 
 
@@ -209,3 +210,6 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/osx,node,code,react,linux,windows
 .env.production
 .env.development
+
+# Local Netlify folder
+.netlify
