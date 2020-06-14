@@ -5,3 +5,11 @@
  */
 
 // You can delete this file if you're not using it
+
+exports.onPreBootstrap = ({ reporter }) => {
+  // use helpers
+  reporter.info(`Reading environment ${process.env.NODE_ENV}:`)
+  return Object.keys(process.env).forEach(variable => reporter.info(
+    `${variable}=${process.env[variable]}`
+  ));
+}
