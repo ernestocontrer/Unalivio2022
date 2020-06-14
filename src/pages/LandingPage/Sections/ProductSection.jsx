@@ -272,7 +272,7 @@ class ProductSection extends React.Component {
               <Card >
                 <form className={classes.form} onSubmit={this.checkout}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Es muy fácil, rápido y seguro</h4>
+                    <h4>Es muuuy fácil, rápido y seguro</h4>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
