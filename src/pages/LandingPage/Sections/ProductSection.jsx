@@ -22,7 +22,7 @@ import CardBody from "components/Card/CardBody.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
 import CustomInput from "components/CustomInput/CustomInput.jsx";
-//import CustomModal from "components/CustomModal/CustomModal.jsx";
+import CustomModal from "components/CustomModal/CustomModal.jsx";
 
 import {CardElement} from '@stripe/react-stripe-js';
 
@@ -69,7 +69,12 @@ class ProductSection extends React.Component {
     ],
     rate: 4.23,
     base: 100,
-    error: ''
+    error: '',
+    modal: {
+      title: 'Loading...',
+      open: false,
+      onClose: () => this.closeModal()
+    }
   }
 
   state = this.defaultState
@@ -141,9 +146,9 @@ class ProductSection extends React.Component {
 
   checkout = (event) => {
     event.preventDefault()
-    this.props.enqueueSnackbar('Procesando...', {
+    this.showModal('Procesando...', {
       variant: 'info',
-      persist: false
+      persist: true
     });
     const {stripe, elements, firebase} = this.props
 
@@ -151,19 +156,20 @@ class ProductSection extends React.Component {
       // Stripe.js and Firebase services have not yet loaded.
       // Make  sure to disable form submission until they're loaded.
       console.error("Services not loaded yet")
-      this.props.enqueueSnackbar('Por favor verifica tu conexión', {
+      this.showModal('Por favor verifica tu conexión', {
         variant: 'warning',
         persist: false
       });
+
       return;
     }
 
     if (firebase.apps.length == 0) {
       // Make sure this Firebase app is loaded
       console.error("Error fetching Firebase app")
-      this.props.enqueueSnackbar('Por favor recarga la página de nuevo', {
-        variant: 'warning',
-        persist: false
+      this.showModal('Por favor recarga la página de nuevo', {
+        variant: 'danger',
+        persist: true
       });
       return;
     }
@@ -174,8 +180,8 @@ class ProductSection extends React.Component {
       console.log(result)
       if (!result.data) {
         console.error('Respuesta sin intent!')
-        this.props.enqueueSnackbar('Por favor intenta de nuevo', {
-          variant: 'error',
+        this.showModal('Por favor intenta de nuevo', {
+          variant: 'warning',
           persist: false
         });
         return
@@ -184,8 +190,8 @@ class ProductSection extends React.Component {
       const intent = result.data
       if (!intent.client_secret) {
         console.error('Intent sin client secret')
-        this.props.enqueueSnackbar('Por favor intenta de nuevo', {
-          variant: 'error',
+        this.showModal('Por favor intenta de nuevo', {
+          variant: 'warning',
           persist: false
         });
         return
@@ -200,8 +206,8 @@ class ProductSection extends React.Component {
       }).then(result  => {
         if (result.error) {
           // Show error to your customer (e.g., insufficient funds)
-          this.props.enqueueSnackbar(result.error.message, {
-            variant: 'error',
+          this.showModal(result.error.message, {
+            variant: 'danger',
             persist: false
           });
         } else {
@@ -212,7 +218,7 @@ class ProductSection extends React.Component {
             // execution. Set up a webhook or plugin to listen for the
             // payment_intent.succeeded event that handles any business critical
             // post-payment actions.
-            this.props.enqueueSnackbar('Recarga en curso!', {
+            this.showModal('Recarga en curso!', {
               variant: 'success',
               persist: false
             });
@@ -224,8 +230,8 @@ class ProductSection extends React.Component {
         }
       }).catch(console.error);
     }).catch(error => {
-      this.props.enqueueSnackbar(error.message, {
-        variant: 'error',
+      this.showModal(error.message, {
+        variant: 'danger',
         persist: false
       });
     });
@@ -249,6 +255,41 @@ class ProductSection extends React.Component {
     })
   };
 
+  showModal = (message, {variant, persist}) => {
+    const {title, actions, open, onClose, ...modal} = this.state.modal
+    this.setState({modal: {
+      title: message,
+      actions: (<Button
+        onClick={this.closeModal}
+        color={variant}
+        simple
+        disabled={!!persist}
+      >
+        {(!!persist)? 'ESPERA' : "CERRAR"}
+      </Button>),
+      open: true,
+      onClose: (!!persist)? () => {} : this.closeModal,
+      ...modal
+    }});
+    if (!persist) setTimeout(this.closeModal, 5000)
+  };
+
+  openModal = () => {
+    const {open, ...modal} = this.state.modal
+    this.setState({modal: {
+      open: true,
+      ...modal
+    }})
+  } 
+
+  closeModal = () => {
+    const {open, ...modal} = this.state.modal
+    this.setState({modal: {
+      open: false,
+      ...modal
+    }})
+  }
+
   componentDidMount = () => {
     this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
   }
@@ -261,6 +302,10 @@ class ProductSection extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.section}>
+        <CustomModal
+          id="modal"
+          {...this.state.modal}
+        />
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
             <h1 className={classes.title}>¡Recarga teléfonos venezolanos desde México!</h1>
@@ -373,7 +418,7 @@ ProductSection.propTypes = {
   classes: PropTypes.object.isRequired,
   stripe: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
-  enqueueSnackbar: PropTypes.func.isRequired
+  //enqueueSnackbar: PropTypes.func.isRequired
 };
 
 
