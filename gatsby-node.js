@@ -8,8 +8,5 @@
 
 exports.onPreBootstrap = ({ reporter }) => {
   // use helpers
-  reporter.info(`Reading environment ${process.env.NODE_ENV}:`)
-  return Object.keys(process.env).forEach(variable => reporter.info(
-    `${variable}=${process.env[variable]}`
-  ));
+  reporter.info(`Using environment ${process.env.NODE_ENV}:`);
 }
