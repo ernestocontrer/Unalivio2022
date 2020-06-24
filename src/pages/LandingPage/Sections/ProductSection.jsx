@@ -34,6 +34,7 @@ import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
 import { withSnackbar } from 'notistack'
 
 import orders from 'services/orders';
+import rates from 'services/rates';
 
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
@@ -67,7 +68,7 @@ class ProductSection extends React.Component {
       //{name: "Transferencia (SPEI)", value: 2},
       //{name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
     ],
-    rate: 4.23,
+    rate: '...',
     base: 100,
     error: '',
     modal: {
@@ -89,42 +90,23 @@ class ProductSection extends React.Component {
     this.setState({paymentObject: payment})
   }
 
-  handleCardMonthChange = event => {
-    let payment = this.state.paymentObject;
-    payment.exp_month = event.target.value.getMonth() + 1;
-    payment.exp_year = event.target.value.getFullYear();
-    this.setState({
-      paymentObject: payment
-    })
-  }
-
-  componentDidMount = () => {
-    //voa uamar a firebase
-    this.init();
-  }
-
-  init = (params) => {
-    // tengo que conectarme a firebase
-    // e ahí jalo la tasa
-    // y la pongo en el state
-  }
-
   refreshRate = () => {
     if (this.props.firebase.apps.length == 0)
       console.error("Error fetching Firebase app")
     else {
-      const db = this.props.firebase.firestore()
-      db.collection('rates')
-        .orderBy('time', 'desc')
-        .where('pair', '==', db.doc('pairs/USDMXN'))
-        .limit(1)
-        .get().then(snap => {
-          snap.forEach(doc => {
-            const price = doc.data().price
-            const rate = this.formatRate(this.state.base / price)
-            this.setState({rate})
-          })
-        }).catch(console.error)
+      rates(this.props.firebase).last().then(snap => {
+        const rate = snap.docs[0].data()
+
+        if (!rate) {
+          console.error('Tasa vacía')
+        }
+        
+        this.setState({
+          rate: this.formatRate(this.state.base * rate.price)
+        })
+      }).catch(err => {
+        console.error('Error fetching rate!')
+      })
     }
   }
 
@@ -176,8 +158,6 @@ class ProductSection extends React.Component {
 
     // call a firebase function 
     this.generateOrder(firebase).then(result => {
-      console.log(Object.keys(result))
-      console.log(result)
       if (!result.data) {
         console.error('Respuesta sin intent!')
         this.showModal('Por favor intenta de nuevo', {
@@ -291,6 +271,7 @@ class ProductSection extends React.Component {
   }
 
   componentDidMount = () => {
+    this.refreshRate();
     this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
   }
 
@@ -317,7 +298,7 @@ class ProductSection extends React.Component {
               <Card >
                 <form className={classes.form} onSubmit={this.checkout}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Es muuuy fácil, rápido y seguro</h4>
+                    <h4>Es muy fácil, rápido y seguro</h4>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
@@ -391,6 +372,7 @@ class ProductSection extends React.Component {
                         value: this.state.product
                       }}
                     />
+                    <br />
                     <CardElement />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
@@ -403,8 +385,8 @@ class ProductSection extends React.Component {
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
               <h2 className={classes.title}>Por cada <span id="base">{this.state.base}</span> pesos</h2>
-              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> dólares!</h1>
-              <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 5min.</h5>
+              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> bolívares!</h1>
+              <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 15 min.</h5>
             </GridItem>
           </GridContainer>
         </div>
