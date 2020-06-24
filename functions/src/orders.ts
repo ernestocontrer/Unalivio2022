@@ -1,20 +1,13 @@
-import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-
 import Stripe from 'stripe';
+
 import {verifyApp} from './orders/verify.app';
 import sendmail from './sendmail';
 
-const config: Stripe.StripeConfig = {
-  'apiVersion': '2020-03-02',
-  'timeout': 90000
-}
-
-admin.initializeApp(functions.config().firebase);
-const db = admin.firestore();
-const stripe = new Stripe(functions.config().stripe.secret_key, config);
-
-export const generate = functions.https.onCall(async (order, context) => {
+export const generate = (
+  db: FirebaseFirestore.Firestore, 
+  stripe: Stripe
+) => functions.https.onCall(async (order, context) => {
   const {product, amount, from, to} = order;
 
   if (!product || !amount || !from || !to) {
@@ -49,7 +42,10 @@ export const generate = functions.https.onCall(async (order, context) => {
   }
 });
 
-export const verify = functions.https.onRequest(verifyApp(stripe, {
+export const verify = (
+  db: FirebaseFirestore.Firestore,
+  stripe: Stripe
+) => functions.https.onRequest(verifyApp(stripe, {
   'payment_intent.succeeded': async (intent: Stripe.PaymentIntent) => {
     const timestamp = new Date();
     const snap = await db.collection('orders').where('intent', '==', intent.id).get();
@@ -65,7 +61,7 @@ export const verify = functions.https.onRequest(verifyApp(stripe, {
     const message = intent.last_payment_error && intent.last_payment_error.message;
     const snap = await db.collection('orders').where('intent', '==', intent.id).get();
 
-    snap.forEach(doc => (doc.ref.set({
+    snap.forEach(doc => (doc.ref.update({
       failed: timestamp,
       reason: message
     })));
@@ -74,54 +70,59 @@ export const verify = functions.https.onRequest(verifyApp(stripe, {
   }
 }));
 
-export const notifyCreation = functions.firestore.document('orders/{orderId}').onCreate(async (snap, context) => {
-  const order = snap.data();
+export const notifyCreation = (
+  db: FirebaseFirestore.Firestore
+) => functions.
+  firestore.
+  document('orders/{orderId}').
+  onCreate(async (snap, context) => {
+    const order = snap.data();
 
-  if (!order) {
-    console.error('Orden vacía')
-    return
-  }
+    if (!order) {
+      console.error('Orden vacía')
+      return
+    }
 
-  const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/USDMXN')).orderBy('time', 'desc').limit(1).get();
+    const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
 
-  const rate = ratesQuery.docs[0].data()
+    const rate = ratesQuery.docs[0].data()
 
-  if (!rate) {
-    console.error('Tasa vacía')
-    return
-  }
+    if (!rate) {
+      console.error('Tasa vacía')
+      return
+    }
 
-  const price = order.amount / rate.price
+    const price = order.amount * rate.price
 
-  await snap.ref.update({price});
+    await snap.ref.update({price});
 
-  const mail = {
-    from: functions.config().gmail.user,
-    to: order.from,
-    bcc: functions.config().unalivio.bcc,
-    subject: 'Gracias por usar Alíviame! ',
-    html: `<div>
-      <h1>Muy bien!</h1>
-      <br />
-      <p>Hemos recibido tu pago:</p>
-      <ul>
-        <li>tel: ${order.to}</li>
-        <li>mxn: ${order.amount}</li>
-      </ul>
-      <br />
-      <p>Que a la tasa ${rate.price} (al ${rate.time}) recargas:</p>
-      <ul>
-        <li>usd: ${price}</li>
-      </ul>
-      <br />
-      <p>Y te avisaremos cuando esté lista.</p>
-    </div>`
-  }
+    const mail = {
+      from: functions.config().gmail.user,
+      to: order.from,
+      bcc: functions.config().unalivio.bcc,
+      subject: 'Gracias por usar Alíviame! ',
+      html: `<div>
+        <h1>Muy bien!</h1>
+        <br />
+        <p>Hemos recibido tu pago:</p>
+        <ul>
+          <li>tel: ${order.to}</li>
+          <li>mxn: ${order.amount}</li>
+        </ul>
+        <br />
+        <p>Que a la tasa ${rate.price} (al ${rate.time}) recargas:</p>
+        <ul>
+          <li>ves: ${price}</li>
+        </ul>
+        <br />
+        <p>Y te avisaremos cuando esté lista.</p>
+      </div>`
+    }
 
-  await sendmail(mail)
-});
+    await sendmail(mail)
+  });
 
-export const notifyUpdate = functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
+export const notifyUpdate = () => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
   const order = change.after.data();
 
   if (!order) {
@@ -141,7 +142,7 @@ export const notifyUpdate = functions.firestore.document('orders/{orderId}').onU
         <p>Confirmamos la recarga (al ${order.succeeded}) por:</p>
         <ul>
           <li>tel: ${order.to}</li>
-          <li>usd: ${order.price}</li>
+          <li>ves: ${order.price}</li>
         </ul>
         <br />
         <h6>Si algo salió mal por favor dínoslo.</h6>
