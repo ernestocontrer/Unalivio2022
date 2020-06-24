@@ -41,6 +41,6 @@ export const main = (
     await db.collection('rates').add({
       pair: db.doc('pairs/VESMXN'),
       time: timestamp,
-      price: vesmxn
+      price: vesmxn * 1.10
     });
   });
