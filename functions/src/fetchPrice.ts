@@ -1,17 +1,18 @@
-import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import {default as fetch, AxiosRequestConfig} from 'axios';
 
-admin.initializeApp(functions.config().firebase);
-const db = admin.firestore();
+const urls = {
+  cryptocompare: (fsym: string = 'USD', tsym: string = 'DASH') => `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${fsym}&tsyms=${tsym}`,
+  yadio: (tsym: string = 'MXN') => `https://api.yadio.io/rate/${tsym}`,
+}
 
 const options = { 
   functions: {
     memory: "2GB" as "2GB",
     timeoutSeconds: 540
   },
-  price: (fsym: string = 'USD', tsym: string = 'DASH'): AxiosRequestConfig => ({
-    url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${fsym}&tsyms=${tsym}`,
+  price: (tsym: string = 'MXN'): AxiosRequestConfig => ({
+    url: urls.yadio(tsym),
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -20,11 +21,13 @@ const options = {
   })
 };
 
-const fetchPrice = async (base: string = 'USD', quote: string = 'DASH'): Promise<number> => {
-  return ((await fetch(options.price(base, quote))).data[base][quote]);
+const fetchPrice = async (quote: string = 'MXN'): Promise<number> => {
+  return ((await fetch(options.price(quote))).data["rate"]);
 }
 
-export const main = functions
+export const main = (
+  db: FirebaseFirestore.Firestore
+) => functions
   .runWith(options.functions)
   .pubsub.schedule('every 15 minutes')
   .onRun(async (context: functions.EventContext) => {
@@ -32,28 +35,12 @@ export const main = functions
     //const timestamp = Date.parse(datetime);
     console.log(`Starting fetchPrice at ${timestamp}.`);
 
-    const usddash = await fetchPrice('USD', 'DASH');
-    const dashmxn = await fetchPrice('DASH', 'MXN');
-    const usdmxn = usddash * dashmxn;
+    const vesmxn = await fetchPrice('MXN');
 
-    console.log(`Inserting USD/DASH rate ${usddash}`);
+    console.log(`Inserting VES/MXN rate ${vesmxn}`);
     await db.collection('rates').add({
-      pair: db.doc('pairs/USDDASH'),
+      pair: db.doc('pairs/VESMXN'),
       time: timestamp,
-      price: usddash
-    });
-
-    console.log(`Inserting DASH/MXN rate ${dashmxn}`);
-    await db.collection('rates').add({
-      pair: db.doc('pairs/DASHMXN'),
-      time: timestamp,
-      price: dashmxn
-    });
-
-    console.log(`Inserting computed USD/MXN rate ${usdmxn}`);
-    return await db.collection('rates').add({
-      pair: db.doc('pairs/USDMXN'),
-      time: timestamp,
-      price: usdmxn
+      price: vesmxn
     });
   });
