@@ -17,11 +17,11 @@ const config = {
 
 const sendmail = async (mail: any) => {
   // create a nodemailer transporter using smtp
-  let transporter = nodemailer.createTransport(config);
+  const transporter = nodemailer.createTransport(config);
 
   // send mail using transporter
   try {
-    let info = await transporter.sendMail(mail);
+    const info = await transporter.sendMail(mail);
     console.log(`Preview: ${nodemailer.getTestMessageUrl(info)}`);
   } catch(err) {
     console.error(err);
