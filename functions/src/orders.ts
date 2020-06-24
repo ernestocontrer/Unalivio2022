@@ -83,7 +83,7 @@ export const notifyCreation = (
       return
     }
 
-    const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/USDMXN')).orderBy('time', 'desc').limit(1).get();
+    const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
 
     const rate = ratesQuery.docs[0].data()
 
@@ -92,7 +92,7 @@ export const notifyCreation = (
       return
     }
 
-    const price = order.amount / rate.price
+    const price = order.amount * rate.price
 
     await snap.ref.update({price});
 
@@ -112,7 +112,7 @@ export const notifyCreation = (
         <br />
         <p>Que a la tasa ${rate.price} (al ${rate.time}) recargas:</p>
         <ul>
-          <li>usd: ${price}</li>
+          <li>ves: ${price}</li>
         </ul>
         <br />
         <p>Y te avisaremos cuando esté lista.</p>
@@ -142,7 +142,7 @@ export const notifyUpdate = () => functions.firestore.document('orders/{orderId}
         <p>Confirmamos la recarga (al ${order.succeeded}) por:</p>
         <ul>
           <li>tel: ${order.to}</li>
-          <li>usd: ${order.price}</li>
+          <li>ves: ${order.price}</li>
         </ul>
         <br />
         <h6>Si algo salió mal por favor dínoslo.</h6>
