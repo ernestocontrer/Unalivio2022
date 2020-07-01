@@ -2,7 +2,7 @@ module.exports = {
   pathPrefix: `/mini-gatsbyv2-material-kit-react`,
   siteMetadata: {
     title: 'ALIVIAME',
-    titleTemplate: '%s | ALIVIAME - Recarga teléfonos venezolanos desde México fácil y seguro.',
+    titleTemplate: '%s | ALIVIAME - Recarga teléfonos fácil y seguro.',
     description:
       "Aliviame es la forma más fácil, económica y segura de enviar recargas telefónicas de México a Venezuela",
     url: "https://unalivio.com",
