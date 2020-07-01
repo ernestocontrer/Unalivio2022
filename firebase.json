@@ -62,11 +62,19 @@
         "source": "**",
         "headers" : [
           { "key" : "Access-Control-Allow-Origin", "value" : "*" },
-          { "key" : "X-Frame-Options", "value" : "BLOCK" },
+          { "key" : "X-Frame-Options", "value" : "DENY" },
           { "key" : "X-Content-Type-Options", "value" : "nosniff" },
           { "key" : "X-XSS-Protection", "value" : "1; mode=block" },
-          { "key": "Content-Security-Policy", "value" : "upgrade-insecure-requests"},
-          { "key": "Strict-Transport-Security", "value" : "max-age=1000"}
+          { "key": "Content-Security-Policy", "value" : "upgrade-insecure-requests" },
+          { "key": "Strict-Transport-Security", "value" : "max-age=1000" },
+          { "key": "Referrer-Policy", "value" : "strict-origin-when-cross-origin" },
+          { "key": "Server", "value": "BLIT QSPTM"},
+          { "key": "X-Powered-By", "value": "BLIT ALV"},
+          { "key": "Public-Key-Pins", "value": null},
+          { "key": "Content-Security-Policy", "value": "default-src https://unalivio.com; script-src https://*.googleapis.com:* https://*.gstatic.com:* https://*.stripe.com:* https://*.google.com:*" },
+          { "key": "Feature-Policy", "value": "sync-xhr *; payment https://*.stripe.com https://unalivio.com" }
+          //*://*.scotthelme.co.uk:*
+
         ]
       }
     ]
