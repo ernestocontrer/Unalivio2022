@@ -289,7 +289,7 @@ class ProductSection extends React.Component {
         />
         <GridContainer justify="center">
           <GridItem xs={12} sm={12} md={8}>
-            <h1 className={classes.title}>¡Recarga teléfonos venezolanos desde México!</h1>
+            <h1 className={classes.title}>¡Recarga teléfonos!</h1>
           </GridItem>
         </GridContainer>
         <div>
