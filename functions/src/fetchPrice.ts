@@ -2,28 +2,36 @@ import * as functions from 'firebase-functions';
 import {default as fetch, AxiosRequestConfig} from 'axios';
 
 const urls = {
-  cryptocompare: (fsym: string = 'USD', tsym: string = 'DASH') => `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${fsym}&tsyms=${tsym}`,
-  yadio: (tsym: string = 'MXN') => `https://api.yadio.io/rate/${tsym}`,
+  cryptocompare: (fsym: string = 'usd', tsym: string = 'dash') => `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${fsym}&tsyms=${tsym}`,
+  yadio: (fsym: string = 'usd') => `https://api.yadio.io/rate/${fsym}`,
+  bitso: (fsym: string = 'btc', tsym: string = 'mxn') => `https://api.bitso.com/v3/ticker/?book=${fsym}_${tsym}`
 }
 
 const options = { 
   functions: {
-    memory: "2GB" as "2GB",
+    memory: "1GB" as "1GB",
     timeoutSeconds: 540
   },
-  price: (tsym: string = 'MXN'): AxiosRequestConfig => ({
-    url: urls.yadio(tsym),
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  })
+  price: {
+    yadio: (fsym: string = 'mxn', tsym: string = 'ves'): AxiosRequestConfig => ({
+      url: urls.yadio(fsym),
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }),
+    bitso: (fsym: string = 'btc', tsym: string = 'mxn'): AxiosRequestConfig => ({
+      url: urls.bitso(fsym, tsym),
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    })
+  }
 };
 
-const fetchPrice = async (quote: string = 'MXN'): Promise<number> => {
-  return ((await fetch(options.price(quote))).data["rate"]);
-}
 
 export const main = (
   db: FirebaseFirestore.Firestore
@@ -35,12 +43,33 @@ export const main = (
     //const timestamp = Date.parse(datetime);
     console.log(`Starting fetchPrice at ${timestamp}.`);
 
-    const vesmxn = await fetchPrice('MXN');
+    const btcmxn: number = +((await fetch(options.price.bitso('btc', 'mxn'))).data["payload"]["last"]);
+    
+    const btcves: number = +((await fetch(options.price.yadio('btc', 'ves'))).data["rate"]);
+
+    console.log(`Inserting BTC/MXN rate ${btcmxn}`);
+    await db.collection('rates').add({
+      pair: db.doc('pairs/BTCMXN'),
+      time: timestamp,
+      price: btcmxn
+    });
+
+    console.log(`Inserting BTC/VES rate ${btcves}`);
+    await db.collection('rates').add({
+      pair: db.doc('pairs/BTCVES'),
+      time: timestamp,
+      price: btcves
+    });
+
+    const vesmxn = btcves / btcmxn
+    const comission = 0.05
+    const utility = 0.05
 
     console.log(`Inserting VES/MXN rate ${vesmxn}`);
     await db.collection('rates').add({
       pair: db.doc('pairs/VESMXN'),
       time: timestamp,
-      price: vesmxn * 1.10
+      price: vesmxn / (1 + (comission + utility))
     });
+    console.log('OK')
   });
