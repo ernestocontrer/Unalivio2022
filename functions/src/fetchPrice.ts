@@ -61,9 +61,10 @@ export const main = (
       price: btcves
     });
     
-    const commission = 0.05
-    const utility = 0.05
-    const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + utility)))
+    const commission = 0.06 // biyuyo
+    const referral = 0.05
+    const utility = 0.09
+    const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + referral + utility)))
 
     console.log(`Inserting VES/MXN rate ${vesmxn}`);
     await db.collection('rates').add({
