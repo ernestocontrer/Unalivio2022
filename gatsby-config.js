@@ -10,6 +10,13 @@ module.exports = {
     facebookUsername: 'aliviameya'
   },
   plugins: [
+    {
+      resolve: 'gatsby-plugin-sri',
+      options: {
+        hash: 'sha512', // 'sha256', 'sha384' or 'sha512' ('sha512' = default)
+        crossorigin: true // Optional
+      }
+    },
     'gatsby-plugin-resolve-src',
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-offline',
