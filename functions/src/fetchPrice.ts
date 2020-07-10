@@ -60,16 +60,16 @@ export const main = (
       time: timestamp,
       price: btcves
     });
-
-    const vesmxn = btcves / btcmxn
-    const comission = 0.05
+    
+    const commission = 0.05
     const utility = 0.05
+    const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + utility)))
 
     console.log(`Inserting VES/MXN rate ${vesmxn}`);
     await db.collection('rates').add({
       pair: db.doc('pairs/VESMXN'),
       time: timestamp,
-      price: vesmxn / (1 + (comission + utility))
+      price: vesmxn
     });
     console.log('OK')
   });
