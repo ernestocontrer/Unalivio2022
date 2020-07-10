@@ -69,7 +69,7 @@ class ProductSection extends React.Component {
       //{name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
     ],
     rate: '...',
-    base: 100,
+    base: 1,
     error: '',
     modal: {
       title: 'Loading...',
@@ -384,8 +384,8 @@ class ProductSection extends React.Component {
               </Card>
             </GridItem>
             <GridItem xs={12} sm={12} md={6}>
-              <h2 className={classes.title}>Por cada <span id="base">{this.state.base}</span> pesos</h2>
-              <h1 className={classes.title}>recargas <span id="rate">{this.state.rate}</span> bolívares!</h1>
+              <h2 className={classes.title}>Por cada {/* <span id="base">{this.state.base}</span> */} peso</h2>
+              <h1 className={classes.title}>recibes <span id="rate">{this.state.rate}</span> bolívares!</h1>
               <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 15 min.</h5>
             </GridItem>
           </GridContainer>
