@@ -1,5 +1,3 @@
-
-
 const rates = (firebase) => {
   const db = firebase.firestore()
   const ratesRef = db.collection('rates');
