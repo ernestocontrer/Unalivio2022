@@ -2,7 +2,24 @@ import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
 
 import {verifyApp} from './orders/verify.app';
+import {validate} from './orders/validate'
 import sendmail from './sendmail';
+
+
+const currentRate = async (db: FirebaseFirestore.Firestore) => {
+  const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
+
+  const rate = ratesQuery.docs[0].data()
+  return rate;
+} 
+
+const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collection('amounts').get()).docs.map(
+  (doc):number => doc.data().amount
+)
+
+const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.collection('products').get()).docs.map(
+  (doc):number => doc.data().value
+)
 
 export const generate = (
   db: FirebaseFirestore.Firestore, 
@@ -15,11 +32,27 @@ export const generate = (
       'invalid-argument', 'Por favor rellena todos los campos correctamente');
     throw up;
   }
-  
+
+  const amounts = await validAmounts(db);
+  const rate = await currentRate(db);
+  const products = await validProducts(db);
+
 
   try {
+    
+    await validate.email('from', from, 'es');
+    validate.amount('amount', amount, 'es', amounts, rate.price);
+    validate.phone('phone', to, 'es');
+    validate.product('product', product, 'es', products)
+  } catch(error) {
+    const up = new functions.https.HttpsError(
+      'invalid-argument', error.message);
+    throw up;
+  }
+  
+  try {
     const intent = await stripe.paymentIntents.create({
-      amount: Math.ceil(amount * 1e2),
+      amount: Math.ceil((amount / rate.price) * 1e2),
       currency: 'mxn',
     });
   
@@ -83,9 +116,7 @@ export const notifyCreation = (
       return
     }
 
-    const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
-
-    const rate = ratesQuery.docs[0].data()
+    const rate = await currentRate(db);
 
     if (!rate) {
       console.error('Tasa vacía')
