@@ -26,7 +26,6 @@ import CustomModal from "components/CustomModal/CustomModal.jsx";
 
 import {CardElement} from '@stripe/react-stripe-js';
 
-
 // Consumers
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
@@ -40,9 +39,9 @@ import rates from 'services/rates';
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
 // dates
-
 import { destroyCookie } from "nookies";
 
+import { AsYouType, parsePhoneNumberFromString } from 'libphonenumber-js'
 
 
 class ProductSection extends React.Component {
@@ -70,7 +69,12 @@ class ProductSection extends React.Component {
     ],
     rate: '...',
     base: 1,
-    error: '',
+    error: {
+      from: false,
+      to: false,
+      amount: false,
+      product: false
+    },
     modal: {
       title: 'Loading...',
       open: false,
@@ -82,6 +86,19 @@ class ProductSection extends React.Component {
 
   handleChange = name => event => {
     this.setState({ [name]: event.target.value })
+  }
+
+  handlePhone = event => {
+    const phone = new AsYouType('VE').input(event.target.value)
+    const phoneNumber = parsePhoneNumberFromString(phone, 'VE')
+
+    const error = this.state.error
+    error.to = (phoneNumber)? !phoneNumber.isValid() : true;
+
+    this.setState({
+      to: phone,
+      error: error
+    })
   }
 
   handlePaymentChange = name => event => {
@@ -325,6 +342,7 @@ class ProductSection extends React.Component {
                       formControlProps={{
                         fullWidth: true
                       }}
+                      error={this.state.error.to}
                       inputProps={{
                         type: "tel",
                         pattern: '[0-9]{4}-[0-9]{7}', 
@@ -334,7 +352,7 @@ class ProductSection extends React.Component {
                             <PhoneForwarded className={classes.inputIconsColor} />
                           </InputAdornment>
                         ),
-                        onChange: this.handleChange("to"),
+                        onChange: this.handlePhone,
                         value: this.state.to
                       }}
                     />
