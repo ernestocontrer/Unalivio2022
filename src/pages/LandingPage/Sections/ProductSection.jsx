@@ -33,6 +33,8 @@ import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
 import { withSnackbar } from 'notistack'
 
 import orders from 'services/orders';
+import products from 'services/products';
+import amounts from 'services/amounts';
 import rates from 'services/rates';
 
 // JSX
@@ -49,17 +51,12 @@ class ProductSection extends React.Component {
     from: '',
     to: '',
     amount: '',
+    amounts: [
+      {name: "Cargando...", value: -1},
+    ],
     product: '',
     products: [ // this will be prefetched from firebase
-      {name: "DirectTV prepago", value: 9},
-      {name: "Digitel", value: 1},
-      {name: "Movistar", value: 2},
-      {name: "Movilnet", value: 3},
-      {name: "Digitel línea fija", value: 4},
-      {name: "Digitel internet", value: 5},
-      {name: "Movistar línea fija", value: 6},
-      {name: "Movistar internet", value: 7},
-      {name: "Movistar prepago", value: 8},
+      {name: "Cargando...", value: -1},
     ],
     method: '',
     methods: [ // this will be prefetched from firebase
@@ -84,6 +81,70 @@ class ProductSection extends React.Component {
 
   state = this.defaultState
 
+  refreshRate = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app")
+    else {
+      rates(this.props.firebase).last().then(snap => {
+        const rate = snap.docs[0].data()
+
+        if (!rate) {
+          console.error('Tasa vacía')
+        }
+        
+        this.setState({
+          rate: this.formatRate(this.state.base * rate.price)
+        })
+      }).catch(err => {
+        console.error('Error fetching rate!')
+      })
+    }
+  }
+
+  formatRate =  rate => Math.floor((rate + Number.EPSILON) * 100) / 100
+
+  formatAmount = (amount, rate) => `${Math.ceil((((amount / rate) + Number.EPSILON) * 100)) / 100 } MXN`
+
+  refreshAmounts = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app")
+    else {
+      amounts(this.props.firebase).list().then(amounts => {
+        if (!amounts) {
+          console.error('Montos vacíos')
+        }
+
+        if (amounts.length == 0) {
+          console.error('Montos vacíos')
+        }
+
+        this.setState({
+          amounts: amounts
+        })
+      }).catch(console.error)
+    }
+  }
+
+  refreshProducts = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app")
+    else {
+      products(this.props.firebase).list().then(products => {
+        if (!products) {
+          console.error('Productos vacíos')
+        }
+
+        if (products.length == 0) {
+          console.error('productos vacíos')
+        }
+
+        this.setState({
+          products: products
+        })
+      }).catch(console.error)
+    }
+  }
+
   handleChange = name => event => {
     this.setState({ [name]: event.target.value })
   }
@@ -107,40 +168,11 @@ class ProductSection extends React.Component {
     this.setState({paymentObject: payment})
   }
 
-  refreshRate = () => {
-    if (this.props.firebase.apps.length == 0)
-      console.error("Error fetching Firebase app")
-    else {
-      rates(this.props.firebase).last().then(snap => {
-        const rate = snap.docs[0].data()
-
-        if (!rate) {
-          console.error('Tasa vacía')
-        }
-        
-        this.setState({
-          rate: this.formatRate(this.state.base * rate.price)
-        })
-      }).catch(err => {
-        console.error('Error fetching rate!')
-      })
-    }
-  }
-
-  formatRate =  rate => Math.round((rate + Number.EPSILON) * 100) / 100
-
   getPaymentName = (code) => {
     const currentPayment = this.state.methods
       .filter(_ => _.value == code);
 
     return (currentPayment.length == 0)? "Selecciona un método de pago primero" : currentPayment[0].name;
-  }
-
-  getProductName = (code) => {
-    const currentProducts = this.state.products
-      .filter(_ => _.value == code);
-
-    return (currentProducts.length == 0)? "Selecciona un producto primero" : currentProducts[0].name;
   }
 
   checkout = (event) => {
@@ -208,22 +240,25 @@ class ProductSection extends React.Component {
             persist: false
           });
         } else {
-          // The payment has been processed!
-          if (result.paymentIntent.status === 'succeeded') {
-            // Show a success message to your customer
-            // There's a risk of the customer closing the window before callback
-            // execution. Set up a webhook or plugin to listen for the
-            // payment_intent.succeeded event that handles any business critical
-            // post-payment actions.
-            this.showModal('Recarga en curso!', {
-              variant: 'success',
-              persist: false
-            });
+          if (result.paymentIntent) {
+            if (result.paymentIntent.status === 'succeeded') {
+              // Show a success message to your customer
+              // There's a risk of the customer closing the window before callback
+              // execution. Set up a webhook or plugin to listen for the
+              // payment_intent.succeeded event that handles any business critical
+              // post-payment actions.
+              this.showModal('Recarga en curso!', {
+                variant: 'success',
+                persist: false
+              });
+            }
           }
-
+          
+          // The payment has been processed!
           destroyCookie(null, "paymentIntentId");
           card.clear()
-          this.setState(this.defaultState)
+          this.setState(this.defaultState);
+          this.refreshData();
         }
       }).catch(console.error);
     }).catch(error => {
@@ -287,9 +322,15 @@ class ProductSection extends React.Component {
     }})
   }
 
-  componentDidMount = () => {
+  refreshData = () => {
     this.refreshRate();
-    this.interval = setInterval(() => this.refreshRate, 5 * 60 * 1000);
+    this.refreshProducts();
+    this.refreshAmounts();
+  }
+
+  componentDidMount = () => {
+    this.refreshData();
+    this.interval = setInterval(() => this.refreshRate(), 5 * 60 * 1000);
   }
 
   componentWillUnmount = () => {
@@ -357,18 +398,21 @@ class ProductSection extends React.Component {
                       }}
                     />
                     <CustomInput
-                      labelText="123.00"
+                      labelText="Monto"
                       id="amount"
                       formControlProps={{
                         fullWidth: true
                       }}
+                      inputSelections={this.state.amounts}
                       inputProps={{
-                        type: "number",
-                        endAdornment: "MXN",
-                        required: true,
-                        min: 10,
-                        max: 5000,
-                        step: 0.01,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <span className={classes.inputIconsColor}>{this.formatAmount(
+                              this.state.amount,
+                              this.state.rate
+                            )}</span>
+                          </InputAdornment>
+                        ),
                         onChange: this.handleChange("amount"),
                         value: this.state.amount
                       }}

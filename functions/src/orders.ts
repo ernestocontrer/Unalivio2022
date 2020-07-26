@@ -14,11 +14,11 @@ const currentRate = async (db: FirebaseFirestore.Firestore) => {
 } 
 
 const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collection('amounts').get()).docs.map(
-  (doc):number => doc.data().amount
+  (doc):number => doc.data().value
 )
 
 const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.collection('products').get()).docs.map(
-  (doc):number => doc.data().value
+  (doc):string => doc.id
 )
 
 export const generate = (

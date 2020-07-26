@@ -88,15 +88,7 @@ const validateEmail = async (ctx: string, str: string, lang: string) => {
   return true;
 }
 
-const validateAmount = (ctx: string, amount: number, lang: string, amounts: number[] = [
-  100000,
-  150000,
-  200000,
-  300000,
-  500000,
-  800000,
-  1000000
-], price: number) => {
+const validateAmount = (ctx: string, amount: number, lang: string, amounts: number[] = [], price: number) => {
   if (!amounts.includes(amount)){
     throw TypeError(contexts[ctx][lang] + ' ' + errors.amount[lang](amounts));
   }
@@ -108,17 +100,7 @@ const validateAmount = (ctx: string, amount: number, lang: string, amounts: numb
   return true;
 }
 
-const validateProduct = (ctx: string, product: number, lang: string, products: number[] = [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  7,
-  8,
-  9
-]) => {
+const validateProduct = (ctx: string, product: string, lang: string, products: string[] = []) => {
   if (!products.includes(product)){
     throw TypeError(contexts[ctx][lang] + ' ' + errors.product[lang]);
   }
