@@ -9,7 +9,7 @@ import sendmail from './sendmail';
 const currentRate = async (db: FirebaseFirestore.Firestore) => {
   const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
 
-  const rate = ratesQuery.docs[0].data()
+  const rate = ratesQuery.docs[0]//.data()
   return rate;
 } 
 
@@ -20,6 +20,8 @@ const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collec
 const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.collection('products').get()).docs.map(
   (doc):string => doc.id
 )
+
+const computePrice = (amount: number, rate: number):number => (Math.ceil((((amount / rate) + Number.EPSILON) * 100)) / 100) 
 
 export const generate = (
   db: FirebaseFirestore.Firestore, 
@@ -37,11 +39,9 @@ export const generate = (
   const rate = await currentRate(db);
   const products = await validProducts(db);
 
-
   try {
-    
     await validate.email('from', from, 'es');
-    validate.amount('amount', amount, 'es', amounts, rate.price);
+    validate.amount('amount', amount, 'es', amounts, rate.data().price);
     validate.phone('phone', to, 'es');
     validate.product('product', product, 'es', products)
   } catch(error) {
@@ -51,8 +51,9 @@ export const generate = (
   }
   
   try {
-    const intent = await stripe.paymentIntents.create({
-      amount: Math.ceil((amount / rate.price) * 1e2),
+    const price = computePrice(amount, rate.data().price);
+    const intent = await stripe.paymentIntents.create({ 
+      amount: Math.ceil(price * 100),
       currency: 'mxn',
     });
   
@@ -62,15 +63,18 @@ export const generate = (
       amount,
       from,
       to,
+      price,
+      rate: rate.ref,
       method: db.doc('methods/card'),
       intent: intent.id,
       created: timestamp
     });
-    
+
+    console.log('Created:', intent.id)
     return intent;
   } catch (err) {
     console.error(err);
-    const up = new functions.https.HttpsError('internal', 'Imposible crear intento de pago');
+    const up = new functions.https.HttpsError('internal', 'No pudimos procesar el pago:'+ err.message);
     throw up;
   }
 });
@@ -116,37 +120,33 @@ export const notifyCreation = (
       return
     }
 
-    const rate = await currentRate(db);
+    const rate = (await order.rate.get()).data();
 
     if (!rate) {
       console.error('Tasa vacía')
       return
     }
 
-    const price = order.amount * rate.price
-
-    await snap.ref.update({price});
-
     const mail = {
       from: functions.config().gmail.user,
       to: order.from,
       bcc: functions.config().unalivio.bcc,
-      subject: 'Gracias por usar Alíviame! ',
+      subject: `Unalivio para ${order.to} de ${order.amount} va en camino! 🙌`,
       html: `<div>
         <h1>Muy bien!</h1>
         <br />
-        <p>Hemos recibido tu pago:</p>
+        <p>Hemos recibido tu órden #${context.params.orderId}:</p>
         <ul>
-          <li>tel: ${order.to}</li>
-          <li>mxn: ${order.amount}</li>
+          <li>Teléfono: ${order.to}</li>
+          <li>Precio: ${order.price}</li>
         </ul>
         <br />
-        <p>Que a la tasa ${rate.price} (al ${rate.time}) recargas:</p>
+        <p>Que a la tasa ${rate.price} VES/MXN (en ${rate.time.toDate().toLocaleString()}) recargas:</p>
         <ul>
-          <li>ves: ${price}</li>
+          <li>Recarga: ${order.amount} Bs. S</li>
         </ul>
         <br />
-        <p>Y te avisaremos cuando esté lista.</p>
+        <p>Y te avisaremos en cuánto el pago quede listo. 💪</p>
       </div>`
     }
 
@@ -156,9 +156,32 @@ export const notifyCreation = (
 export const notifyUpdate = () => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
   const order = change.after.data();
 
-  if (!order) {
-    return
-    //const up = new Error()
+  if (!order) return;
+
+  if (order.settled) {
+    const mail = {
+      from: functions.config().gmail.user,
+      to: order.from,
+      bcc: functions.config().unalivio.bcc,
+      subject: `Haz aliviado ${order.amount} a ${order.to}! 🥳`,
+      html: `<div>
+        <h1>Muy bien!</h1>
+        <br />
+        <p>Confirmamos la recarga (en ${order.settled.toDate().toLocaleString()}) de tu orden #${context.params.orderId}:</p>
+        <ul>
+          <li>Teléfono: ${order.to}</li>
+          <li>Recarga: ${order.amount} Bs. S</li>
+          <li>Precio: ${order.price} MXN</li>
+        </ul>
+        <br />
+        <h6>Si algo salió mal por favor dínoslo.</h6>
+        <br />
+        <p>Gracias y cómpartelo para que más personas puedan recibir Unalivio! 💛💙💖</p>
+      </div>`
+    }
+
+    await sendmail(mail);
+    return;
   }
 
   if (order.succeeded) {
@@ -166,23 +189,25 @@ export const notifyUpdate = () => functions.firestore.document('orders/{orderId}
       from: functions.config().gmail.user,
       to: order.from,
       bcc: functions.config().unalivio.bcc,
-      subject: `Tu recarga de ${order.amount} a ${order.to} fué exitosa!`,
+      subject: `Tu alivio por ${order.price} MXN fué pagado! 👏`,
       html: `<div>
         <h1>Muy bien!</h1>
         <br />
-        <p>Confirmamos la recarga (al ${order.succeeded}) por:</p>
+        <p>Confirmamos el pago (en ${order.succeeded.toDate().toLocaleString()}) de tu orden #${context.params.orderId}:</p>
         <ul>
-          <li>tel: ${order.to}</li>
-          <li>ves: ${order.price}</li>
+          <li>Teléfono: ${order.to}</li>
+          <li>Recarga: ${order.amount} Bs. S</li>
+          <li>Precio: ${order.price} MXN</li>
         </ul>
         <br />
         <h6>Si algo salió mal por favor dínoslo.</h6>
         <br />
-        <p>Gracias y cómpartelo para que más personas puedan recibir Un Alivio.</p>
+        <p>Muy pronto llegará unalivio! ✨</p>
       </div>`
     }
 
-    await sendmail(mail)
+    await sendmail(mail);
+    return;
   }
 });
 
