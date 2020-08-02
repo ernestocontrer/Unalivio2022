@@ -177,7 +177,7 @@ class ProductSection extends React.Component {
 
   checkout = (event) => {
     event.preventDefault()
-    this.showModal('Procesando...', {
+    this.showModal('Procesando datos...', {
       variant: 'info',
       persist: true
     });
@@ -206,6 +206,10 @@ class ProductSection extends React.Component {
     }
 
     // call a firebase function 
+    this.showModal('Validando orden...', {
+      variant: 'info',
+      persist: true
+    });
     this.generateOrder(firebase).then(result => {
       if (!result.data) {
         console.error('Respuesta sin intent!')
@@ -233,24 +237,41 @@ class ProductSection extends React.Component {
       stripe.confirmCardPayment(secret, {
         payment_method: { card }
       }).then(result  => {
+        this.showModal('Procesando pago...', {
+          variant: 'info',
+          persist: true
+        });
+
+        let modalMessage = 'Algo salió mal'
+        let modal =  {
+          variant: 'danger',
+          persist: false
+        }
+
         if (result.error) {
           // Show error to your customer (e.g., insufficient funds)
-          this.showModal(result.error.message, {
+          modalMessage = result.error.message
+          modal =  {
             variant: 'danger',
             persist: false
-          });
+          }
         } else {
           if (result.paymentIntent) {
+            this.showModal('Confirmando...', {
+              variant: 'info',
+              persist: true
+            });
             if (result.paymentIntent.status === 'succeeded') {
               // Show a success message to your customer
               // There's a risk of the customer closing the window before callback
               // execution. Set up a webhook or plugin to listen for the
               // payment_intent.succeeded event that handles any business critical
               // post-payment actions.
-              this.showModal('Recarga en curso!', {
+              modalMessage = 'Recarga en curso!'
+              modal = {
                 variant: 'success',
                 persist: false
-              });
+              }
             }
           }
           
@@ -258,6 +279,7 @@ class ProductSection extends React.Component {
           destroyCookie(null, "paymentIntentId");
           card.clear()
           this.setState(this.defaultState);
+          this.showModal(modalMessage, modal);
           this.refreshData();
         }
       }).catch(console.error);
@@ -303,7 +325,7 @@ class ProductSection extends React.Component {
       onClose: (!!persist)? () => {} : this.closeModal,
       ...modal
     }});
-    if (!persist) setTimeout(this.closeModal, 5000)
+    if (!persist) setTimeout(this.closeModal, 15000)
   };
 
   openModal = () => {
