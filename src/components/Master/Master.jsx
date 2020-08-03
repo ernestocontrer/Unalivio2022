@@ -30,9 +30,9 @@ const MasterPage = ({classes, children, seo, ...rest}) => (<div>
     </video>
   )}</div>}
   <Header
-    color="primary"
+    color="white"
     routes={dashboardRoutes}
-    brand={<img id="logo" alt="Aliviame!" style={{maxHeight: 92}} src="/logo.png" />}
+    brand={<img id="logo" alt="Aliviame!" style={{maxHeight: 80}} src="/logo.png" />}
     rightLinks={<HeaderLinks />}
     fixed
     changeColorOnScroll={false}
