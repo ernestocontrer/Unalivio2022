@@ -8,7 +8,7 @@ import classNames from "classnames";
 //import { FaPlay } from 'react-icons/fa';
 
 // core components
-//import {isMobile} from 'react-device-detect';
+import {isMobile} from 'react-device-detect';
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
@@ -21,7 +21,7 @@ const dashboardRoutes = [];
 
 const MasterPage = ({classes, children, seo, ...rest}) => (<div>
   <SEO {...seo} />
-  {<div >{(false?
+  {<div >{(isMobile?
     <div className={classes.background}></div> : <video 
       id="bg-video"
       className={classes.background} 
