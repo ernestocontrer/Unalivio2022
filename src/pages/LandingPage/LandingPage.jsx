@@ -19,7 +19,7 @@ import aboutPageStyle from "assets/jss/material-kit-react/views/landingPage.jsx"
 import ProductSection from "./Sections/ProductSection.jsx";
 
 const SEO = {
-  title: 'Aliviame'
+  title: 'Unalivio'
 }
 
 const MasterPage = withStyles(aboutPageStyle)(Master)
