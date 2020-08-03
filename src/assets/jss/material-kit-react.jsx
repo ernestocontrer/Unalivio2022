@@ -69,7 +69,7 @@ const defaultFont = {
   lineHeight: "1.5em"
 };
 
-const primaryColor = "#ff5722";//"#9c27b0";
+const primaryColor = "#2196f3";//"#9c27b0";
 const warningColor = "#ff9800";
 const dangerColor = "#f44336";
 const successColor = "#4caf50";
@@ -124,7 +124,7 @@ const infoCardHeader = {
 };
 const primaryCardHeader = {
   color: "#fff",
-  background: "linear-gradient(60deg, #ed4b82, #ff5722)", //"linear-gradient(60deg, #ab47bc, #8e24aa)",
+  background: "linear-gradient(60deg, #C8E6C9, #1976d2)", //"linear-gradient(60deg, #ab47bc, #8e24aa)",
   ...primaryBoxShadow
 };
 const roseCardHeader = {
@@ -160,7 +160,7 @@ const title = {
   margin: "1.75rem 0 0.875rem",
   textDecoration: "none",
   fontWeight: "700",
-  fontFamily: `"Roboto Slab", "Times New Roman", serif`
+  fontFamily: `"Montserrat", "Times New Roman", serif`
 };
 
 const cardTitle = {

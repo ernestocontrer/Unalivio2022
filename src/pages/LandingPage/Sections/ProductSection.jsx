@@ -470,7 +470,7 @@ class ProductSection extends React.Component {
             <GridItem xs={12} sm={12} md={6}>
               <h2 className={classes.title}>Por cada {/* <span id="base">{this.state.base}</span> */} peso</h2>
               <h1 className={classes.title}>recibes <span id="rate">{this.state.rate}</span> bolívares!</h1>
-              <h5 className={classes.description}>*Tasa aproximada sujeta a cambios cada 15 min.</h5>
+              <h5 className={classes.description}>*Tasa sujeta a cambios cada 15 min.</h5>
             </GridItem>
           </GridContainer>
         </div>
