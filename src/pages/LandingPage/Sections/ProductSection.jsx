@@ -361,23 +361,19 @@ class ProductSection extends React.Component {
 
   render() {
     const { classes } = this.props;
-    return (
+    return (<div className={classes.background}>
       <div className={classes.section}>
         <CustomModal
           id="modal"
           {...this.state.modal}
         />
-        <GridContainer justify="center">
-          <GridItem xs={12} sm={12} md={8}>
-            <h1 className={classes.title}>¡Recarga teléfonos!</h1>
-          </GridItem>
-        </GridContainer>
         <div>
-          <GridContainer>
-            <GridItem xs={12} sm={12} md={6}>
-              <Card >
+          <GridContainer justify="center">
+            <GridItem xs={12} sm={12} md={4}>
+              <Card>
                 <form className={classes.form} onSubmit={this.checkout}>
                   <CardHeader color="primary" className={classes.cardHeader}>
+                    <h1 className={classes.title}>¡Recarga ya!</h1>
                     <h4>Es muy fácil, rápido y seguro</h4>
                   </CardHeader>
                   <CardBody>
@@ -460,22 +456,25 @@ class ProductSection extends React.Component {
                     <CardElement />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button type="submit" color="primary" size="lg" >
+                    <Button type="submit" color="secondary" size="lg" round >
                       Recargar
                     </Button>
                   </CardFooter>
                 </form>
               </Card>
             </GridItem>
-            <GridItem xs={12} sm={12} md={6}>
+            <GridItem xs={0} sm={0} md={1} />
+            <GridItem xs={12} sm={12} md={4}>
+              <br />
+              <br />
               <h2 className={classes.title}>Por cada {/* <span id="base">{this.state.base}</span> */} peso</h2>
               <h1 className={classes.title}>recibes <span id="rate">{this.state.rate}</span> bolívares!</h1>
-              <h5 className={classes.description}>*Tasa sujeta a cambios cada 15 min.</h5>
+              <h5 className={classes.description}>Próxima tasa en 15min.</h5>
             </GridItem>
           </GridContainer>
         </div>
       </div>
-    );
+    </div>);
   }
 }
 

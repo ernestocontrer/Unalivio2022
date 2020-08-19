@@ -19,28 +19,34 @@ import SEO from "components/SEO/SEO.jsx";
 
 const dashboardRoutes = [];
 
-const MasterPage = ({classes, children, seo, ...rest}) => (<div>
+const MasterPage = ({classes, children, seo, poster, video, ...rest}) => (<div>
   <SEO {...seo} />
-  {<div >{(isMobile?
+  {<div >{((isMobile && video)?
     <div className={classes.background}></div> : <video 
       id="bg-video"
-      className={classes.background} 
-      poster="/bg.jpg" playsInline autoPlay muted loop>
-      <source src="/bg.mp4" type="video/mp4" />
+      className={classes.background}
+      poster={poster || "/bg.jpg"} playsInline autoPlay muted loop>
+      <source src={video} type="video/mp4" />
     </video>
   )}</div>}
   <Header
     color="white"
     routes={dashboardRoutes}
     brand={<img id="logo" alt="UNALIVIO" style={{maxHeight: 80}} src="/logo.png" />}
-    rightLinks={<HeaderLinks />}
+    rightLinks={<HeaderLinks links={[{
+      id: 'link-inicio',
+      title: '¿Por qué recargar teléfonos con Unalivio?',
+      href: '#inicio',
+      target: '_blank',
+      children: <>INICIO</>
+    }]} />}
     fixed
     changeColorOnScroll={false}
     {...rest}
   />
     {/* {authenticated ? this.props.children : <SignIn />} */}
     <div style={{marginTop: 40}} className={classNames(classes.mainTransparent)}>
-      <div className={classes.container}>
+      <div>
         {children}
       </div>
     </div>

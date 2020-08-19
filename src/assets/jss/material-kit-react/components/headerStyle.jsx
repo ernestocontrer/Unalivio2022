@@ -41,7 +41,7 @@ const headerStyle = {
   },
   container: {
     ...container,
-    minHeight: "50px",
+    minHeight: "56px",
     flex: "1",
     alignItems: "center",
     justifyContent: "space-between",
@@ -53,8 +53,8 @@ const headerStyle = {
   },
   title: {
     ...defaultFont,
-    lineHeight: "30px",
-    fontSize: "18px",
+    lineHeight: "32px",
+    fontSize: "24px",
     borderRadius: "3px",
     textTransform: "none",
     color: "inherit",

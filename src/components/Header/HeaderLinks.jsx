@@ -22,26 +22,26 @@ import Button from "components/CustomButtons/Button.jsx";
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.jsx";
 
 function HeaderLinks({ ...props }) {
-  const { classes } = props;
+  const { classes, links } = props;
   return (
     <List className={classes.list}>
-      <ListItem className={classes.listItem}>
+      {links.map((link, k) => <ListItem className={classes.listItem} key={k}>
         <Tooltip
-          id="instagram-twitter"
-          title="¡Síguenos en Twitter!"
+          id={link.id}
+          title={link.title}
           placement={typeof window !== 'undefined' && window.innerWidth > 959 ? "top" : "left"}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
-            href="https://twitter.com/esunalivio"
-            target="_blank"
+            href={link.href}
+            target={link.target}
             color="transparent"
             className={classes.navLink}
           >
-            <FaTwitter/>
+            {link.children}
           </Button>
         </Tooltip>
-      </ListItem>
+      </ListItem>)}
       <ListItem className={classes.listItem}>
         <Tooltip
           id="instagram-facebook"

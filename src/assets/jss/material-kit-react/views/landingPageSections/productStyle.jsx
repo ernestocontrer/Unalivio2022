@@ -1,8 +1,25 @@
-import { title } from "assets/jss/material-kit-react.jsx";
+import { title, primaryColor, secondaryColor } from "assets/jss/material-kit-react.jsx";
 
 const productStyle = {
+  background: {
+    //zIndex: 100,
+    //top: "50%",
+    //left: "50%",
+    //top: 0,
+    //left: 0,
+    minWidth: "100%",
+    minHeight: "100%",
+    width: "auto",
+    height: "auto",
+    //transform: "translateX(-50%) translateY(-50%)",
+    backgroundImage: "url(/recarga.jpg)",
+    backgroundColor: primaryColor,
+    backgroundRepeat: 'no-repeat',
+    position: 'relative',
+    backgroundSize: "cover"
+  },
   section: {
-    padding: "70px 0",
+    padding: "70px 40px",
     textAlign: "center"
   },
   title: {
@@ -13,7 +30,10 @@ const productStyle = {
     textDecoration: "none"
   },
   description: {
-    color: "#C8E6C9"
+    color: secondaryColor
+  },
+  form: {
+    minHeight: "600px"
   }
 };
 
