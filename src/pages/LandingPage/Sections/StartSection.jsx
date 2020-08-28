@@ -25,7 +25,7 @@ const MoneyIcon = () => (<img src={moneyIcon} style={{maxHeight: '80px'}}/>)
 class StartSection extends React.Component {
   render() {
     const { classes } = this.props;
-    return (<div className={classes.background}>
+    return (<div className={classes.background} id="why">
       <div className={classes.section}>
         <GridContainer justify="center">
           <GridItem cs={12} sm={12} md={6}>

@@ -1,4 +1,4 @@
-import { title, primaryColor, secondaryColor } from "assets/jss/material-kit-react.jsx";
+import { title, subtitle, primaryColor, secondaryColor, grayColor } from "assets/jss/material-kit-react.jsx";
 
 const productStyle = {
   background: {
@@ -19,7 +19,7 @@ const productStyle = {
     backgroundSize: "cover"
   },
   section: {
-    padding: "70px 40px",
+    padding: "64px 40px",
     textAlign: "center"
   },
   title: {
@@ -29,8 +29,16 @@ const productStyle = {
     minHeight: "32px",
     textDecoration: "none"
   },
+  subtitle: {
+    ...subtitle,
+    marginBottom: "1rem",
+    marginTop: "30px",
+    minHeight: "32px",
+    textDecoration: "none",
+    color: primaryColor
+  },
   description: {
-    color: secondaryColor
+    color: grayColor
   },
   form: {
     minHeight: "600px"

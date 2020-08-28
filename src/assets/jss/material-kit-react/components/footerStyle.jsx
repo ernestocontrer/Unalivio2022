@@ -1,4 +1,4 @@
-import { container, primaryColor } from "assets/jss/material-kit-react.jsx";
+import { container, primaryColor, secondaryForeground } from "assets/jss/material-kit-react.jsx";
 
 const footerStyle = {
   block: {
@@ -39,6 +39,15 @@ const footerStyle = {
     }
   },
   container,
+  fullWidthContainer: {
+    paddingLeft: "0px",
+    paddingRight: "0px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    zIndex: "12",
+    backgroundColor: secondaryForeground,
+    filter: "blur(0px) opacity(75%)"
+  },
   list: {
     marginBottom: "0",
     padding: "0",
@@ -47,7 +56,8 @@ const footerStyle = {
   inlineBlock: {
     display: "inline-block",
     padding: "0px",
-    width: "auto"
+    width: "auto",
+    color: "inherit"
   },
   icon: {
     width: "18px",

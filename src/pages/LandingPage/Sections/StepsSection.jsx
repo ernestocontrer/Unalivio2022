@@ -30,7 +30,7 @@ const CardIcon = () => (<img src={cardIcon} style={{maxHeight: '40px'}}/>)
 class StepsSection extends React.Component {
   render() {
     const { classes } = this.props;
-    return (<div className={classes.background}>
+    return (<div className={classes.background} id="howto">
       <div className={classes.section}>
         <GridContainer justify="center">
           <GridItem cs={12} sm={12} md={6}>
@@ -43,7 +43,7 @@ class StepsSection extends React.Component {
             <GridContainer justify="center">
               <GridItem xs={12} sm={12} md={4}>
                 <InfoArea
-                  title="Ingresa los datos de la recarga para tu ser querido"
+                  title="Llena el formulario de recarga para tu ser querido"
                   description={<FormIcon />}
                   icon={NumberIcon("1", classes.number)}
                   iconColor="secondary"
@@ -52,7 +52,7 @@ class StepsSection extends React.Component {
               </GridItem>
               <GridItem xs={12} sm={12} md={4}>
                 <InfoArea
-                  title="Ingresa los datos de tu tarjeta de débito o crédito"
+                  title="Verifica los datos de tu tarjeta de débito o crédito"
                   description={<CardIcon />}
                   icon={NumberIcon("2", classes.number)}
                   iconColor="secondary"

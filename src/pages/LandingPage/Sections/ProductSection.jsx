@@ -361,7 +361,7 @@ class ProductSection extends React.Component {
 
   render() {
     const { classes } = this.props;
-    return (<div className={classes.background}>
+    return (<div className={classes.background} id="topup">
       <div className={classes.section}>
         <CustomModal
           id="modal"
@@ -373,8 +373,7 @@ class ProductSection extends React.Component {
               <Card>
                 <form className={classes.form} onSubmit={this.checkout}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h1 className={classes.title}>¡Recarga ya!</h1>
-                    <h4>Es muy fácil, rápido y seguro</h4>
+                    <h1 className={classes.title}>¡Alívialo ya!</h1>
                   </CardHeader>
                   <CardBody>
                     <CustomInput
@@ -452,25 +451,26 @@ class ProductSection extends React.Component {
                         value: this.state.product
                       }}
                     />
-                    <br />
                     <CardElement />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button type="submit" color="secondary" size="lg" round >
-                      Recargar
-                    </Button>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={6}> 
+                        <Button type="submit" color="secondary" size="lg" round>
+                          Recargar
+                        </Button>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={6}> 
+                        <h5 className={classes.subtitle}>¡Por cada {/* <span id="base">{this.state.base}</span> */} peso
+                        recibes <span id="rate">{this.state.rate}</span> bolívares!</h5>
+                        <h6 className={classes.description}>Próxima tasa en 15min.</h6>
+                      </GridItem>
+                    </GridContainer>
                   </CardFooter>
                 </form>
               </Card>
             </GridItem>
-            <GridItem xs={0} sm={0} md={1} />
-            <GridItem xs={12} sm={12} md={4}>
-              <br />
-              <br />
-              <h2 className={classes.title}>Por cada {/* <span id="base">{this.state.base}</span> */} peso</h2>
-              <h1 className={classes.title}>recibes <span id="rate">{this.state.rate}</span> bolívares!</h1>
-              <h5 className={classes.description}>Próxima tasa en 15min.</h5>
-            </GridItem>
+            <GridItem xs={0} sm={0} md={4} />
           </GridContainer>
         </div>
       </div>

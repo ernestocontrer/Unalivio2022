@@ -23,7 +23,7 @@ function Footer({ ...props }) {
   });
   return (
     <footer className={footerClasses}>
-      <div className={classes.container}>
+      <div className={classes.fullWidthContainer}>
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>

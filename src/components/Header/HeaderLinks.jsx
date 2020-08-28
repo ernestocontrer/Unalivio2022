@@ -18,6 +18,7 @@ import { FaTwitter, FaFacebook, FaInstagram } from 'react-icons/fa';
 // core components
 import CustomDropdown from "components/CustomDropdown/CustomDropdown.jsx";
 import Button from "components/CustomButtons/Button.jsx";
+import { AnchorLink } from "gatsby-plugin-anchor-links";
 
 import headerLinksStyle from "assets/jss/material-kit-react/components/headerLinksStyle.jsx";
 
@@ -32,30 +33,37 @@ function HeaderLinks({ ...props }) {
           placement={typeof window !== 'undefined' && window.innerWidth > 959 ? "top" : "left"}
           classes={{ tooltip: classes.tooltip }}
         >
-          <Button
+          {(link.target == '_anchor')? <AnchorLink to={link.href} title={link.title} className={classes.navLink}>
+            <Button
+              color="transparent"
+              rel="noopener noreferrer"
+            >
+              {link.children}
+            </Button>
+          </AnchorLink> : <Button
             href={link.href}
             target={link.target}
             color="transparent"
             className={classes.navLink}
           >
             {link.children}
-          </Button>
+          </Button>}
         </Tooltip>
       </ListItem>)}
       <ListItem className={classes.listItem}>
         <Tooltip
-          id="instagram-facebook"
-          title="¡Síguenos en Facebook!"
+          id="link-twitter"
+          title="¡Síguenos en Twitter!"
           placement={typeof window !== 'undefined' && window.innerWidth > 959 ? "top" : "left"}
           classes={{ tooltip: classes.tooltip }}
         >
           <Button
             color="transparent"
-            href="https://www.facebook.com/esunalivio"
+            href="https://twitter.com/esunalivio"
             target="_blank"
             className={classes.navLink}
           >
-            <FaFacebook/>
+            <FaTwitter/>
           </Button>
         </Tooltip>
       </ListItem>

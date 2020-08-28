@@ -32,13 +32,27 @@ const MasterPage = ({classes, children, seo, poster, video, ...rest}) => (<div>
   <Header
     color="white"
     routes={dashboardRoutes}
-    brand={<img id="logo" alt="UNALIVIO" style={{maxHeight: 80}} src="/logo.png" />}
+    brand={<a href="/">
+      <img id="logo" alt="UNALIVIO" style={{maxHeight: 80}} src="/logo.png" />
+    </a>}
     rightLinks={<HeaderLinks links={[{
-      id: 'link-inicio',
+      id: 'link-why',
       title: '¿Por qué recargar teléfonos con Unalivio?',
-      href: '#inicio',
-      target: '_blank',
-      children: <>INICIO</>
+      href: '/#why',
+      target: '_anchor',
+      children: <>¿POR QUÉ UNALIVIO?</>
+    },{
+      id: 'link-howto',
+      title: '¿Cómo funciona?',
+      href: '/#howto',
+      target: '_anchor',
+      children: <>¿CÓMO FUNCIONA?</>
+    },{
+      id: 'link-topup',
+      title: '¡Alívialo ya!',
+      href: '/#topup',
+      target: '_anchor',
+      children: <>¡RECARGA YA!</>
     }]} />}
     fixed
     changeColorOnScroll={false}
@@ -54,7 +68,7 @@ const MasterPage = ({classes, children, seo, poster, video, ...rest}) => (<div>
     var vid = document.getElementById("bg-video");
     vid.playbackRate = 0.3; 
   </script>
-  <Footer />
+  <Footer whiteFont={true} />
 </div>)
 
 

@@ -29,6 +29,7 @@ import { Divider } from "@material-ui/core";
 import GridItem from "components/Grid/GridItem.jsx";
 import Button from "components/CustomButtons/Button.jsx";
 
+import { AnchorLink } from "gatsby-plugin-anchor-links";
 
 
 const SEO = {
@@ -55,15 +56,17 @@ const LandingPage = ({seo, classes, ...rest}) => (<MasterPage
             fácil, rápida y segura.
           </h4>
           <br />
-          <Button
-            color="secondary"
-            size="lg"
-            onClick={() => { console.log('#name'); }}
-            rel="noopener noreferrer"
-            round
-          >
-            RECARGAR SALDO
-          </Button>
+          <AnchorLink to="/#topup">
+            <Button
+              color="secondary"
+              size="lg"
+              onClick={() => {}}
+              rel="noopener noreferrer"
+              round
+            >
+              RECARGAR SALDO
+            </Button>
+          </AnchorLink>
           <br />
         </GridItem>
       </GridContainer>

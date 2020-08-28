@@ -52,6 +52,7 @@ class Header extends React.Component {
         .classList.remove(classes[changeColorOnScroll.color]);
     }
   }
+
   componentWillUnmount() {
     if (this.props.changeColorOnScroll) {
       typeof window !== 'undefined' && window.removeEventListener("scroll", this.headerColorChange);
