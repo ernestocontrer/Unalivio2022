@@ -25,8 +25,8 @@ const transition = {
 };
 
 const conatinerFluid = {
-  paddingRight: "15px",
-  paddingLeft: "15px",
+  paddingRight: "16px",
+  paddingLeft: "16px",
   marginRight: "auto",
   marginLeft: "auto",
   width: "100%"
@@ -64,12 +64,21 @@ const card = {
 };
 
 const defaultFont = {
-  fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+  fontFamily: `"Montserrat", "Roboto", "Helvetica", "Arial", sans-serif`,
+  //fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   fontWeight: "300",
   lineHeight: "1.5em"
 };
 
-const primaryColor = "#2196f3";//"#9c27b0";
+const primaryForeground = '#fff';
+const secondaryForeground = '#000';
+
+const primaryColor = "#2c82c4";//"#9c27b0";
+const primaryLightColor = "#6ab1f7";
+const primaryDarkColor = "#005693";
+const secondaryColor = "#f9a22f";
+const secondaryLightColor = "#ffd361";
+const secondaryDarkColor = "#c17300";
 const warningColor = "#ff9800";
 const dangerColor = "#f44336";
 const successColor = "#4caf50";
@@ -124,7 +133,7 @@ const infoCardHeader = {
 };
 const primaryCardHeader = {
   color: "#fff",
-  background: "linear-gradient(60deg, #C8E6C9, #1976d2)", //"linear-gradient(60deg, #ab47bc, #8e24aa)",
+  background: `linear-gradient(60deg, ${secondaryLightColor}, ${primaryLightColor})`, //"linear-gradient(60deg, #ab47bc, #8e24aa)",
   ...primaryBoxShadow
 };
 const roseCardHeader = {
@@ -160,8 +169,14 @@ const title = {
   margin: "1.75rem 0 0.875rem",
   textDecoration: "none",
   fontWeight: "700",
-  fontFamily: `"Montserrat", "Times New Roman", serif`
+  fontFamily: `"Montserrat", "Roboto", "Helvetica", "Arial", sans-serif`
 };
+
+const note = {
+  ...defaultFont,
+  color: "#FFFFFF", // 3C4858
+}
+
 
 const cardTitle = {
   ...title,
@@ -188,7 +203,14 @@ export {
   boxShadow,
   card,
   defaultFont,
+  primaryForeground,
+  secondaryForeground,
   primaryColor,
+  primaryLightColor,
+  primaryDarkColor,
+  secondaryColor,
+  secondaryLightColor,
+  secondaryDarkColor,
   warningColor,
   dangerColor,
   successColor,
@@ -211,6 +233,7 @@ export {
   cardHeader,
   defaultBoxShadow,
   title,
+  note,
   cardTitle,
   cardLink,
   cardSubtitle

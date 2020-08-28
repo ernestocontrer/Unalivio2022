@@ -43,11 +43,17 @@ module.exports = {
         name: 'UNALIVIO',
         short_name: 'unalivio',
         start_url: '/',
-        background_color: '#663399',
-        theme_color: '#663399',
+        background_color: '#999999',
+        theme_color: '#2c82c4',
         display: 'minimal-ui',
         icon: 'src/assets/img/favicon.png', // This path is relative to the root of the site.
       },
     },
+    {
+      resolve: `gatsby-plugin-anchor-links`,
+      options: {
+        offset: -64, // This path is relative to the root of the site.
+      },
+    }
   ],
 }

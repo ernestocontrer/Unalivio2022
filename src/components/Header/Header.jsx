@@ -52,6 +52,7 @@ class Header extends React.Component {
         .classList.remove(classes[changeColorOnScroll.color]);
     }
   }
+
   componentWillUnmount() {
     if (this.props.changeColorOnScroll) {
       typeof window !== 'undefined' && window.removeEventListener("scroll", this.headerColorChange);
@@ -129,6 +130,7 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
   color: PropTypes.oneOf([
     "primary",
+    "secondary",
     "info",
     "success",
     "warning",
