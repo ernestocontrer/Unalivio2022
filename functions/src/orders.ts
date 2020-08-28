@@ -131,22 +131,20 @@ export const notifyCreation = (
       from: functions.config().gmail.user,
       to: order.from,
       bcc: functions.config().unalivio.bcc,
-      subject: `Unalivio para ${order.to} de ${order.amount} va en camino! 🙌`,
+      subject: `Solicitaste UnAlivio a ${order.to} por ${order.amount} Bs. S  🙌`,
       html: `<div>
-        <h1>Muy bien!</h1>
+        <h1>¡Recibimos tu solicitud!</h1>
         <br />
-        <p>Hemos recibido tu órden #${context.params.orderId}:</p>
+        <p>Hemos recibido tu orden con código #${context.params.orderId}:</p>
         <ul>
           <li>Teléfono: ${order.to}</li>
-          <li>Precio: ${order.price}</li>
-        </ul>
-        <br />
-        <p>Que a la tasa ${rate.price} VES/MXN (en ${rate.time.toDate().toLocaleString()}) recargas:</p>
-        <ul>
           <li>Recarga: ${order.amount} Bs. S</li>
+          <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+          <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString()}</li>
         </ul>
         <br />
-        <p>Y te avisaremos en cuánto el pago quede listo. 💪</p>
+        <p>El siguiente paso es que tu orden se cobrará, y le haremos llegar la recarga a tu ser querido! Relájate y nosotros te mantenemos informados con dos correos más. 😌</p>
+        <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
       </div>`
     }
 
@@ -163,20 +161,23 @@ export const notifyUpdate = () => functions.firestore.document('orders/{orderId}
       from: functions.config().gmail.user,
       to: order.from,
       bcc: functions.config().unalivio.bcc,
-      subject: `Haz aliviado ${order.amount} a ${order.to}! 🥳`,
+      subject: `Has enviado UnAlivio a ${order.to} por ${order.amount} Bs. S. 🥳`,
       html: `<div>
-        <h1>Muy bien!</h1>
+        <h1>¡Tu Alivio ya fué Recargado!</h1>
         <br />
-        <p>Confirmamos la recarga (en ${order.settled.toDate().toLocaleString()}) de tu orden #${context.params.orderId}:</p>
+        <p>Confirmamos haber completado la recarga de tu orden con código #${context.params.orderId}:</p>
         <ul>
           <li>Teléfono: ${order.to}</li>
           <li>Recarga: ${order.amount} Bs. S</li>
-          <li>Precio: ${order.price} MXN</li>
+          <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+          <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString()}</li>
+          <li>Fecha y hora de recepción: ${order.succeeded.toDate().toLocaleString()}</li>
+          <li>Fecha y hora de recepción: ${order.settled.toDate().toLocaleString()}</li>
         </ul>
         <br />
-        <h6>Si algo salió mal por favor dínoslo.</h6>
-        <br />
-        <p>Gracias y cómpartelo para que más personas puedan recibir Unalivio! 💛💙💖</p>
+        <p>Tu ser querido ha sido aliviado, llámalo que ya tiene saldo! </p><br />
+        <p>Gracias y cuéntanos que opinas en Instagram <a target="_blank" href="https://instagram.com/esunalivio">@EsUnalivio</a>! </p>
+        <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
       </div>`
     }
 
@@ -189,20 +190,21 @@ export const notifyUpdate = () => functions.firestore.document('orders/{orderId}
       from: functions.config().gmail.user,
       to: order.from,
       bcc: functions.config().unalivio.bcc,
-      subject: `Tu alivio por ${order.price} MXN fué pagado! 👏`,
+      subject: `UnAlivio para ${order.to} de ${order.amount} Bs. S.  ya fué cobrado 👏`,
       html: `<div>
-        <h1>Muy bien!</h1>
+        <h1>¡El cargo de UnAlivio ya fué realizado!</h1>
         <br />
-        <p>Confirmamos el pago (en ${order.succeeded.toDate().toLocaleString()}) de tu orden #${context.params.orderId}:</p>
-        <ul>
+        <p>Confirmamos el pago de tu orden con código #${context.params.orderId}:</p>
+        <ul style="font-size:80%">
           <li>Teléfono: ${order.to}</li>
           <li>Recarga: ${order.amount} Bs. S</li>
-          <li>Precio: ${order.price} MXN</li>
+          <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+          <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString()}</li>
+          <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString()}</li>
         </ul>
         <br />
-        <h6>Si algo salió mal por favor dínoslo.</h6>
-        <br />
-        <p>Muy pronto llegará unalivio! ✨</p>
+        <p>Muy pronto le llegará unalivio al celular de tu ser querido! ✨</p>
+        <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
       </div>`
     }
 
