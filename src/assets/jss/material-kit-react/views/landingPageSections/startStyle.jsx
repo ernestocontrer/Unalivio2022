@@ -13,7 +13,7 @@ const teamStyle = {
     width: "auto",
     height: "auto",
     //transform: "translateX(-50%) translateY(-50%)",
-    backgroundImage: "url(/blue.jpg)",
+    //backgroundImage: "url(/blue.jpg)",
     backgroundColor: primaryColor,
     backgroundRepeat: 'no-repeat',
     position: 'relative',
