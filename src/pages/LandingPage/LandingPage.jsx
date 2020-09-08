@@ -31,17 +31,20 @@ import Button from "components/CustomButtons/Button.jsx";
 
 import { AnchorLink } from "gatsby-plugin-anchor-links";
 
+import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 
 const SEO = {
-  title: 'Unalivio'
+  title: 'Unalivio',
+  pathname: '/'
 }
 
 const MasterPage = withStyles(masterPageStyle)(Master)
 
-const LandingPage = ({seo, classes, ...rest}) => (<MasterPage 
+const LandingPage = ({seo, classes, firebase, ...rest}) => (<MasterPage 
   seo={SEO}
   poster="/bg.jpg"
   video={false}
+  firebase={firebase}
   {...rest}
 >
   <Parallax filter >
@@ -82,4 +85,4 @@ const LandingPage = ({seo, classes, ...rest}) => (<MasterPage
   </div>
 </MasterPage>)
 
-export default withStyles(landingPageStyle)(LandingPage);
+export default withStyles(landingPageStyle)(withFirebase(LandingPage));
