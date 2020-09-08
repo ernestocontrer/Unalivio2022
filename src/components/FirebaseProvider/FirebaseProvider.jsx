@@ -2,6 +2,7 @@ import React,{useState, useEffect, Component} from 'react'
 import app from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/functions'
+import 'firebase/analytics'
 import getFirebase from 'db/firebase'
 
 const FirebaseContext = React.createContext(null)
