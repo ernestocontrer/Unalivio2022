@@ -27,7 +27,7 @@ const getFirebase = firebase => {
   
     firebase.initializeApp(config)
     firebaseCache = firebase
-    return firebase
+    return firebaseCache
   }
 
   return null;
