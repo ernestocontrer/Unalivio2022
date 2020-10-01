@@ -18,10 +18,12 @@
     "clean": "gatsby clean",
     "build": "gatsby build",
     "develop": "gatsby develop --port 8008",
-    "deploy": "firebase deploy --only hosting",
+    "deploy": "firebase deploy",
     "format": "prettier --write src/**/*.{js,jsx}",
     "start": "npm run develop",
     "serve": "gatsby serve",
+    "backend": "firebase emulators:start",
+    "payments": "stripe listen --forward-to localhost:5001/verifyOrder",
     "test": "jest"
   },
   "dependencies": {
@@ -42,6 +44,8 @@
     "gatsby": "^2.20.25",
     "gatsby-cli": "^2.12.45",
     "gatsby-plugin-anchor-links": "^1.1.1",
+    "gatsby-plugin-env-variables": "^2.0.0",
+    "gatsby-plugin-gtag": "^1.0.13",
     "gatsby-plugin-manifest": "^2.3.5",
     "gatsby-plugin-material-ui": "1.2.5",
     "gatsby-plugin-offline": "^2.0.24",
