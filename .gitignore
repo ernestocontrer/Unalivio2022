@@ -27,6 +27,7 @@ data
 ### Firebase Patch ###
 .runtimeconfig.json
 .runtimeconfig-develop.json
+functions/.runtimeconfig-*.json 
 .firebase/
 
 
