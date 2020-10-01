@@ -20,13 +20,17 @@ export const getUiConfig = firebase => ({
 })
 
 const getFirebase = firebase => {
-  if (firebaseCache) {
-    return firebaseCache
+  if (typeof window !== 'undefined') {
+    if (firebaseCache) {
+      return firebaseCache
+    }
+  
+    firebase.initializeApp(config)
+    firebaseCache = firebase
+    return firebase
   }
 
-  firebase.initializeApp(config)
-  firebaseCache = firebase
-  return firebase
+  return null;
 }
 
 export default getFirebase
