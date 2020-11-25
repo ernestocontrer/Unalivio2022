@@ -37,7 +37,7 @@ export const main = (
   db: FirebaseFirestore.Firestore
 ) => functions
   .runWith(options.functions)
-  .pubsub.schedule('every 15 minutes')
+  .pubsub.schedule('every 6 hours')
   .onRun(async (context: functions.EventContext) => {
     const timestamp = new Date();
     //const timestamp = Date.parse(datetime);
@@ -65,6 +65,8 @@ export const main = (
     const referral = 0.05
     const utility = 0.09
     const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + referral + utility)))
+
+
 
     console.log(`Inserting VES/MXN rate ${vesmxn}`);
     await db.collection('rates').add({
