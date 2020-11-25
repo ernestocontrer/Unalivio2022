@@ -1,0 +1,74 @@
+{
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "backend",
+			"problemMatcher": [],
+			"label": "npm: backend",
+			"detail": "firebase emulators:start --import ./data/seed",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "develop",
+			"path": "functions/",
+			"problemMatcher": [],
+			"label": "npm: develop - functions",
+			"detail": "tsc -w",
+			"runOn": "folderOpen"
+		},
+		{
+			"type": "npm",
+			"script": "payments",
+			"problemMatcher": [],
+			"label": "npm: payments",
+			"detail": "stripe listen --forward-to localhost:5001/verifyOrder",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "develop",
+			"problemMatcher": [],
+			"label": "npm: develop",
+			"detail": "gatsby develop --port 8008",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "clean",
+			"problemMatcher": [],
+			"label": "npm: clean",
+			"detail": "gatsby clean"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "gatsby build"
+		},
+		{
+			"type": "npm",
+			"script": "deploy",
+			"problemMatcher": [],
+			"label": "npm: deploy",
+			"detail": "firebase deploy"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"path": "functions/",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build - functions",
+			"detail": "tsc"
+		}
+	]
+}
