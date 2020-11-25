@@ -1,5 +1,7 @@
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
+//import Timeout from 'await-timeout';
+
 
 import {verifyApp} from './orders/verify.app';
 import {validate} from './orders/validate'
@@ -87,15 +89,22 @@ export const verify = (
   db: FirebaseFirestore.Firestore,
   stripe: Stripe
 ) => functions.https.onRequest(verifyApp(stripe, {
+  'payment_intent.created': async (intent: Stripe.PaymentIntent) => {
+    console.log("Created payment intent:", intent.id);
+  },
   'payment_intent.succeeded': async (intent: Stripe.PaymentIntent) => {
+    console.log("Succeeded payment intent:", intent.id);
+  },
+  'charge.succeeded': async (charge: Stripe.Charge) => {
     const timestamp = new Date();
-    const snap = await db.collection('orders').where('intent', '==', intent.id).get();
+    const snap = await db.collection('orders').where('intent', '==', charge.payment_intent).get();
 
     snap.forEach(doc => (doc.ref.update({
-      succeeded: timestamp
+      succeeded: timestamp,
+      charge: charge.id
     })));
 
-    console.log("Succeeded:", intent.id);
+    console.log("Succeeded charge:", charge.id);
   },
   'payment_intent.payment_failed': async (intent: Stripe.PaymentIntent) => {
     const timestamp = new Date();
@@ -111,49 +120,44 @@ export const verify = (
   }
 }));
 
-export const notifyCreation = (
-  db: FirebaseFirestore.Firestore
-) => functions.
-  firestore.
-  document('orders/{orderId}').
-  onCreate(async (snap, context) => {
-    const order = snap.data();
+export const notifyCreation = () => functions.firestore.document('orders/{orderId}').onCreate(async (snap, context) => {
+  const order = snap.data();
 
-    if (!order) {
-      console.error('Orden vacía')
-      return
-    }
+  if (!order) {
+    console.error('Orden vacía')
+    return
+  }
 
-    const rate = (await order.rate.get()).data();
+  const rate = (await order.rate.get()).data();
 
-    if (!rate) {
-      console.error('Tasa vacía')
-      return
-    }
+  if (!rate) {
+    console.error('Tasa vacía')
+    return
+  }
 
-    const mail = {
-      from: functions.config().gmail.user,
-      to: order.from,
-      bcc: functions.config().unalivio.bcc,
-      subject: `Solicitaste UnAlivio a ${order.to} por ${order.amount} Bs. S  🙌`,
-      html: `<div>
-        <h1>¡Recibimos tu solicitud!</h1>
-        <br />
-        <p>Hemos recibido tu orden con código #${context.params.orderId}:</p>
-        <ul>
-          <li>Teléfono: ${order.to}</li>
-          <li>Recarga: ${order.amount} Bs. S</li>
-          <li>Cargo a tu tarjeta: ${order.price} MXN</li>
-          <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
-        </ul>
-        <br />
-        <p>El siguiente paso es que tu orden se cobrará, y le haremos llegar la recarga a tu ser querido! Relájate y nosotros te mantenemos informados con dos correos más. 😌</p>
-        <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
-      </div>`
-    }
+  const mail = {
+    from: functions.config().gmail.user,
+    to: order.from,
+    bcc: functions.config().unalivio.bcc,
+    subject: `Solicitaste UnAlivio a ${order.to} por ${order.amount} Bs. S  🙌`,
+    html: `<div>
+      <h1>¡Recibimos tu solicitud!</h1>
+      <br />
+      <p>Hemos recibido tu orden con código #${context.params.orderId}:</p>
+      <ul>
+        <li>Teléfono: ${order.to}</li>
+        <li>Recarga: ${order.amount} Bs. S</li>
+        <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+        <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
+      </ul>
+      <br />
+      <p>El siguiente paso es que tu orden se cobrará, y le haremos llegar la recarga a tu ser querido! Relájate y nosotros te mantenemos informados con dos correos más. 😌</p>
+      <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
+    </div>`
+  }
 
-    await sendmail(mail)
-  });
+  await sendmail(mail)
+});
 
 export const notifyUpdate = () => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
   const order = change.after.data();
@@ -177,8 +181,8 @@ export const notifyUpdate = () => functions.firestore.document('orders/{orderId}
             <li>Recarga: ${order.amount} Bs. S</li>
             <li>Cargo a tu tarjeta: ${order.price} MXN</li>
             <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
-            <li>Fecha y hora de recepción: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
-            <li>Fecha y hora de recepción: ${order.settled.toDate().toLocaleString(locale, options)}</li>
+            <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
+            <li>Fecha y hora de recarga: ${order.settled.toDate().toLocaleString(locale, options)}</li>
           </ul>
           <br />
           <p>Tu ser querido ha sido aliviado, llámalo que ya tiene saldo! </p><br />

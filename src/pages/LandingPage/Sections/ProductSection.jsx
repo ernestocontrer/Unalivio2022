@@ -175,11 +175,41 @@ class ProductSection extends React.Component {
     return (currentPayment.length == 0)? "Selecciona un método de pago primero" : currentPayment[0].name;
   }
 
-  checkout = (event) => {
-    event.preventDefault()
+  confirm = (event) => {
+    event.preventDefault();
+
+    this.showModal('Confirma tu orden', {
+      variant: 'info',
+      persist: true,
+      content: (<>
+        <ul>
+          <li>Email de contacto: {this.state.from}</li>
+          <li>Teléfono: {this.state.to}</li>
+          <li>Monto a recargar: {this.state.amount}</li>
+        </ul>
+      </ >),
+      buttons: (<>
+        <Button onClick={this.checkout} color="info">CHÉVERE PROCEDER</Button>
+        <Button onClick={this.closeModal}>REGRESAR Y MODIFICAR</Button>
+      </ >)
+    });
+  }
+
+  checkout = () => {
+
+    
+    this.setState({modal: this.defaultState.modal});
+
     this.showModal('Procesando datos...', {
       variant: 'info',
-      persist: true
+      persist: true,
+      content: (<>
+        <ul>
+          <li>Email de contacto: {this.state.from}</li>
+          <li>Teléfono: {this.state.to}</li>
+          <li>Monto a recargar: {this.state.amount}</li>
+        </ul>
+      </ >)
     });
     const {stripe, elements, firebase} = this.props
 
@@ -187,7 +217,7 @@ class ProductSection extends React.Component {
       // Stripe.js and Firebase services have not yet loaded.
       // Make  sure to disable form submission until they're loaded.
       console.error("Services not loaded yet")
-      this.showModal('Por favor verifica tu conexión', {
+      this.showModal('Por favor verifica tu conexión de internet y recarga la página de nuevo', {
         variant: 'warning',
         persist: false
       });
@@ -210,6 +240,7 @@ class ProductSection extends React.Component {
       variant: 'info',
       persist: true
     });
+
     this.generateOrder(firebase).then(result => {
       if (!result.data) {
         console.error('Respuesta sin intent!')
@@ -234,20 +265,31 @@ class ProductSection extends React.Component {
       /*this.handlePayment(intent.client_secret, stripe, elements)*/
       const card = elements.getElement(CardElement)
 
+      if (!card) {
+        console.error('Tarjeta no pudo leerse')
+        this.showModal('Por favor intenta de nuevo', {
+          variant: 'warning',
+          persist: false
+        });
+      }
+
+      this.showModal('Procesando pago...', {
+        variant: 'info',
+        persist: true
+      });
       stripe.confirmCardPayment(secret, {
         payment_method: { card }
       }).then(result  => {
-        this.showModal('Procesando pago...', {
-          variant: 'info',
-          persist: true
-        });
-
-        let modalMessage = 'Algo salió mal'
+        let modalMessage = 'Algo salió mal. Por favor contáctanos a contacto@unalivio.com y la hora de fallo:' + (new Date());
         let modal =  {
           variant: 'danger',
           persist: false
         }
 
+        this.showModal('Confirmando...', {
+          variant: 'info',
+          persist: true
+        });
         if (result.error) {
           // Show error to your customer (e.g., insufficient funds)
           modalMessage = result.error.message
@@ -257,10 +299,6 @@ class ProductSection extends React.Component {
           }
         } else {
           if (result.paymentIntent) {
-            this.showModal('Confirmando...', {
-              variant: 'info',
-              persist: true
-            });
             if (result.paymentIntent.status === 'succeeded') {
               // Show a success message to your customer
               // There's a risk of the customer closing the window before callback
@@ -274,14 +312,14 @@ class ProductSection extends React.Component {
               }
             }
           }
-          
-          // The payment has been processed!
-          destroyCookie(null, "paymentIntentId");
-          card.clear()
-          this.setState(this.defaultState);
-          this.showModal(modalMessage, modal);
-          this.refreshData();
         }
+
+        // The payment has been processed!
+        destroyCookie(null, "paymentIntentId");
+        this.setState(this.defaultState);
+        this.showModal(modalMessage, modal);
+        card.clear();
+        this.refreshData();
       }).catch(console.error);
     }).catch(error => {
       this.showModal(error.message, {
@@ -309,21 +347,22 @@ class ProductSection extends React.Component {
     })
   };
 
-  showModal = (message, {variant, persist}) => {
+  showModal = (message, {variant, persist, content, buttons}) => {
     const {title, actions, open, onClose, ...modal} = this.state.modal
     this.setState({modal: {
+      ...modal,
       title: message,
-      actions: (<Button
+      content: content || (<></>),
+      actions: (buttons || (<Button
         onClick={this.closeModal}
         color={variant}
         simple
         disabled={!!persist}
       >
         {(!!persist)? 'ESPERA' : "CERRAR"}
-      </Button>),
+      </Button>)),
       open: true,
-      onClose: (!!persist)? () => {} : this.closeModal,
-      ...modal
+      onClose: (!!persist)? () => {} : this.closeModal
     }});
     if (!persist) setTimeout(this.closeModal, 15000)
   };
@@ -371,7 +410,7 @@ class ProductSection extends React.Component {
           <GridContainer justify="center">
             <GridItem xs={12} sm={12} md={4}>
               <Card>
-                <form className={classes.form} onSubmit={this.checkout}>
+                <form className={classes.form} onSubmit={this.confirm}>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h1 className={classes.title}>¡Alívialo ya!</h1>
                   </CardHeader>
@@ -483,6 +522,8 @@ ProductSection.propTypes = {
   classes: PropTypes.object.isRequired,
   stripe: PropTypes.object.isRequired,
   firebase: PropTypes.object.isRequired,
+  db: PropTypes.object.isRequired,
+  functions: PropTypes.object.isRequired,
   //enqueueSnackbar: PropTypes.func.isRequired
 };
 
