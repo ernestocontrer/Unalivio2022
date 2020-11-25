@@ -58,6 +58,14 @@ const teamStyle = {
   },
   margin5: {
     margin: "5px"
+  },
+  number: {
+    ...title,
+    fontSize: "80px",
+    marginBottom: "0px",
+    marginTop: "1rem",
+    minHeight: "80px",
+    textDecoration: "none"
   }
 };
 
