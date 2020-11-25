@@ -1,17 +1,11 @@
 import React,{useState, useEffect, Component} from 'react'
-import app from 'firebase/app'
-import 'firebase/firestore'
-import 'firebase/functions'
-import 'firebase/analytics'
 import getFirebase from 'db/firebase'
 
 const FirebaseContext = React.createContext(null)
 
-const withFirebase = Component => props => (
-  <FirebaseContext.Consumer>
-    {firebase => <Component {...props} firebase={firebase} />}
-  </FirebaseContext.Consumer>
-)
+const withFirebase = Component => props => (<FirebaseContext.Consumer>
+  {firebase => <Component {...props} firebase={firebase} />}
+</FirebaseContext.Consumer>)
 
 export {FirebaseContext, withFirebase}
 
@@ -23,8 +17,25 @@ export default ({ children }) => {
 
   const init = () => {
     console.log('Initializing firebase')
-    const firebase = getFirebase(app)
-    setState({ firebase })
+
+    const lazyFirebase = {
+      app:  import('firebase/app'),
+      firestore: import('firebase/firestore'),
+      functions: import('firebase/functions'),
+      analytics: import('firebase/analytics')
+    }
+
+    Promise.all([
+      lazyFirebase.app, 
+      lazyFirebase.firestore,
+      lazyFirebase.functions,
+      lazyFirebase.analytics
+    ]).then(([app]) => {
+      const firebase = getFirebase(app)
+      return setState({ firebase });
+    }).catch(console.error);
+
+    //const firebase = getFirebase(app)
   }
 
   useEffect(() => {
@@ -34,7 +45,7 @@ export default ({ children }) => {
     }
   }, [/* input */])
   
-  if (!app.apps.length || !state.firebase) {
+  if (!state.firebase || !state.firebase.apps.length) {
     return null
   }  return (<FirebaseContext.Provider value={ state.firebase }>
     { children }

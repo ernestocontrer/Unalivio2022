@@ -9,6 +9,7 @@ import 'typeface-montserrat';
 // pages for this product
 //import Components from "./Components/Components.jsx";
 import LandingPage from "./LandingPage/LandingPage.jsx";
+import GroceriesPage from "./GroceriesPage/GroceriesPage.jsx"
 //import ProfilePage from "./ProfilePage/ProfilePage.jsx";
 //import LoginPage from "./LoginPage/LoginPage.jsx";
 
@@ -18,6 +19,7 @@ export default () => {
   return (<Router history={hist}>
     <Switch>
       <Route path="/" component={(LandingPage)} />
+      <Route path="/mercado" component={(GroceriesPage)} />
     </Switch>
   </Router>)
 };

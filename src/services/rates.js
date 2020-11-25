@@ -1,5 +1,7 @@
+import {spawnDb} from 'services/emulator-suite'
+
 const rates = (firebase) => {
-  const db = firebase.firestore()
+  const db = spawnDb(firebase);
   const ratesRef = db.collection('rates');
   return {
     list: () => (ratesRef.get().then(snap => snap.map(rate => ({

@@ -22,8 +22,9 @@
     "format": "prettier --write src/**/*.{js,jsx}",
     "start": "npm run develop",
     "serve": "gatsby serve",
-    "backend": "firebase emulators:start",
-    "payments": "stripe listen --forward-to localhost:5001/verifyOrder",
+    "seeder": "./seeder.sh",
+    "backend": "./backend.sh",
+    "payments": "stripe listen --events payment_intent.created,payment_intent.succeeded,charge.succeeded,payment_intent.canceled,payment_intent.payment_failed --forward-to http://localhost:5001/aliviame-mvp/us-central1/verifyOrder",
     "test": "jest"
   },
   "dependencies": {
@@ -41,6 +42,7 @@
     "core-js": "^2.6.11",
     "date-fns": "^2.12.0",
     "firebase": "^7.14.1",
+    "firebase-tools": "^8.14.1",
     "gatsby": "^2.20.25",
     "gatsby-cli": "^2.12.45",
     "gatsby-plugin-anchor-links": "^1.1.1",
