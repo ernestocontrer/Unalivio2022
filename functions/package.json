@@ -3,6 +3,7 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
+    "develop": "tsc -w",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.2.2",
     "@types/nodemailer": "^6.4.0",
+    "await-timeout": "^1.1.1",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "email-deep-validator": "^3.3.0",
