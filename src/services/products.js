@@ -8,9 +8,12 @@ const products = (firebase) => {
   const db = spawnDb(firebase)
   const productsRef = db.collection('products');
   return {
-    list: () => (productsRef.get().then(snap => snap.docs.map(product => ({
+    list: (offering = 'topup') => (productsRef.where(
+      "offering", '==', db.doc(`offerings/${offering}`)
+    ).get().then(snap => snap.docs.map(product => ({
       name: product.data().name,
-      value: product.id
+      value: product.id,
+      price: product.data().price
     }))))
   }
 }
