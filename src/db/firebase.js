@@ -20,11 +20,11 @@ export const getUiConfig = firebase => ({
 })
 
 const getFirebase = firebase => {
-  if (typeof window !== 'undefined') {
-    if (firebaseCache) {
-      return firebaseCache
-    }
+  if (firebaseCache) {
+    return firebaseCache
+  }
   
+  if (typeof window !== 'undefined') {
     firebase.initializeApp(config)
     firebaseCache = firebase
     return firebaseCache
@@ -32,5 +32,10 @@ const getFirebase = firebase => {
 
   return null;
 }
+
+const lazy = (f) => {
+  let loead
+}
+
 
 export default getFirebase
