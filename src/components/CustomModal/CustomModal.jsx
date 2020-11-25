@@ -54,7 +54,7 @@ function CustomModal({...props}) {
         className={classes.modalHeader}
         {...titleProps}
       >
-        <IconButton
+        {/* <IconButton
           className={classes.modalCloseButton}
           key="close"
           aria-label="Close"
@@ -62,7 +62,7 @@ function CustomModal({...props}) {
           onClick={onClose}
         >
           <Close className={classes.modalClose} />
-        </IconButton>
+        </IconButton> */}
         <h4 className={classes.modalTitle}>{title}</h4>
       </DialogTitle>
       <DialogContent
