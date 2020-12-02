@@ -62,8 +62,8 @@ export const main = (
     });
     
     const commission = 0.06 // biyuyo
-    const referral = 0.05
-    const utility = 0.09
+    const referral = 0.02
+    const utility = 0.02
     const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + referral + utility)))
 
 
