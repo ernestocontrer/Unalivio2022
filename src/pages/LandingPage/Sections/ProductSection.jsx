@@ -502,8 +502,15 @@ class ProductSection extends React.Component {
                       <GridItem xs={12} sm={12} md={6}> 
                         <h5 className={classes.subtitle}>¡Por cada {/* <span id="base">{this.state.base}</span> */} peso
                         recibes <span id="rate">{this.state.rate}</span> bolívares!</h5>
-                        <h6 className={classes.description}>Próxima tasa en 15min.</h6>
                       </GridItem>
+                      <Button
+                          color="transparent"
+                          href="/privacy"
+                          target="_blank"
+                          className={classes.navLink}
+                        >
+                        <h6 className={classes.description}>Tu privacidad es importante para nosotros</h6>
+                      </Button>
                     </GridContainer>
                   </CardFooter>
                 </form>
