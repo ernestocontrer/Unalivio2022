@@ -19,6 +19,13 @@ const currentRate = async (db: FirebaseFirestore.Firestore) => {
   return rate;
 } 
 
+const currentDiscount = async (db: FirebaseFirestore.Firestore, code: string) => {
+  const couponsQuery = (await db.collection('coupons').doc(code).get()).data();
+
+  const coupon = (!couponsQuery)? 0 : couponsQuery.discount;
+  return coupon;
+} 
+
 const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collection('amounts').get()).docs.map(
   (doc):number => doc.data().value
 )
@@ -27,13 +34,17 @@ const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.colle
   (doc):string => doc.id
 )
 
-const computePrice = (amount: number, rate: number):number => (Math.ceil((((amount / rate) + Number.EPSILON) * 100)) / 100) 
+const validCoupons = async (db: FirebaseFirestore.Firestore) => (await db.collection('coupons').get()).docs.map(
+  (doc):string => doc.data().name
+)
+
+const computePrice = (amount: number, rate: number, discount: number = 0):number => (Math.ceil((((amount / rate) - discount + Number.EPSILON) * 100)) / 100) 
 
 export const generate = (
   db: FirebaseFirestore.Firestore, 
   stripe: Stripe
 ) => functions.https.onCall(async (order, context) => {
-  const {product, amount, from, to} = order;
+  const {product, amount, from, to, coupon} = order;
 
   if (!product || !amount || !from || !to) {
     const up = new functions.https.HttpsError(
@@ -44,20 +55,25 @@ export const generate = (
   const amounts = await validAmounts(db);
   const rate = await currentRate(db);
   const products = await validProducts(db);
+  const coupons = await validCoupons(db);
+  const discount = await currentDiscount(db, coupon);
+
+  console.log(coupons);
+  console.log(discount)
 
   try {
     await validate.email('from', from, 'es');
     validate.amount('amount', amount, 'es', amounts, rate.data().price);
     validate.phone('phone', to, 'es');
-    validate.product('product', product, 'es', products)
+    validate.product('product', product, 'es', products);
   } catch(error) {
-    const up = new functions.https.HttpsError(
-      'invalid-argument', error.message);
+    const up = new functions.https.HttpsError('invalid-argument', error.message);
     throw up;
   }
-  
+
   try {
-    const price = computePrice(amount, rate.data().price);
+    const price = computePrice(amount, rate.data().price, discount);
+    console.log(price)
     const intent = await stripe.paymentIntents.create({ 
       amount: Math.ceil(price * 100),
       currency: 'mxn',
