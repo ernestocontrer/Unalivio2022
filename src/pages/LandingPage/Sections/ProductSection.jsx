@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 
 // @material-ui/icons
 import ContactMail from '@material-ui/icons/ContactMail';
+import Redeem from '@material-ui/icons/Redeem';
 //import People from "@material-ui/icons/People";
 import Category from '@material-ui/icons/Category';
 import PhoneForwarded from '@material-ui/icons/PhoneForwarded';
@@ -51,6 +52,7 @@ class ProductSection extends React.Component {
     from: '',
     to: '',
     amount: '',
+    coupon: '',
     amounts: [
       {name: "Cargando...", value: -1},
     ],
@@ -166,6 +168,17 @@ class ProductSection extends React.Component {
     let payment = this.state.paymentObject;
     payment[name] = event.target.value;
     this.setState({paymentObject: payment})
+  }
+
+  handleCoupon = event => {
+    const coupon = event.target.value;
+
+    this.setState({
+      coupon: coupon.
+        toUpperCase().
+        replace(/\s/g, "").
+        substr(0, 19)
+    })
   }
 
   getPaymentName = (code) => {
@@ -330,12 +343,13 @@ class ProductSection extends React.Component {
   }
 
   generateOrder = (firebase) => {
-    const {product, amount, from, to} = this.state;
+    const {product, amount, from, to, coupon} = this.state;
     return orders(firebase).create({
       product,
       amount,
       from,
-      to
+      to,
+      coupon
     });
   }
   
@@ -461,6 +475,7 @@ class ProductSection extends React.Component {
                       }}
                       inputSelections={this.state.amounts}
                       inputProps={{
+                        required: true,
                         endAdornment: (
                           <InputAdornment position="end">
                             <span className={classes.inputIconsColor}>{this.formatAmount(
@@ -481,6 +496,7 @@ class ProductSection extends React.Component {
                       }}
                       inputSelections={this.state.products}
                       inputProps={{
+                        required: true,
                         endAdornment: (
                           <InputAdornment position="end">
                             <Category className={classes.inputIconsColor} />
@@ -488,6 +504,23 @@ class ProductSection extends React.Component {
                         ),
                         onChange: this.handleChange("product"),
                         value: this.state.product
+                      }}
+                    />
+                    <CustomInput
+                      labelText="CUPON"
+                      id="coupon"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        type: "text",
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <Redeem className={classes.inputIconsColor} />
+                          </InputAdornment>
+                        ),
+                        onChange: this.handleCoupon,
+                        value: this.state.coupon
                       }}
                     />
                     <CardElement />
@@ -504,11 +537,11 @@ class ProductSection extends React.Component {
                         recibes <span id="rate">{this.state.rate}</span> bolívares!</h5>
                       </GridItem>
                       <Button
-                          color="transparent"
-                          href="/privacy"
-                          target="_blank"
-                          className={classes.navLink}
-                        >
+                        color="transparent"
+                        href="/privacy"
+                        target="_blank"
+                        className={classes.navLink}
+                      >
                         <h6 className={classes.description}>Tu privacidad es importante para nosotros</h6>
                       </Button>
                     </GridContainer>

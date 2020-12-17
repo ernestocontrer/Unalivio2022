@@ -17,8 +17,7 @@ class TeamSection extends React.Component {
       <div className={classes.section}>
         <h2 className={classes.title}>Aviso Legal</h2>
         <p className={classes.description}>
-          Esta página puede ser reproducida con fines no lucrativos, siempre y cuando no se mutile, ni se omita la fuente completa ni su dirección electrónica bajo los términos de la licencia <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.es" >CC BY-NC-SA 4.0</a>.<br />
-          De otra forma, requiere permiso previo por escrito por parte de UNALIVIO S. A. P. I. DE C. V.
+          Esta página no puede ser reproducida parcial o totalmente sin permiso previo por escrito por parte de UNALIVIO S. A. P. I. DE C. V.
         </p>  
       </div>
     );

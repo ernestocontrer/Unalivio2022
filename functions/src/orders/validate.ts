@@ -18,6 +18,10 @@ const contexts = {
   product: {
     es: 'La compañía',
     en: 'The provider'
+  },
+  coupon: {
+    es: 'El cupón',
+    en: 'The coupon'
   }
 }
 
@@ -63,6 +67,10 @@ const errors = {
     es: (elements:any[]) => `debe ser uno de ${elements}`
   },
   product: {
+    en: 'is not valid',
+    es: 'es inválido'
+  },
+  coupon: {
     en: 'is not valid',
     es: 'es inválido'
   }

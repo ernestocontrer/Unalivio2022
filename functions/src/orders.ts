@@ -19,6 +19,13 @@ const currentRate = async (db: FirebaseFirestore.Firestore) => {
   return rate;
 } 
 
+const currentCoupon = async (db: FirebaseFirestore.Firestore, code: string) => {
+  const couponsQuery = await db.collection('coupons').where('name', '==', code).limit(1).get();
+
+  const coupon : any  = (couponsQuery.empty)? {} : couponsQuery.docs[0].data();
+  return coupon;
+} 
+
 const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collection('amounts').get()).docs.map(
   (doc):number => doc.data().value
 )
@@ -27,13 +34,13 @@ const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.colle
   (doc):string => doc.id
 )
 
-const computePrice = (amount: number, rate: number):number => (Math.ceil((((amount / rate) + Number.EPSILON) * 100)) / 100) 
+const computePrice = (amount: number, rate: number, discount: number = 0):number => (Math.ceil((((amount / rate) - discount + Number.EPSILON) * 100)) / 100) 
 
 export const generate = (
   db: FirebaseFirestore.Firestore, 
   stripe: Stripe
 ) => functions.https.onCall(async (order, context) => {
-  const {product, amount, from, to} = order;
+  const {product, amount, from, to, coupon} = order;
 
   if (!product || !amount || !from || !to) {
     const up = new functions.https.HttpsError(
@@ -49,13 +56,12 @@ export const generate = (
     await validate.email('from', from, 'es');
     validate.amount('amount', amount, 'es', amounts, rate.data().price);
     validate.phone('phone', to, 'es');
-    validate.product('product', product, 'es', products)
+    validate.product('product', product, 'es', products);
   } catch(error) {
-    const up = new functions.https.HttpsError(
-      'invalid-argument', error.message);
+    const up = new functions.https.HttpsError('invalid-argument', error.message);
     throw up;
   }
-  
+
   try {
     const price = computePrice(amount, rate.data().price);
     const intent = await stripe.paymentIntents.create({ 
@@ -64,7 +70,8 @@ export const generate = (
     });
   
     const timestamp = new Date();
-    await db.collection('orders').add({
+    
+    const order_ : any = {
       product: db.doc(`products/${product}`),
       amount,
       from,
@@ -73,8 +80,17 @@ export const generate = (
       rate: rate.ref,
       method: db.doc('methods/card'),
       intent: intent.id,
-      created: timestamp
-    });
+      created: timestamp,
+    }
+    
+    const coupon_ = await currentCoupon(db, coupon);
+
+    if (!!coupon_) {
+      order_.coupon = coupon;
+      order_.gift = coupon_.gift;
+    }
+
+    await db.collection('orders').add(order_);
 
     console.log('Created:', intent.id)
     return intent;
