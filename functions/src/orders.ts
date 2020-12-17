@@ -19,10 +19,10 @@ const currentRate = async (db: FirebaseFirestore.Firestore) => {
   return rate;
 } 
 
-const currentDiscount = async (db: FirebaseFirestore.Firestore, code: string) => {
-  const couponsQuery = (await db.collection('coupons').doc(code).get()).data();
+const currentCoupon = async (db: FirebaseFirestore.Firestore, code: string) => {
+  const couponsQuery = await db.collection('coupons').where('name', '==', code).limit(1).get();
 
-  const coupon = (!couponsQuery)? 0 : couponsQuery.discount;
+  const coupon : any  = (couponsQuery.empty)? {} : couponsQuery.docs[0].data();
   return coupon;
 } 
 
@@ -32,10 +32,6 @@ const validAmounts = async (db: FirebaseFirestore.Firestore) => (await db.collec
 
 const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.collection('products').get()).docs.map(
   (doc):string => doc.id
-)
-
-const validCoupons = async (db: FirebaseFirestore.Firestore) => (await db.collection('coupons').get()).docs.map(
-  (doc):string => doc.data().name
 )
 
 const computePrice = (amount: number, rate: number, discount: number = 0):number => (Math.ceil((((amount / rate) - discount + Number.EPSILON) * 100)) / 100) 
@@ -55,11 +51,6 @@ export const generate = (
   const amounts = await validAmounts(db);
   const rate = await currentRate(db);
   const products = await validProducts(db);
-  const coupons = await validCoupons(db);
-  const discount = await currentDiscount(db, coupon);
-
-  console.log(coupons);
-  console.log(discount)
 
   try {
     await validate.email('from', from, 'es');
@@ -72,15 +63,15 @@ export const generate = (
   }
 
   try {
-    const price = computePrice(amount, rate.data().price, discount);
-    console.log(price)
+    const price = computePrice(amount, rate.data().price);
     const intent = await stripe.paymentIntents.create({ 
       amount: Math.ceil(price * 100),
       currency: 'mxn',
     });
   
     const timestamp = new Date();
-    await db.collection('orders').add({
+    
+    const order_ : any = {
       product: db.doc(`products/${product}`),
       amount,
       from,
@@ -89,8 +80,17 @@ export const generate = (
       rate: rate.ref,
       method: db.doc('methods/card'),
       intent: intent.id,
-      created: timestamp
-    });
+      created: timestamp,
+    }
+    
+    const coupon_ = await currentCoupon(db, coupon);
+
+    if (!!coupon_) {
+      order_.coupon = coupon;
+      order_.gift = coupon_.gift;
+    }
+
+    await db.collection('orders').add(order_);
 
     console.log('Created:', intent.id)
     return intent;
