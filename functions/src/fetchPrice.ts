@@ -40,7 +40,7 @@ export const main = (
   .pubsub.schedule('every 6 hours')
   .onRun(async (context: functions.EventContext) => {
     const timestamp = new Date();
-    //const timestamp = Date.parse(datetime);
+    
     console.log(`Starting fetchPrice at ${timestamp}.`);
 
     const btcmxn: number = +((await fetch(options.price.bitso('btc', 'mxn'))).data["payload"]["last"]);
@@ -61,9 +61,9 @@ export const main = (
       price: btcves
     });
     
-    const commission = 0.06 // biyuyo
+    const commission = 0.10 // biyuyo 6% +stripe 3.6
     const referral = 0.02
-    const utility = 0.02
+    const utility = 0.05
     const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + referral + utility)))
 
 
