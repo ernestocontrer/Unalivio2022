@@ -51,7 +51,7 @@ const LandingPage = ({seo, classes, firebase, ...rest}) => (<MasterPage
     <div className={classes.container}>
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
-          <h1 className={classes.title}>Alivia el teléfono de tus seres queridos en Venezuela</h1>
+          <h1 className={classes.title}>Alivia a tus seres queridos en Venezuela con una recarga</h1>
           <h4 className={classes.note}>
             <span style={{fontWeight: "bold"}}>Unalivio</span> es la única plataforma que te
             permite recargar los teléfonos de tus

@@ -536,14 +536,19 @@ class ProductSection extends React.Component {
                         <h5 className={classes.subtitle}>¡Por cada {/* <span id="base">{this.state.base}</span> */} peso
                         recibes <span id="rate">{this.state.rate}</span> bolívares!</h5>
                       </GridItem>
-                      <Button
-                        color="transparent"
-                        href="/privacy"
-                        target="_blank"
-                        className={classes.navLink}
-                      >
-                        <h6 className={classes.description}>Tu privacidad es importante para nosotros</h6>
-                      </Button>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <h6 className={classes.description}>El precio está expresado en pesos mexicanos, para tarjetas de otros países puede haber cargos adicionales. Consulta con tu banco.</h6>
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={8}> 
+                        <Button
+                          color="transparent"
+                          href="/privacy"
+                          target="_blank"
+                          className={classes.navLink}
+                        >
+                          <h6 className={classes.description}>¡Tu privacidad es importante para nosotros!</h6>
+                        </Button>
+                      </GridItem>
                     </GridContainer>
                   </CardFooter>
                 </form>
