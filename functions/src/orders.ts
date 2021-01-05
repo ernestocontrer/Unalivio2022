@@ -22,7 +22,7 @@ const currentRate = async (db: FirebaseFirestore.Firestore) => {
 const currentCoupon = async (db: FirebaseFirestore.Firestore, code: string) => {
   const couponsQuery = await db.collection('coupons').where('name', '==', code).limit(1).get();
 
-  const coupon : any  = (couponsQuery.empty)? {} : couponsQuery.docs[0].data();
+  const coupon : any  = (couponsQuery.empty)? undefined : couponsQuery.docs[0].data();
   return coupon;
 } 
 
