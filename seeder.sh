@@ -1,12 +1,14 @@
 #! /bin/sh
 
 
-NOW=$(date +%Y-%m-%dT%x)
+NOW=$(date +%Y-%m-%dT%X)
 echo "Seeding data..."
 TARGET_STORAGE_BUCKET="gs://aliviame-mvp.appspot.com/data/seeds/$NOW/firestore_export"
 SEED_PATH="./data/"
 #METADATA_PATH=${SEED_PATH}/firebase-export-metadata.json
 gcloud firestore export $TARGET_STORAGE_BUCKET #--collection-ids='amounts','currencies','methods','pairs','products','providers','rates'
+
+rm -rf $SEED_PATH/*
 
 gsutil -m rsync -r $TARGET_STORAGE_BUCKET $SEED_PATH
 
