@@ -28,4 +28,4 @@ export const fetchPrice = _fetchPrice(db);
 export const generateOrder = _generateOrder(db, stripe);
 export const verifyOrder = _verifyOrder(db, stripe);
 export const notifyCreation = _notifyCreation();
-export const notifyUpdate = _notifyUpdate();
+export const notifyUpdate = _notifyUpdate(admin.firestore.FieldValue.delete());

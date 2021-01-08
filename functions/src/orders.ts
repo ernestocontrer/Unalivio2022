@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
 //import Timeout from 'await-timeout';
+import * as moment from 'moment';
+
 
 
 import {verifyApp} from './orders/verify.app';
@@ -175,68 +177,89 @@ export const notifyCreation = () => functions.firestore.document('orders/{orderI
   await sendmail(mail)
 });
 
-export const notifyUpdate = () => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
+
+
+export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
   const order = change.after.data();
 
   if (!order) return;
 
-
   if (order.succeeded) {
     if (order.settled && order.reference && order.provider) {
-      const mail = {
-        from: functions.config().gmail.user,
-        to: order.from,
-        bcc: functions.config().unalivio.bcc,
-        subject: `Has enviado UnAlivio a ${order.to} por ${order.amount} Bs. S. 🥳`,
-        html: `<div>
-          <h1>¡Tu Alivio ya fué Recargado!</h1>
-          <br />
-          <p>Confirmamos haber completado la recarga de tu orden con código #${context.params.orderId}:</p>
-          <ul>
-            <li>Teléfono: ${order.to}</li>
-            <li>Recarga: ${order.amount} Bs. S</li>
-            <li>Cargo a tu tarjeta: ${order.price} MXN</li>
-            <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
-            <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
-            <li>Fecha y hora de recarga: ${order.settled.toDate().toLocaleString(locale, options)}</li>
-          </ul>
-          <br />
-          <p>Tu ser querido ha sido aliviado, llámalo que ya tiene saldo! </p><br />
-          <p>Gracias y cuéntanos que opinas en Instagram <a target="_blank" href="https://instagram.com/esunalivio">@EsUnalivio</a>! </p>
-          <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
-        </div>`
+      if (order.notifiedDelivery) {
+        const mail = {
+          from: functions.config().gmail.user,
+          to: order.from,
+          bcc: functions.config().unalivio.bcc,
+          subject: `Has enviado UnAlivio a ${order.to} por ${order.amount} Bs. S. 🥳`,
+          html: `<div>
+            <h1>¡Tu Alivio ya fué Recargado!</h1>
+            <br />
+            <p>Confirmamos haber completado la recarga de tu orden con código #${context.params.orderId}:</p>
+            <ul>
+              <li>Teléfono: ${order.to}</li>
+              <li>Recarga: ${order.amount} Bs. S</li>
+              <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+              <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
+              <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
+              <li>Fecha y hora de recarga: ${order.settled.toDate().toLocaleString(locale, options)}</li>
+            </ul>
+            <br />
+            <p>Tu ser querido ha sido aliviado, llámalo que ya tiene saldo! </p><br />
+            <p>Gracias y cuéntanos que opinas en Instagram <a target="_blank" href="https://instagram.com/esunalivio">@EsUnalivio</a>! </p>
+            <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
+          </div>`
+        }
+    
+        await sendmail(mail);
+        return;
+      } else {
+        await change.after.ref.update({
+          created: moment(order.created).toDate(),
+          succeeded: moment(order.succeeded).toDate(),
+          settled: moment(order.settled).toDate(),
+          notifiedDelivery: moment().toDate()
+        });
+        return;
       }
-  
-      await sendmail(mail);
-      return;
+
     } else if(!order.settled && !order.reference && !order.provider) {
-      const mail = {
-        from: functions.config().gmail.user,
-        to: order.from,
-        bcc: functions.config().unalivio.bcc,
-        subject: `UnAlivio para ${order.to} de ${order.amount} Bs. S.  ya fué cobrado 👏`,
-        html: `<div>
-          <h1>¡El cargo de UnAlivio ya fué realizado!</h1>
-          <br />
-          <p>Confirmamos el pago de tu orden con código #${context.params.orderId}:</p>
-          <ul style="font-size:80%">
-            <li>Teléfono: ${order.to}</li>
-            <li>Recarga: ${order.amount} Bs. S</li>
-            <li>Cargo a tu tarjeta: ${order.price} MXN</li>
-            <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
-            <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
-          </ul>
-          <br />
-          <p>Muy pronto le llegará unalivio al celular de tu ser querido! ✨</p>
-          <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
-        </div>`
+      if (order.notifiedCharge) {
+        const mail = {
+          from: functions.config().gmail.user,
+          to: order.from,
+          bcc: functions.config().unalivio.bcc,
+          subject: `UnAlivio para ${order.to} de ${order.amount} Bs. S.  ya fué cobrado 👏`,
+          html: `<div>
+            <h1>¡El cargo de UnAlivio ya fué realizado!</h1>
+            <br />
+            <p>Confirmamos el pago de tu orden con código #${context.params.orderId}:</p>
+            <ul style="font-size:80%">
+              <li>Teléfono: ${order.to}</li>
+              <li>Recarga: ${order.amount} Bs. S</li>
+              <li>Cargo a tu tarjeta: ${order.price} MXN</li>
+              <li>Fecha y hora de recepción: ${order.created.toDate().toLocaleString(locale, options)}</li>
+              <li>Fecha y hora de cobro: ${order.succeeded.toDate().toLocaleString(locale, options)}</li>
+            </ul>
+            <br />
+            <p>Muy pronto le llegará unalivio al celular de tu ser querido! ✨</p>
+            <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
+          </div>`
+        }
+    
+        await sendmail(mail);
+        return;
+      } else {
+        await change.after.ref.update({
+          created: moment(order.created).toDate(),
+          succeeded: moment(order.succeeded).toDate(),
+          notifiedCharge: moment().toDate()
+        });
+        return;
       }
-  
-      await sendmail(mail);
-      return;
     }
-
+    return;
   }
-
+  return;
 });
 
