@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
 //import Timeout from 'await-timeout';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 
 
@@ -179,6 +179,9 @@ export const notifyCreation = () => functions.firestore.document('orders/{orderI
 
 
 
+const parsedate = (date : string|number) => moment.tz(date, "America/Chicago").toDate()
+
+
 export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions.firestore.document('orders/{orderId}').onUpdate(async (change, context) => {
   const order = change.after.data();
 
@@ -214,15 +217,21 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
         await sendmail(mail);
         return;
       } else {
-        await change.after.ref.update({
-          created: moment(order.created).toDate(),
-          succeeded: moment(order.succeeded).toDate(),
-          settled: moment(order.settled).toDate(),
-          notifiedDelivery: moment().toDate()
-        });
+        const dates : any = {
+          notifiedDelivery: (new Date())
+        }
+
+        //if (typeof order.created === 'string' || typeof order.created === 'number') dates.created = moment(order.created).tz('America/Los_Angeles').toDate();
+        //if (typeof order.succeeded === 'string' || typeof order.succeeded === 'number') dates.succeeded = moment(order.succeeded).tz('America/Los_Angeles').toDate();
+        //if (typeof order.settled === 'string' || typeof order.settled === 'number') dates.settled = moment(order.settled).tz('America/Los_Angeles').toDate();
+
+        if (typeof order.created === 'string' || typeof order.created === 'number') dates.created = parsedate(order.created);
+        if (typeof order.succeeded === 'string' || typeof order.succeeded === 'number') dates.succeeded = parsedate(order.succeeded);
+        if (typeof order.settled === 'string' || typeof order.settled === 'number') dates.settled = parsedate(order.settled);
+
+        await change.after.ref.update(dates);
         return;
       }
-
     } else if(!order.settled && !order.reference && !order.provider) {
       if (order.notifiedCharge) {
         const mail = {
@@ -250,11 +259,18 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
         await sendmail(mail);
         return;
       } else {
-        await change.after.ref.update({
-          created: moment(order.created).toDate(),
-          succeeded: moment(order.succeeded).toDate(),
-          notifiedCharge: moment().toDate()
-        });
+        const dates : any = {
+          notifiedCharge: (new Date())
+        }
+
+        //if (typeof order.created === 'string' || typeof order.created === 'number') dates.created = moment(order.created).tz('America/Los_Angeles').toDate();
+        //if (typeof order.succeeded === 'string' || typeof order.succeeded === 'number') dates.succeeded = moment(order.succeeded).tz('America/Los_Angeles').toDate();
+
+        if (typeof order.created === 'string' || typeof order.created === 'number') dates.created = parsedate(order.created);
+        if (typeof order.succeeded === 'string' || typeof order.succeeded === 'number') dates.succeeded = parsedate(order.succeeded);
+
+
+        await change.after.ref.update(dates);
         return;
       }
     }

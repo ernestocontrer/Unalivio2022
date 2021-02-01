@@ -11,6 +11,7 @@ import 'typeface-montserrat';
 import LandingPage from "./LandingPage/LandingPage.jsx";
 import GroceriesPage from "./GroceriesPage/GroceriesPage.jsx"
 import PrivacyPage from "./PrivacyPage/PrivacyPage.jsx"
+import GiveawayPage from "./GiveawayPage/GiveawayPage.jsx";
 //import ProfilePage from "./ProfilePage/ProfilePage.jsx";
 //import LoginPage from "./LoginPage/LoginPage.jsx";
 
@@ -22,6 +23,7 @@ export default () => {
       <Route path="/" component={(LandingPage)} />
       <Route path="/mercado" component={(GroceriesPage)} />
       <Route path="/privacy" component={ PrivacyPage } />
+      <Route path="/regala" component={ GiveawayPage } />
     </Switch>
   </Router>)
 };
