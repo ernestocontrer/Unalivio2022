@@ -59,7 +59,7 @@ const GiveawayPage = ({seo, classes, firebase, ...rest}) => (<MasterPage
             fácil, rápida y segura. ¡Si tienes un código de regalo promocional puedes hacerlo ya!
           </h4>
           <br />
-          <AnchorLink to="/regalo#topup">
+          <AnchorLink to="/regala#topup">
             <Button
               color="secondary"
               size="lg"

@@ -209,8 +209,6 @@ class ProductSection extends React.Component {
   }
 
   checkout = () => {
-
-    
     this.setState({modal: this.defaultState.modal});
 
     this.showModal('Procesando datos...', {
@@ -255,27 +253,6 @@ class ProductSection extends React.Component {
     });
 
     this.generateOrder(firebase).then(result => {
-      if (!result.data) {
-        console.error('Respuesta sin intent!')
-        this.showModal('Por favor intenta de nuevo', {
-          variant: 'warning',
-          persist: false
-        });
-        return
-      }
-
-      const intent = result.data
-      if (!intent.client_secret) {
-        console.error('Intent sin client secret')
-        this.showModal('Por favor intenta de nuevo', {
-          variant: 'warning',
-          persist: false
-        });
-        return
-      }
-
-      const secret = intent.client_secret
-      /*this.handlePayment(intent.client_secret, stripe, elements)*/
       const card = elements.getElement(CardElement)
 
       if (!card) {
@@ -290,50 +267,27 @@ class ProductSection extends React.Component {
         variant: 'info',
         persist: true
       });
-      stripe.confirmCardPayment(secret, {
-        payment_method: { card }
-      }).then(result  => {
-        let modalMessage = 'Algo salió mal. Por favor contáctanos a contacto@unalivio.com y la hora de fallo:' + (new Date());
-        let modal =  {
-          variant: 'danger',
-          persist: false
-        }
 
-        this.showModal('Confirmando...', {
-          variant: 'info',
-          persist: true
-        });
-        if (result.error) {
-          // Show error to your customer (e.g., insufficient funds)
-          modalMessage = result.error.message
-          modal =  {
-            variant: 'danger',
-            persist: false
-          }
-        } else {
-          if (result.paymentIntent) {
-            if (result.paymentIntent.status === 'succeeded') {
-              // Show a success message to your customer
-              // There's a risk of the customer closing the window before callback
-              // execution. Set up a webhook or plugin to listen for the
-              // payment_intent.succeeded event that handles any business critical
-              // post-payment actions.
-              modalMessage = 'Recarga en curso!'
-              modal = {
-                variant: 'success',
-                persist: false
-              }
-            }
-          }
-        }
+      let modalMessage = 'Algo salió mal. Por favor contáctanos a contacto@unalivio.com y la hora de fallo:' + (new Date());
+      let modal =  {
+        variant: 'danger',
+        persist: false
+      }
 
-        // The payment has been processed!
-        destroyCookie(null, "paymentIntentId");
-        this.setState(this.defaultState);
-        this.showModal(modalMessage, modal);
-        card.clear();
-        this.refreshData();
-      }).catch(console.error);
+      this.showModal('Confirmando...', {
+        variant: 'info',
+        persist: true
+      });
+
+      // The payment has been processed!
+      destroyCookie(null, "paymentIntentId");
+      this.setState(this.defaultState);
+      this.showModal('Recarga en curso!', {
+        variant: 'success',
+        persist: false
+      });
+      card.clear();
+      this.refreshData();
     }).catch(error => {
       this.showModal(error.message, {
         variant: 'danger',
@@ -349,7 +303,8 @@ class ProductSection extends React.Component {
       amount,
       from,
       to,
-      coupon
+      coupon,
+      giveaway: true
     });
   }
   
@@ -465,27 +420,6 @@ class ProductSection extends React.Component {
                         ),
                         onChange: this.handlePhone,
                         value: this.state.to
-                      }}
-                    />
-                    <CustomInput
-                      labelText="Monto"
-                      id="amount"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputSelections={this.state.amounts}
-                      inputProps={{
-                        required: true,
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <span className={classes.inputIconsColor}>{this.formatAmount(
-                              this.state.amount,
-                              this.state.rate
-                            )}</span>
-                          </InputAdornment>
-                        ),
-                        onChange: this.handleChange("amount"),
-                        value: this.state.amount
                       }}
                     />
                     <CustomInput

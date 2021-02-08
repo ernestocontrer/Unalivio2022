@@ -36,55 +36,67 @@ const validProducts = async (db: FirebaseFirestore.Firestore) => (await db.colle
   (doc):string => doc.id
 )
 
+const validCoupons = async (db: FirebaseFirestore.Firestore) => (await db.collection('coupons').get()).docs.map(
+  (doc):string => doc.data().name
+)
+
 const computePrice = (amount: number, rate: number, discount: number = 0):number => (Math.ceil((((amount / rate) - discount + Number.EPSILON) * 100)) / 100) 
 
 export const generate = (
   db: FirebaseFirestore.Firestore, 
   stripe: Stripe
 ) => functions.https.onCall(async (order, context) => {
-  const {product, amount, from, to, coupon} = order;
+  const {product, amount, from, to, coupon, giveaway} = order;
 
-  if (!product || !amount || !from || !to) {
+  if (!giveaway) {
+    if (!product || !amount || !from || !to) {
+      const up = new functions.https.HttpsError(
+        'invalid-argument', 'Por favor rellena todos los campos correctamente');
+      throw up;
+    }
+  } else if (!product || !from || !to) {
     const up = new functions.https.HttpsError(
       'invalid-argument', 'Por favor rellena todos los campos correctamente');
     throw up;
   }
 
+
   const amounts = await validAmounts(db);
   const rate = await currentRate(db);
   const products = await validProducts(db);
+  const coupons = await validCoupons(db);
 
   try {
     await validate.email('from', from, 'es');
-    validate.amount('amount', amount, 'es', amounts, rate.data().price);
     validate.phone('phone', to, 'es');
     validate.product('product', product, 'es', products);
+    
+    if (giveaway) {
+      validate.product('coupon', coupon, 'es', coupons);
+    } else {
+      validate.amount('amount', amount, 'es', amounts, rate.data().price);
+    }
   } catch(error) {
     const up = new functions.https.HttpsError('invalid-argument', error.message);
     throw up;
   }
 
   try {
+    console.log("pinche")
     const price = computePrice(amount, rate.data().price);
-    const intent = await stripe.paymentIntents.create({ 
-      amount: Math.ceil(price * 100),
-      currency: 'mxn',
-    });
-  
     const timestamp = new Date();
-    
+
     const order_ : any = {
       product: db.doc(`products/${product}`),
-      amount,
       from,
       to,
       price,
       rate: rate.ref,
       method: db.doc('methods/card'),
-      intent: intent.id,
       created: timestamp,
     }
-    
+
+    console.log("puto");
     const coupon_ = await currentCoupon(db, coupon);
 
     if (!!coupon_) {
@@ -92,9 +104,25 @@ export const generate = (
       order_.gift = coupon_.gift;
     }
 
-    await db.collection('orders').add(order_);
+    console.log("mijito");
+    let intent : any = {data: {giveaway: true}};
+    if (!giveaway) {
+      intent = await stripe.paymentIntents.create({ 
+        amount: Math.ceil(price * 100),
+        currency: 'mxn',
+      });
+      order_.intent = intent.id;
+      order_.amount = amount; 
+    } else {
+      order_.amount = 0;
+      order_.giveaway = true;
+    }
 
-    console.log('Created:', intent.id)
+    const o = await db.collection('orders').add(order_);
+
+    console.log('Created:', o.id)
+    console.log("maricón");
+
     return intent;
   } catch (err) {
     console.error(err);
@@ -102,6 +130,8 @@ export const generate = (
     throw up;
   }
 });
+
+
 
 export const verify = (
   db: FirebaseFirestore.Firestore,
@@ -174,7 +204,13 @@ export const notifyCreation = () => functions.firestore.document('orders/{orderI
     </div>`
   }
 
-  await sendmail(mail)
+  await sendmail(mail);
+
+  if (!!order.giveaway) {
+    await snap.ref.update({
+      succeeded: new Date()
+    });
+  }
 });
 
 
