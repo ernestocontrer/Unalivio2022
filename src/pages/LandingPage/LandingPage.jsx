@@ -47,7 +47,8 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 		firebase={firebase}
 		{...rest}
 	>
-		<Parallax filter>
+	{/*filter  style={{ marginTop: '-40px' ,background:'#ffd233',minHeight: '102vh',}} */}
+		<Parallax >
 			<div className={classes.container}>
 				<GridContainer>
 					<GridItem xs={12} sm={12} md={6}>

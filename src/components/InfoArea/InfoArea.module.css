@@ -1,0 +1,22 @@
+.siempre {
+	font-stretch: normal;
+	font-style: normal;
+	line-height: normal;
+	letter-spacing: 0.23px;
+	text-align: center;
+	font-size: 18px;
+}
+
+.siempre h4 {
+	font-family: Montserrat;
+	font-weight: 700;
+	color: #fff;
+	margin-top: 39px;
+}
+
+.siempre p {
+	font-family: Roboto;
+	font-weight: 300;
+	color: #000;
+	margin-top: 12px;
+}

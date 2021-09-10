@@ -22,6 +22,7 @@ class Header extends React.Component {
 		this.state = {
 			mobileOpen: false,
 		};
+
 		this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
 		this.headerColorChange = this.headerColorChange.bind(this);
 	}
@@ -60,6 +61,25 @@ class Header extends React.Component {
 				window.removeEventListener('scroll', this.headerColorChange);
 		}
 	}
+
+	state = { className: '' };
+
+	componentDidMount() {
+		window.addEventListener('scroll', this.handleScroll);
+	}
+
+	handleScroll = () => {
+		if (window.pageYOffset > 250) {
+			if (!this.state.className) {
+				this.setState({ className: '#fff', color: '#000000' });
+			}
+		} else {
+			if (this.state.className) {
+				this.setState({ className: '', color: '' });
+			}
+		}
+	};
+
 	render() {
 		const { classes, color, rightLinks, leftLinks, brand, fixed, absolute } =
 			this.props;
@@ -71,8 +91,16 @@ class Header extends React.Component {
 		});
 		const brandComponent = <Button className={classes.title}>{brand}</Button>;
 		return (
-			<AppBar className={appBarClasses} >
-				<Toolbar className={classes.container} >
+			<AppBar
+				className={appBarClasses}
+				style={{
+					backgroundColor: this.state.className,
+				}}
+			>
+				<Toolbar
+					className={classes.container}
+					style={{ color: this.state.color }}
+				>
 					{leftLinks !== undefined ? brandComponent : null}
 					<div className={classes.flex}>
 						{leftLinks !== undefined ? (
@@ -120,7 +148,6 @@ class Header extends React.Component {
 Header.defaultProps = {
 	color: 'white',
 };
-
 Header.propTypes = {
 	classes: PropTypes.object.isRequired,
 	color: PropTypes.oneOf([

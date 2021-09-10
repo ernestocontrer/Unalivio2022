@@ -30,6 +30,7 @@ const conatinerFluid = {
 	marginRight: 'auto',
 	marginLeft: 'auto',
 	width: '100%',
+	
 };
 const container = {
 	...conatinerFluid,

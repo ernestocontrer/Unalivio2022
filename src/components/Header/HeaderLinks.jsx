@@ -25,10 +25,11 @@ import headerLinksStyle from 'assets/jss/material-kit-react/components/headerLin
 
 function HeaderLinks({ ...props }) {
 	const { classes, links } = props;
+
 	return (
 		<List className={classes.list}>
 			{links.map((link, k) => (
-				<ListItem className={classes.listItem} key={k} style={{}}>
+				<ListItem className={classes.listItem} key={k}>
 					<Tooltip
 						id={link.id}
 						title={link.title}
@@ -63,7 +64,10 @@ function HeaderLinks({ ...props }) {
 				</ListItem>
 			))}
 
-			<ListItem className={classes.listItem} style={{padding:0}}>
+			<ListItem
+				className={classes.listItem}
+				style={{ padding: 0, color: '#038dda' }}
+			>
 				<Tooltip
 					id='instagram-tooltip'
 					title='¡Síguenos en Instagram!'
@@ -84,7 +88,10 @@ function HeaderLinks({ ...props }) {
 					</Button>
 				</Tooltip>
 			</ListItem>
-			<ListItem className={classes.listItem} style={{padding:0 ,margin:'0'}}>
+			<ListItem
+				className={classes.listItem}
+				style={{ padding: 0, margin: 0, color: '#038dda' }}
+			>
 				<Tooltip
 					id='link-twitter'
 					title='¡Síguenos en Twitter!'

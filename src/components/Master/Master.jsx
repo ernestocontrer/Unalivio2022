@@ -39,7 +39,7 @@ const MasterPage = ({
 
 	useEffect(
 		() => {
-			//  init()
+			init();
 			return () => {
 				/* cleanup */
 			};
@@ -48,7 +48,6 @@ const MasterPage = ({
 			/* input */
 		]
 	);
-
 	return (
 		<div>
 			<SEO {...seo} />
