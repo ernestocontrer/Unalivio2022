@@ -22,21 +22,21 @@
 }
 
 @media (max-width: 960px) {
-		.buttonRecargar {
-			left: 0px !important;
-			transform: translate(-50%, 0);
-		}
+	.buttonRecargar {
+		left: 0px !important;
+		transform: translate(-50%, 0);
 	}
-
+}
 
 .backgroundSection {
 	background: url('/blue.jpg') 50% / cover no-repeat;
-	min-height: 677px;
+	min-height: 688px;
 }
 
 .title_1 {
 	font-family: Montserrat;
 	color: #fff;
+	margin-top: 95px;
 }
 .text {
 	font-family: Roboto;

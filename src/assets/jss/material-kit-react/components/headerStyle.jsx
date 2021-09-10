@@ -43,7 +43,7 @@ const headerStyle = {
 		// text color header ----------------------------------------------
 		color: '#038dda',
 		...container,
-		height: '11vh',
+		height: '12vh',
 		flex: '1',
 		alignItems: 'center',
 		justifyContent: 'space-between',
