@@ -26,11 +26,14 @@
 		left: 0px !important;
 		transform: translate(-50%, 0);
 	}
+	.backgroundSection {
+		background-position: 50% !important;
+	}
+	
 }
 
 .backgroundSection {
-	background: url('/blue.jpg') 50% / cover no-repeat;
-	min-height: 688px;
+	background: url('/blue.jpg') 0 0 / cover no-repeat;
 }
 
 .title_1 {
