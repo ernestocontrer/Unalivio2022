@@ -1,13 +1,13 @@
-const config = {
-	apiKey: "AIzaSyAkvloEt1pfB7ihmh9l-SN3EP68TG--q-c",
-	authDomain: "aliviame-mvp.firebaseapp.com",
-	databaseURL: "https://aliviame-mvp.firebaseio.com",
-	projectId: "aliviame-mvp",
-	storageBucket: "aliviame-mvp.appspot.com",
-	messagingSenderId: "1017861162472",
-	appId: "1:1017861162472:web:0536df66894fca14f2905d",
-	measurementId: "G-HDTRY68PBG"
- };;
+const config =  {
+		apiKey: "AIzaSyAkvloEt1pfB7ihmh9l-SN3EP68TG--q-c",
+		authDomain: "aliviame-mvp.firebaseapp.com",
+		databaseURL: "https://aliviame-mvp.firebaseio.com",
+		projectId: "aliviame-mvp",
+		storageBucket: "aliviame-mvp.appspot.com",
+		messagingSenderId: "1017861162472",
+		appId: "1:1017861162472:web:d3e5b173fa30a8a4f2905d",
+		measurementId: "G-1Y0N8RC58T"
+	 };
 
 let firebaseCache;
 
