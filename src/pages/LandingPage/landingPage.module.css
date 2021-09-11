@@ -1,4 +1,5 @@
 .block {
 	margin-top: -40px;
-	min-height: 102vh ;
+	/* min-height: 102vh ; */
+	height: 853px;
 }

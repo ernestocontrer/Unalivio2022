@@ -43,17 +43,19 @@
 
 .backgroundSection {
 	background: url('/blue.jpg') 0 0 / cover no-repeat;
+	/* height: 688px; */
+	height: 100%;
+
 }
 
 .title_1 {
 	font-family: Montserrat;
 	color: #fff;
-	margin-top: 95px;
 }
 .text {
 	font-family: Roboto;
 	color: #000;
-	margin-bottom: 72px;
-	margin-top: 40px;
+	/* margin-bottom: 72px; */
+	/* margin-top: 40px; */
 	text-align: center;
 }
