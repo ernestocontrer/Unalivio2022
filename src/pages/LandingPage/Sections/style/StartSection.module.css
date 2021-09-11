@@ -21,6 +21,16 @@
 	color: #fff;
 }
 
+.buttonRecargar:hover {
+	background-color: #1adc23;
+	box-shadow: 0 2px 2px 0 rgb(156 39 176 / 14%);
+}
+.buttonRecargar:focus {
+	background-color: #1adc23;
+	box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14),
+		0 1px 5px 1px rgba(156, 39, 176, 0.5);
+}
+
 @media (max-width: 960px) {
 	.buttonRecargar {
 		left: 0px !important;
@@ -29,7 +39,6 @@
 	.backgroundSection {
 		background-position: 50% !important;
 	}
-	
 }
 
 .backgroundSection {

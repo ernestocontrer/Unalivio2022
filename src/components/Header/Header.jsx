@@ -69,13 +69,18 @@ class Header extends React.Component {
 	}
 
 	handleScroll = () => {
-		if (window.pageYOffset > 250) {
+		if (window.pageYOffset > 170) {
 			if (!this.state.className) {
-				this.setState({ className: '#fff', color: '#000000' });
+				this.setState({
+					className: '#fff',
+					color: '#000000',
+					boxShadow:
+						'0 4px 18px 0px rgba(0, 0, 0, 0.12), 0 7px 10px -5px rgba(0, 0, 0, 0.15)',
+				});
 			}
 		} else {
 			if (this.state.className) {
-				this.setState({ className: '', color: '' });
+				this.setState({ className: '', color: '', height: '', boxShadow: '' });
 			}
 		}
 	};
@@ -95,11 +100,12 @@ class Header extends React.Component {
 				className={appBarClasses}
 				style={{
 					backgroundColor: this.state.className,
+					boxShadow: this.state.boxShadow,
 				}}
 			>
 				<Toolbar
 					className={classes.container}
-					style={{ color: this.state.color }}
+					style={{ color: this.state.color, height: this.state.height }}
 				>
 					{leftLinks !== undefined ? brandComponent : null}
 					<div className={classes.flex}>

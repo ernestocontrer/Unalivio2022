@@ -34,7 +34,7 @@ class StartSection extends React.Component {
 		const { classes } = this.props;
 		return (
 			<div
-				className={classes.background + ' ' + section.backgroundSection}
+				className={[classes.background , section.backgroundSection].join(' ')}
 				id='why'
 			>
 				<div className={classes.section}>

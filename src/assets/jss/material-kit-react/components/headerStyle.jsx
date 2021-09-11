@@ -125,8 +125,9 @@ const headerStyle = {
 		// backgroundColor header -------------------------------------------
 		// background: '#ffd233',
 		background: 'rgba(255, 255, 0, 0)',
-		boxShadow:
-			'0 4px 18px 0px rgba(0, 0, 0, 0.12), 0 7px 10px -5px rgba(0, 0, 0, 0.15)',
+		// boxShadow:
+		// 	'0 4px 18px 0px rgba(0, 0, 0, 0.12), 0 7px 10px -5px rgba(0, 0, 0, 0.15)',
+		boxShadow:'none'
 	},
 	drawerPaper: {
 		border: 'none',
