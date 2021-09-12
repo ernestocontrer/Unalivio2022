@@ -78,7 +78,7 @@ const MasterPage = ({
 						<img
 							id='logo'
 							alt='UNALIVIO'
-							style={{ maxHeight: 51 }}
+							style={{ maxHeight:46 }}
 							src='/logo.png'
 						/>
 					</a>

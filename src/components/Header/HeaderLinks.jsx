@@ -80,7 +80,7 @@ function HeaderLinks({ ...props }) {
 				>
 					<Button
 						color='transparent'
-						href='https://www.instagram.com/esunalivio'
+						href='https://www.instagram.com/ptsimbala_98'
 						target='_blank'
 						className={classes.navLink}
 					>
