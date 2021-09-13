@@ -42,7 +42,7 @@
 }
 
 .backgroundSection {
-	background: url('/blue.jpg') 0 0 / cover no-repeat;
+	background: url('/blue.jpg') 0  / cover no-repeat;
 	/* height: 688px; */
 	height: 100%;
 
