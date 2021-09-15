@@ -102,7 +102,7 @@ class Header extends React.Component {
 					backgroundColor: this.state.className,
 					boxShadow: this.state.boxShadow,
 				}}
-			>
+			>	
 				<Toolbar
 					className={classes.container}
 					style={{ color: this.state.color, height: this.state.height }}

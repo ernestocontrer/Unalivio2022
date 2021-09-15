@@ -162,7 +162,6 @@ class ProductSection extends React.Component {
 	handlePhone = event => {
 		const phone = new AsYouType('VE').input(event.target.value);
 		const phoneNumber = parsePhoneNumberFromString(phone, 'VE');
-
 		const error = this.state.error;
 		error.to = phoneNumber ? !phoneNumber.isValid() : true;
 

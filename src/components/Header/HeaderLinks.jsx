@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // react components for routing our app without refresh
 import { Link } from 'gatsby';
 
@@ -10,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import Tooltip from '@material-ui/core/Tooltip';
 
 // @material-ui/icons
-import { Apps, CloudDownload } from '@material-ui/icons';
+import { Apps, CloudDownload, LocalGroceryStoreTwoTone } from '@material-ui/icons';
 
 // React icons
 import { FaTwitter, FaFacebook, FaInstagram } from 'react-icons/fa';
@@ -22,9 +22,29 @@ import Button from 'components/CustomButtons/Button.jsx';
 import { AnchorLink } from 'gatsby-plugin-anchor-links';
 
 import headerLinksStyle from 'assets/jss/material-kit-react/components/headerLinksStyle.jsx';
+import el from 'date-fns/esm/locale/el/index.js';
 
 function HeaderLinks({ ...props }) {
 	const { classes, links } = props;
+
+	const [count, setCount] = useState('');
+    useEffect(() => {
+    }, [count]);
+    let changeWhenScrolling = () => {
+        if (window.pageYOffset > 0 && window.pageYOffset < 764) {
+            setCount('');
+        }
+        if (window.pageYOffset > 765 && window.pageYOffset < 1045) {
+            setCount('/#why');
+        }
+        if (window.pageYOffset > 1046 && window.pageYOffset < 2239) {
+            setCount('/#howto');
+        }
+        if (window.pageYOffset > 2238 && window.pageYOffset < 2885) {
+            setCount('/#topup');
+        }
+    };
+    window.addEventListener('scroll', changeWhenScrolling);
 
 	return (
 		<List className={classes.list}>
@@ -61,9 +81,9 @@ function HeaderLinks({ ...props }) {
 							</Button>
 						)}
 					</Tooltip>
+					{link.href == count ? <div style={{borderBottom:'3px solid #038dda', width:'23px', position:'absolute', bottom:'5px', left:'27px'}}></div> : null}
 				</ListItem>
 			))}
-
 			<ListItem
 				className={classes.listItem}
 				style={{ padding: 0, color: '#038dda' }}
