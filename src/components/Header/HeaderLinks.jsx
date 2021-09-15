@@ -28,8 +28,6 @@ function HeaderLinks({ ...props }) {
 	const { classes, links } = props;
 
 	const [count, setCount] = useState('');
-    useEffect(() => {
-    }, [count]);
     let changeWhenScrolling = () => {
         if (window.pageYOffset > 0 && window.pageYOffset < 764) {
             setCount('');
@@ -63,7 +61,7 @@ function HeaderLinks({ ...props }) {
 						{link.target == '_anchor' ? (
 							<AnchorLink
 								to={link.href}
-								title={link.title}
+								// title={link.title}
 								className={classes.navLink}
 							>
 								<Button color='transparent' rel='noopener noreferrer'>
