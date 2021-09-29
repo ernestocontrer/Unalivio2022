@@ -1,4 +1,4 @@
-/*import * as nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 //import * as sgMail from '@sendgrid/mail';
 import * as functions from 'firebase-functions';
 
@@ -29,9 +29,9 @@ const sendmail = async (mail: any) => {
   } catch(err) {
     console.error(err);
   }
-};
+};// test
 
 export default sendmail;
 
-*/
+
 

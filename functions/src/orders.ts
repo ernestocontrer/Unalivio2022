@@ -7,12 +7,12 @@ import * as moment from 'moment-timezone';
 
 import {verifyApp} from './orders/verify.app';
 import {validate} from './orders/validate'
-//import sendmail from './sendmail';
+import sendmail from './sendmail';
 
-// const locale = 'es-MX';
-// const options = {
-//   timeZone: 'America/Mexico_City'
-// }
+const locale = 'es-MX';
+const options = {
+  timeZone: 'America/Mexico_City'
+}
 
 const currentRate = async (db: FirebaseFirestore.Firestore) => {
   const ratesQuery = await db.collection('rates').where('pair', '==', db.doc('pairs/VESMXN')).orderBy('time', 'desc').limit(1).get();
@@ -183,7 +183,7 @@ export const notifyCreation = () => functions.firestore.document('orders/{orderI
     return
   }
 
-  /*const mail = {
+  const mail = {
     from: functions.config().gmail.user,
     to: order.from,
     bcc: functions.config().unalivio.bcc,
@@ -204,8 +204,8 @@ export const notifyCreation = () => functions.firestore.document('orders/{orderI
     </div>`
   }
 
-  //await sendmail(mail);
-*/
+  await sendmail(mail);
+
   if (!!order.giveaway) {
     await snap.ref.update({
       succeeded: new Date()
@@ -226,7 +226,7 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
   if (order.succeeded) {
     if (order.settled && order.reference && order.provider) {
       if (order.notifiedDelivery) {
-       /* const mail = {
+        const mail = {
           from: functions.config().gmail.user,
           to: order.from,
           bcc: functions.config().unalivio.bcc,
@@ -248,9 +248,9 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
             <p>Gracias y cuéntanos que opinas en Instagram <a target="_blank" href="https://instagram.com/esunalivio">@EsUnalivio</a>! </p>
             <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
           </div>`
-        }*/
+        }
     
-        // await sendmail(mail);
+        await sendmail(mail);
         return;
       } else {
         const dates : any = {
@@ -270,7 +270,7 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
       }
     } else if(!order.settled && !order.reference && !order.provider) {
       if (order.notifiedCharge) {
-        /*const mail = {
+        const mail = {
           from: functions.config().gmail.user,
           to: order.from,
           bcc: functions.config().unalivio.bcc,
@@ -290,9 +290,9 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) => functions
             <p>Muy pronto le llegará unalivio al celular de tu ser querido! ✨</p>
             <h6>Si algo salió mal por favor dínoslo a <a href="mailto:contacto@unalivio.com">contacto@unalivio.com</a> o respondiendo a éste correo, estamos para servirte.</h6>
           </div>`
-        }*/
+        }
     
-        // await sendmail(mail);
+        await sendmail(mail);
         return;
       } else {
         const dates : any = {
