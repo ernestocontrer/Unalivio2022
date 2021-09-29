@@ -20,32 +20,6 @@
   },
   "storage": {
     "rules": "storage.rules"
-  },
-  "emulators": {
-    "functions": {
-      "port": 5001
-    },
-    "firestore": {
-      "port": 8080
-    },
-    "hosting": {
-      "port": 5000
-    },
-    "pubsub": {
-      "port": 8085
-    },
-    "ui": {
-      "enabled": true,
-      "port": 8005
-    },
-    "auth": {
-      "port": 9099
-    },
-    "database": {
-      "port": 9000
-    }
-  },
-  "database": {
-    "rules": "firestore.rules"
   }
+  
 }
