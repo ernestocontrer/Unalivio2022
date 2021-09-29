@@ -6,11 +6,12 @@ echo "Seeding data..."
 TARGET_STORAGE_BUCKET="gs://aliviame-mvp.appspot.com/data/seeds/$NOW/firestore_export"
 SEED_PATH="./data/"
 #METADATA_PATH=${SEED_PATH}/firebase-export-metadata.json
-gcloud firestore export $TARGET_STORAGE_BUCKET #--collection-ids='amounts','currencies','methods','pairs','products','providers','rates'
+gcloud firestore export $TARGET_STORAGE_BUCKET --project=aliviame-mvp
+#--collection-ids='amounts','currencies','methods','pairs','products','providers','rates'
 
 rm -rf $SEED_PATH/*
 
-gsutil -m rsync -r $TARGET_STORAGE_BUCKET $SEED_PATH
+env CLOUDSDK_CORE_PROJECT='aliviame-mvp' gsutil -m rsync -r $TARGET_STORAGE_BUCKET $SEED_PATH
 
 #jq ".path = \"${SEED_PATH}\" | .metadata_file = \"firestore_export.overall_export_metadata\"" ${METADATA_PATH} > ${METADATA_PATH}
 
