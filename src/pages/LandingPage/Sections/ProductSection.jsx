@@ -270,6 +270,7 @@ class ProductSection extends React.Component {
 
 		this.generateOrder(firebase)
 			.then(result => {
+				
 				if (!result.data) {
 					console.error('Respuesta sin intent!');
 					this.showModal('Por favor intenta de nuevo', {
@@ -512,7 +513,7 @@ class ProductSection extends React.Component {
 															<span className={classes.inputIconsColor}>
 																{this.formatAmount(
 																	this.state.amount,
-																	this.state.rate,
+																	this.state.rate
 																)}
 															</span>
 														</InputAdornment>
