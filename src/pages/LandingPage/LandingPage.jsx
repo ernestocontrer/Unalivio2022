@@ -50,8 +50,8 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 		{...rest}
 	>
 		<Parallax>
-			<div className={classes.container + ' ' + page.block}>
-				<GridContainer>
+			<div className={[classes.container , page.block].join(' ')} >
+				<GridContainer >
 					<GridItem xs={12} sm={12} md={6}>
 						<h1 className={classes.title}>
 							Alivia a tus seres queridos en Venezuela con una recarga
