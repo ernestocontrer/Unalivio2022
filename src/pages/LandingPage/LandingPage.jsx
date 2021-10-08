@@ -50,9 +50,9 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 		{...rest}
 	>
 		<Parallax  className={page.block}>
-			<div className={classes.container }>
+			<div className={classes.container } style={{position:'relative',left:'30%'}}>
 				<GridContainer>
-					{/* <GridItem xs={12} sm={12} md={6}>
+					<GridItem xs={12} sm={12} md={6}>
 						<h1 className={classes.title}>
 							Alivia a tus seres queridos en Venezuela con una recarga
 						</h1>
@@ -75,7 +75,7 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 							</Button>
 						</AnchorLink>
 						<br />
-					</GridItem> */}
+					</GridItem>
 				</GridContainer>
 			</div>
 		</Parallax>
