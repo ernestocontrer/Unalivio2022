@@ -16,6 +16,7 @@ import HeaderLinks from 'components/Header/HeaderLinks.jsx';
 //import GridContainer from "components/Grid/GridContainer.jsx";
 //import GridItem from "components/Grid/GridItem.jsx";
 import SEO from 'components/SEO/SEO.jsx';
+import image from 'assets/img/bg.png';
 
 const dashboardRoutes = [];
 
@@ -60,10 +61,9 @@ const MasterPage = ({
 							id='bg-video'
 							className={classes.background}
 							style={{
-								background: "url('/bg.png') 0 50px /auto 110vh no-repeat",
+								background: `url(` + image + `) 0 50px /auto 100vh no-repeat`,
 								filter: ' opacity(100%)',
 							}}
-							// poster={'/bg.png'}
 							playsInline
 							autoPlay
 							muted
