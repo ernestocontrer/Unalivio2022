@@ -59,7 +59,11 @@ const MasterPage = ({
 						<video
 							id='bg-video'
 							className={classes.background}
-							poster={poster || '/bg.jpg'}
+							style={{
+								background: "url('/bg.png') 0 50px /auto 110vh no-repeat",
+								filter: ' opacity(100%)',
+							}}
+							// poster={'/bg.png'}
 							playsInline
 							autoPlay
 							muted
@@ -78,7 +82,7 @@ const MasterPage = ({
 						<img
 							id='logo'
 							alt='UNALIVIO'
-							style={{ maxHeight:46 }}
+							style={{ maxHeight: 46 }}
 							src='/logo.png'
 						/>
 					</a>

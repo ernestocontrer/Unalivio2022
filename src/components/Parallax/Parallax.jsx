@@ -52,7 +52,7 @@ class Parallax extends React.Component {
 				style={{
 					...style,
 					// 'url(' + image + ')'
-					backgroundImage: 'linear-gradient(152deg, #ffd029 39%, #f3b202 81%), linear-gradient(to bottom, #ffd233, #ffd233)',
+					// backgroundImage: 'linear-gradient(152deg, #ffd029 39%, #f3b202 81%), linear-gradient(to bottom, #ffd233, #ffd233)',
 					...this.state,
 				}}
 				ref='parallax'

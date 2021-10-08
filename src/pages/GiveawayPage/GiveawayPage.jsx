@@ -42,7 +42,7 @@ const MasterPage = withStyles(masterPageStyle)(Master)
 
 const GiveawayPage = ({seo, classes, firebase, ...rest}) => (<MasterPage 
   seo={SEO}
-  poster="/bg.jpg"
+  poster="/bg.png"
   video={false}
   firebase={firebase}
   {...rest}

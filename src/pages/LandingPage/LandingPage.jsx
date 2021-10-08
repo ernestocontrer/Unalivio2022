@@ -44,16 +44,15 @@ const MasterPage = withStyles(masterPageStyle)(Master);
 const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 	<MasterPage
 		seo={SEO}
-		poster='/bg.jpg'
+		poster='/bg.png'
 		video={false}
 		firebase={firebase}
 		{...rest}
 	>
-	{/*filter  style={{ marginTop: '-40px' ,background:'#ffd233',minHeight: '102vh',}} */}
-		<Parallax className={page.block} >
+		<Parallax  className={page.block}>
 			<div className={classes.container }>
 				<GridContainer>
-					<GridItem xs={12} sm={12} md={6}>
+					{/* <GridItem xs={12} sm={12} md={6}>
 						<h1 className={classes.title}>
 							Alivia a tus seres queridos en Venezuela con una recarga
 						</h1>
@@ -76,7 +75,7 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 							</Button>
 						</AnchorLink>
 						<br />
-					</GridItem>
+					</GridItem> */}
 				</GridContainer>
 			</div>
 		</Parallax>

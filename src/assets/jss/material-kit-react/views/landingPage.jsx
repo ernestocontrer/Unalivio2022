@@ -12,7 +12,7 @@ const landingPageStyle = {
     width: "auto",
     height: "auto",
     transform: "translateX(-50%) translateY(-50%)",
-    background: "url('/bg.jpg') no-repeat",
+    background: "url('/bg.png') no-repeat",
     backgroundSize: "cover",
     transition: "3s opacity",
   },
