@@ -32,7 +32,7 @@ import { AnchorLink } from 'gatsby-plugin-anchor-links';
 
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 
-import page from './landingPage.module.css'
+import page from './landingPage.module.css';
 
 const SEO = {
 	title: 'Unalivio',
@@ -49,8 +49,8 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => (
 		firebase={firebase}
 		{...rest}
 	>
-		<Parallax  className={page.block}>
-			<div className={classes.container } style={{position:'relative',left:'30%'}}>
+		<Parallax>
+			<div className={classes.container + ' ' + page.block}>
 				<GridContainer>
 					<GridItem xs={12} sm={12} md={6}>
 						<h1 className={classes.title}>
