@@ -6,7 +6,7 @@ import * as moment from 'moment-timezone';
 import { verifyApp } from './orders/verify.app';
 import { validate } from './orders/validate';
 import sendmail from './sendmail';
-import FetchRequest from './soapApi';
+//import FetchRequest from './soapApi';
 
 const locale = 'es-MX';
 const options = {
@@ -142,7 +142,7 @@ export const generate = (db: FirebaseFirestore.Firestore, stripe: Stripe) =>
 			console.log('Created:', o.id);
 			console.log('maricón');
 
-			FetchRequest(to, amount, o.id);
+//			FetchRequest(to, amount, o.id);
 
 			return intent;
 		} catch (err) {
