@@ -31,6 +31,7 @@
     "nodemailer": "^6.4.8",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "request": "^2.88.2",
+    "soap": "^0.42.0",
     "stripe": "^8.52.0",
     "uuid": "^8.3.2"
   },
