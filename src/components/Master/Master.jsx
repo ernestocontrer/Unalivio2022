@@ -29,18 +29,8 @@ const MasterPage = ({
 	firebase,
 	...rest
 }) => {
-	const init = () => {
-		if (firebase.analytics()) {
-			firebase.analytics().logEvent('page_view', {
-				page_path: seo.pathname,
-				page_title: seo.title,
-			});
-		}
-	};
-
 	useEffect(
 		() => {
-			init();
 			return () => {
 				/* cleanup */
 			};
@@ -52,7 +42,7 @@ const MasterPage = ({
 	return (
 		<div>
 			<SEO {...seo} />
-			{
+			{/* {
 				<div>
 					{isMobile && video ? (
 						<div className={classes.background}></div>
@@ -73,7 +63,14 @@ const MasterPage = ({
 						</video>
 					)}
 				</div>
-			}
+			} */}
+			<div
+				className={classes.background}
+				style={{
+					background: `url(` + image + `) 0 50px /auto 100vh no-repeat`,
+					filter: ' opacity(100%)',
+				}}
+			></div>
 			<Header
 				color='white'
 				routes={dashboardRoutes}

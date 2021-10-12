@@ -24,6 +24,8 @@
     "express": "^4.17.1",
     "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",
+    "http-post": "^0.1.1",
+    "https-post": "^0.1.1",
     "libphonenumber-js": "^1.7.55",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
@@ -32,7 +34,6 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "request": "^2.88.2",
     "soap": "^0.42.0",
-    "stripe": "^8.52.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

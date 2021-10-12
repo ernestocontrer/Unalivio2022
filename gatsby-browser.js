@@ -8,7 +8,7 @@
 import React from "react";
 
 import FirebaseProvider from "components/FirebaseProvider/FirebaseProvider.jsx"
-import StripeProvider from 'components/StripeProvider/StripeProvider.jsx'
+// import StripeProvider from 'components/StripeProvider/StripeProvider.jsx'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { SnackbarProvider } from "notistack";
 
@@ -20,11 +20,11 @@ export const wrapRootElement = ({ element }) => {
     language="es"
   >
     <SnackbarProvider>
-      <StripeProvider>
+      {/* <StripeProvider> */}
         <FirebaseProvider>
       {element}
       </FirebaseProvider>
-      </StripeProvider>
+      {/* </StripeProvider> */}
     </SnackbarProvider>
   </GoogleReCaptchaProvider>
   )

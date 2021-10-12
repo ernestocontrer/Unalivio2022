@@ -24,11 +24,9 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import CustomInput from 'components/CustomInput/CustomInput.jsx';
 import CustomModal from 'components/CustomModal/CustomModal.jsx';
 
-import { CardElement } from '@stripe/react-stripe-js';
 
 // Consumers
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
-import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
 //import { withGoogleRecaptcha } from 'react-google-recaptcha-v3';
 import { withSnackbar } from 'notistack';
 
@@ -236,10 +234,9 @@ class ProductSection extends React.Component {
 				</>
 			),
 		});
-		const { stripe, elements, firebase } = this.props;
+		const { elements, firebase } = this.props;
 
-		if (!stripe || !elements || !firebase) {
-			// Stripe.js and Firebase services have not yet loaded.
+		if ( !elements || !firebase) {
 			// Make  sure to disable form submission until they're loaded.
 			console.error('Services not loaded yet');
 			this.showModal(
@@ -269,52 +266,7 @@ class ProductSection extends React.Component {
 			persist: true,
 		});
 
-		this.generateOrder(firebase)
-			.then(result => {
-				const card = elements.getElement(CardElement);
-
-				if (!card) {
-					console.error('Tarjeta no pudo leerse');
-					this.showModal('Por favor intenta de nuevo', {
-						variant: 'warning',
-						persist: false,
-					});
-				}
-
-				this.showModal('Procesando pago...', {
-					variant: 'info',
-					persist: true,
-				});
-
-				let modalMessage =
-					'Algo salió mal. Por favor contáctanos a contacto@unalivio.com y la hora de fallo:' +
-					new Date();
-				let modal = {
-					variant: 'danger',
-					persist: false,
-				};
-
-				this.showModal('Confirmando...', {
-					variant: 'info',
-					persist: true,
-				});
-
-				// The payment has been processed!
-				destroyCookie(null, 'paymentIntentId');
-				this.setState(this.defaultState);
-				this.showModal('Recarga en curso!', {
-					variant: 'success',
-					persist: false,
-				});
-				card.clear();
-				this.refreshData();
-			})
-			.catch(error => {
-				this.showModal(error.message, {
-					variant: 'danger',
-					persist: false,
-				});
-			});
+		
 	};
 
 	generateOrder = firebase => {
@@ -329,13 +281,6 @@ class ProductSection extends React.Component {
 		});
 	};
 
-	handlePayment = (secret, stripe, elements) => {
-		return stripe.confirmCardPayment(secret, {
-			payment_method: {
-				card: elements.getElement(CardElement),
-			},
-		});
-	};
 
 	showModal = (message, { variant, persist, content, buttons }) => {
 		const { title, actions, open, onClose, ...modal } = this.state.modal;
@@ -488,7 +433,6 @@ class ProductSection extends React.Component {
 													value: this.state.coupon,
 												}}
 											/>
-											<CardElement />
 										</CardBody>
 										<CardFooter className={classes.cardFooter}>
 											<GridContainer>
@@ -545,7 +489,6 @@ class ProductSection extends React.Component {
 
 ProductSection.propTypes = {
 	classes: PropTypes.object.isRequired,
-	stripe: PropTypes.object.isRequired,
 	firebase: PropTypes.object.isRequired,
 	db: PropTypes.object.isRequired,
 	functions: PropTypes.object.isRequired,
@@ -553,5 +496,5 @@ ProductSection.propTypes = {
 };
 
 export default withStyles(productStyle)(
-	withSnackbar(withFirebase(withStripe(ProductSection)))
+	withSnackbar(withFirebase(ProductSection))
 );

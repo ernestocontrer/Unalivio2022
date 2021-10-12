@@ -61,7 +61,7 @@ export const main = (
       price: btcves
     });
     
-    const commission = 0.10 // biyuyo 6% +stripe 3.6
+    const commission = 0.10 // biyuyo 6% 
     const referral = 0.02
     const utility = 0.05
     const vesmxn = Math.floor((btcves / btcmxn) * (1 - (commission + referral + utility)))

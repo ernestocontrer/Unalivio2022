@@ -24,7 +24,6 @@
     "serve": "gatsby serve",
     "seeder": "./seeder.sh",
     "backend": "./backend.sh",
-    "payments": "stripe listen --events payment_intent.created,payment_intent.succeeded,charge.succeeded,payment_intent.canceled,payment_intent.payment_failed --forward-to http://localhost:5001/aliviame-mvp/us-central1/verifyOrder",
     "test": "jest"
   },
   "dependencies": {
@@ -35,8 +34,6 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@material-ui/core": "^3.9.4",
     "@material-ui/icons": "^3.0.2",
-    "@stripe/react-stripe-js": "^1.1.2",
-    "@stripe/stripe-js": "^1.6.0",
     "@types/sax": "^1.2.3",
     "@types/selenium-webdriver": "^4.0.9",
     "classnames": "^2.2.6",
@@ -62,6 +59,7 @@
     "gatsby-plugin-sass": "^2.2.3",
     "gatsby-plugin-sri": "^1.1.0",
     "history": "^4.7.2",
+    "https-post": "^0.1.1",
     "libphonenumber-js": "^1.7.55",
     "nanoid": "^3.1.28",
     "net": "^1.0.2",

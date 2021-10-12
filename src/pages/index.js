@@ -2,7 +2,6 @@ import React from "react";
 import {createMemoryHistory} from "history";
 import {Route, Router, Switch} from "react-router-dom";
 
-import '@stripe/stripe-js';
 import "assets/scss/material-kit-react.scss?v=1.4.0";
 import 'typeface-roboto';
 import 'typeface-montserrat';

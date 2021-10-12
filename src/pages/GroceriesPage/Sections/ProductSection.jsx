@@ -23,11 +23,9 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import CustomInput from 'components/CustomInput/CustomInput.jsx';
 import CustomModal from 'components/CustomModal/CustomModal.jsx';
 
-import { CardElement } from '@stripe/react-stripe-js';
 
 // Consumers
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
-import { withStripe } from 'components/StripeProvider/StripeProvider.jsx';
 //import { withGoogleRecaptcha } from 'react-google-recaptcha-v3';
 import { withSnackbar } from 'notistack';
 
@@ -211,13 +209,7 @@ class ProductSection extends React.Component {
 		});
 	};
 
-	handlePayment = (secret, stripe, elements) => {
-		return stripe.confirmCardPayment(secret, {
-			payment_method: {
-				card: elements.getElement(CardElement),
-			},
-		});
-	};
+
 
 	showModal = (message, { variant, persist, content, buttons }) => {
 		const { title, actions, open, onClose, ...modal } = this.state.modal;
@@ -376,7 +368,6 @@ class ProductSection extends React.Component {
 													value: this.state.product,
 												}}
 											/>
-											<CardElement />
 										</CardBody>
 										<CardFooter className={classes.cardFooter}>
 											<GridContainer>
@@ -406,7 +397,6 @@ class ProductSection extends React.Component {
 
 ProductSection.propTypes = {
 	classes: PropTypes.object.isRequired,
-	stripe: PropTypes.object.isRequired,
 	firebase: PropTypes.object.isRequired,
 	db: PropTypes.object.isRequired,
 	functions: PropTypes.object.isRequired,
@@ -414,5 +404,5 @@ ProductSection.propTypes = {
 };
 
 export default withStyles(productStyle)(
-	withSnackbar(withFirebase(withStripe(ProductSection)))
+	withSnackbar(withFirebase(ProductSection))
 );
