@@ -27,6 +27,9 @@ const headerLinksStyle = theme => ({
 			background: '#038DDA',
 			boxShadow: '0 2px 5px #e85d04',
 		},
+		'@media (max-width: 1280px)': {
+			padding:'12px 18px'
+		},
 	},
 	list: {
 		...defaultFont,
@@ -37,6 +40,9 @@ const headerLinksStyle = theme => ({
 		paddingTop: '0',
 		paddingBottom: '0',
 		color: 'inherit',
+		'@media (max-width: 1280px)': {
+			transform: 'scale(0.9)',
+		},
 	},
 	listItem: {
 		float: 'left',

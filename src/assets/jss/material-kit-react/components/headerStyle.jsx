@@ -49,6 +49,17 @@ const headerStyle = {
 		justifyContent: 'space-between',
 		display: 'flex',
 		flexWrap: 'nowrap',
+		'@media (max-width: 1280px)': {
+			position: 'relative',            
+			top: '50%',  
+			left:'2%',
+			right:'40%',
+			height: '19vh',
+			marginTop:'-16px',
+		},
+		'@media (max-width: 1071px)': {
+			width:'500px'
+		},
 	},
 	flex: {
 		flex: 1,

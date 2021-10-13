@@ -15,6 +15,15 @@ const footerStyle = {
 		textDecoration: 'none',
 		position: 'relative',
 		display: 'block',
+		'@media (max-width: 1280px)': {
+			margin:'0 10px',
+		},
+		'@media (max-width: 785px)': {
+			width:'200px',
+			display:'flex',
+			flexWrap:'wrap',
+			margin:'0 20px',
+		},
 	},
 	left: {
 		float: 'left!important',
@@ -51,6 +60,13 @@ const footerStyle = {
 		zIndex: '12',
 		backgroundColor: secondaryForeground,
 		filter: 'blur(0px) opacity(75%)',
+		'@media (max-width: 1280px)': {
+			display:'flex',
+			justifyContent:'center',
+			flexDirection:'column',
+			width:'80%',
+			padding:'5px'
+		},
 	},
 	list: {
 		marginBottom: '0',
