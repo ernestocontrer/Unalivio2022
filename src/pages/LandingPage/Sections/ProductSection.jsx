@@ -265,7 +265,6 @@ class ProductSection extends React.Component {
 			persist: true,
 		});
 	};
-
 	generateOrder = firebase => {
 		const { product, amount, from, to, coupon } = this.state;
 		return orders(firebase).create({

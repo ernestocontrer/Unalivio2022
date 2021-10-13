@@ -25,45 +25,23 @@ const MasterPage = ({
 	children,
 	seo,
 	poster,
-	video,
+	// video,
 	firebase,
 	...rest
 }) => {
-	useEffect(
-		() => {
-			return () => {
-				/* cleanup */
-			};
-		},
-		[
-			/* input */
-		]
-	);
+	// useEffect(
+	// 	() => {
+	// 		return () => {
+	// 			/* cleanup */
+	// 		};
+	// 	},
+	// 	[
+	// 		/* input */
+	// 	]
+	// );
 	return (
 		<div>
-			<SEO {...seo} />
-			{/* {
-				<div>
-					{isMobile && video ? (
-						<div className={classes.background}></div>
-					) : (
-						<video
-							id='bg-video'
-							className={classes.background}
-							style={{
-								background: `url(` + image + `) 0 50px /auto 100vh no-repeat`,
-								filter: ' opacity(100%)',
-							}}
-							playsInline
-							autoPlay
-							muted
-							loop
-						>
-							<source src={video} type='video/mp4' />
-						</video>
-					)}
-				</div>
-			} */}
+			{/* <SEO {...seo} /> */}
 			<div
 				className={classes.background}
 				style={{

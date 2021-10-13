@@ -1,34 +1,32 @@
+import axios from 'axios-https-proxy-fix';
+// npm install axios-https-proxy-fix
 
-const https = require('https');
-https.post = require('https-post');
-
-const url = 'https://sandbox.123pago.net/msBotonDePago/index.jsp';
-const res = '';
+const url = 'https://sandbox.123pago.net/msBotonDePago/index.jsp?';
 const data = {
 	nbproveedor: 'UNALIVIO TEST',
 	nb: 'asdddlmk',
-	ap: 'trtttmklm',
+	ap: 'trtttmk',
 	ci: '99888127',
 	em: 'DevTestForNov@gmail.com',
 	cs: '9bb4cde193775ec6f4cb8c4a724432a0',
 	nai: `${Date.now()}`,
-	co: 'qweerrrrr',
+	co: 'qweljgjvjg',
 	mt: '100',
 	tl: 4144131804,
-	width: '190px',
+	width: '1900px',
 };
 
 const requestPago = () => {
-	https.post(url, data, (res: any) => {
-		res.setEncoding('utf8');
-		res.on('data', (chunk: any) => {
-			res = chunk;
-			console.log('res134', res);
-		});
+	axios({
+		method: 'post',
+		url: url,
+		headers: {
+			'Content-type': 'application/x-www-form-urlencoded',
+		},
+		params: data,
+	}).then(response => {
+		console.log('OK123', response.data);
 	});
-	return res;
 };
 
 export default requestPago;
-
-

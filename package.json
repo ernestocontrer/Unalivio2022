@@ -41,6 +41,7 @@
     "date-fns": "^2.12.0",
     "easy-soap-request": "^4.2.0",
     "empty": "^0.10.1",
+    "fetch": "^1.1.0",
     "firebase": "^7.14.1",
     "firebase-tools": "^8.14.1",
     "fs": "0.0.1-security",
