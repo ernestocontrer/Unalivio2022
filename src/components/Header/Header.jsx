@@ -15,7 +15,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Menu from '@material-ui/icons/Menu';
 // core components
 import headerStyle from 'assets/jss/material-kit-react/components/headerStyle.jsx';
-
+import header from './header.module.css'
 class Header extends React.Component {
 	constructor(props) {
 		super(props);
@@ -84,7 +84,6 @@ class Header extends React.Component {
 			}
 		}
 	};
-
 	render() {
 		const { classes, color, rightLinks, leftLinks, brand, fixed, absolute } =
 			this.props;
@@ -103,6 +102,7 @@ class Header extends React.Component {
 					boxShadow: this.state.boxShadow,
 				}}
 			>	
+			
 				<Toolbar
 					className={classes.container}
 					style={{ color: this.state.color, height: this.state.height }}
@@ -118,9 +118,11 @@ class Header extends React.Component {
 						)}
 					</div>
 					<Hidden smDown implementation='css'>
+					<div className={header.block}>
 						{rightLinks}
+					</div>
 					</Hidden>
-					<Hidden mdUp>
+					<Hidden lgUp>
 						<IconButton
 							color='inherit'
 							aria-label='open drawer'
@@ -130,7 +132,7 @@ class Header extends React.Component {
 						</IconButton>
 					</Hidden>
 				</Toolbar>
-				<Hidden mdUp implementation='css'>
+				<Hidden lgUp implementation='css'>
 					<Drawer
 						variant='temporary'
 						anchor={'right'}

@@ -1,0 +1,11 @@
+@media (max-width: 1279px) {
+	.block {
+		display: none;
+	}
+}
+/* 
+@media (max-width: 1350px) {
+	.block {
+		transform:scale(0.7)
+	}
+} */

@@ -34,6 +34,7 @@ import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 
 import page from './landingPage.module.css';
 
+
 const SEO = {
 	title: 'Unalivio',
 	pathname: '/',
@@ -41,53 +42,56 @@ const SEO = {
 
 const MasterPage = withStyles(masterPageStyle)(Master);
 
-const LandingPage = ({ seo, classes, firebase, ...rest }) => (
-	<MasterPage
-		seo={SEO}
-		poster='/bg.png'
-		video={false}
-		firebase={firebase}
-		{...rest}
-	>
-		<Parallax>
-			<div className={[classes.container , page.block].join(' ')} >
-				<GridContainer >
-					<GridItem xs={12} sm={12} md={6}>
-						<h1 className={classes.title}>
-							Alivia a tus seres queridos en Venezuela con una recarga
-						</h1>
-						<h4 className={classes.note}>
-							<span style={{ fontWeight: 'bold' }}>Unalivio</span> es la única
-							plataforma que te permite recargar los teléfonos de tus seres
-							queridos en <span style={{ fontWeight: 'bold' }}>Venezuela</span>{' '}
-							de forma fácil, rápida y segura.
-						</h4>
-						<br />
-						<AnchorLink to='/#topup'>
-							<Button
-								color='secondary'
-								size='lg'
-								onClick={() => {}}
-								rel='noopener noreferrer'
-								round
-							>
-								RECARGAR SALDO
-							</Button>
-						</AnchorLink>
-						<br />
-					</GridItem>
-				</GridContainer>
+const LandingPage = ({ seo, classes, firebase, ...rest }) => {
+	return (
+		<MasterPage
+			seo={SEO}
+			poster='/bg.png'
+			video={false}
+			firebase={firebase}
+			{...rest}
+		>
+			<Parallax>
+				<div className={[classes.container, page.block].join(' ')}>
+					<GridContainer>
+						<GridItem xs={12} sm={12} md={6}>
+							<h1 className={classes.title}>
+								Alivia a tus seres queridos en Venezuela con una recarga
+							</h1>
+							<h4 className={classes.note}>
+								<span style={{ fontWeight: 'bold' }}>Unalivio</span> es la única
+								plataforma que te permite recargar los teléfonos de tus seres
+								queridos en{' '}
+								<span style={{ fontWeight: 'bold' }}>Venezuela</span> de forma
+								fácil, rápida y segura.
+							</h4>
+							<br />
+							<AnchorLink to='/#topup'>
+								<Button
+									color='secondary'
+									size='lg'
+									onClick={() => {}}
+									rel='noopener noreferrer'
+									round
+								>
+									RECARGAR SALDO
+								</Button>
+							</AnchorLink>
+							<br />
+						</GridItem>
+					</GridContainer>
+				</div>
+			</Parallax>
+			<div className={classNames(classes.main, classes.mainRaised)}>
+				<div className={classes.fullWidthContainer}>
+					<StartSection />
+					<EncryptionSection />
+					<StepsSection />
+					<ProductSection />
+				</div>
 			</div>
-		</Parallax>
-		<div className={classNames(classes.main, classes.mainRaised)}>
-			<div className={classes.fullWidthContainer}>
-				<StartSection />
-				<EncryptionSection />
-				<StepsSection />
-				<ProductSection />
-			</div>
-		</div>
-	</MasterPage>
-);
+		</MasterPage>
+	);
+};
 
 export default withStyles(landingPageStyle)(withFirebase(LandingPage));

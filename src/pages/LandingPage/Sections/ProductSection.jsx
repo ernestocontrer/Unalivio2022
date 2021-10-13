@@ -24,7 +24,6 @@ import CardFooter from 'components/Card/CardFooter.jsx';
 import CustomInput from 'components/CustomInput/CustomInput.jsx';
 import CustomModal from 'components/CustomModal/CustomModal.jsx';
 
-
 // Consumers
 import { withFirebase } from 'components/FirebaseProvider/FirebaseProvider.jsx';
 //import { withGoogleRecaptcha } from 'react-google-recaptcha-v3';
@@ -42,9 +41,12 @@ import productStyle from 'assets/jss/material-kit-react/views/landingPageSection
 import { destroyCookie } from 'nookies';
 
 import { AsYouType, parsePhoneNumberFromString } from 'libphonenumber-js';
+import requestPago from '../../../services/pago';
 
 class ProductSection extends React.Component {
 	defaultState = {
+		data: '',
+		mode: false,
 		from: '',
 		to: '',
 		amount: '',
@@ -76,7 +78,6 @@ class ProductSection extends React.Component {
 			onClose: () => this.closeModal(),
 		},
 	};
-
 	state = this.defaultState;
 
 	refreshRate = () => {
@@ -193,7 +194,6 @@ class ProductSection extends React.Component {
 
 	confirm = event => {
 		event.preventDefault();
-
 		this.showModal('Confirma tu orden', {
 			variant: 'info',
 			persist: true,
@@ -209,7 +209,7 @@ class ProductSection extends React.Component {
 			buttons: (
 				<>
 					<Button onClick={this.checkout} color='info'>
-						CHÉVERE PROCEDER
+						CHÉVERE PROCEDER!!!
 					</Button>
 					<Button onClick={this.closeModal}>REGRESAR Y MODIFICAR</Button>
 				</>
@@ -219,6 +219,14 @@ class ProductSection extends React.Component {
 
 	checkout = () => {
 		this.setState({ modal: this.defaultState.modal });
+
+		let then = this;
+		requestPago(this.state.from, this.state.to, this.state.amount).then(
+			response => {
+				then.setState({ data: response });
+				then.setState({ mode: true });
+			}
+		);
 
 		this.showModal('Procesando datos...', {
 			variant: 'info',
@@ -275,7 +283,6 @@ class ProductSection extends React.Component {
 			coupon,
 		});
 	};
-
 
 	showModal = (message, { variant, persist, content, buttons }) => {
 		const { title, actions, open, onClose, ...modal } = this.state.modal;
@@ -455,20 +462,29 @@ class ProductSection extends React.Component {
 										<CardFooter className={classes.cardFooter}>
 											<GridContainer>
 												<GridItem xs={12} sm={12} md={6}>
-													<Button
-														type='submit'
-														color='secondary'
-														size='lg'
-														round
-													>
-														Recargar
-													</Button>
+													{!this.state.mode ? (
+														<Button
+															type='submit'
+															color='secondary'
+															size='lg'
+															round
+														>
+															Recargar
+														</Button>
+													) : (
+														<iframe
+															srcdoc={this.state.data}
+															width='200px'
+															height='100px'
+															scrolling='no'
+															style={{border:"none"}}
+														></iframe>
+													)}
 												</GridItem>
+
 												<GridItem xs={12} sm={12} md={6}>
 													<h5 className={classes.subtitle}>
-														¡Por cada{' '}
-														{/* <span id="base">{this.state.base}</span> */}{' '}
-														peso recibes{' '}
+														¡Por cada peso recibes{' '}
 														<span id='rate'>{this.state.rate}</span> bolívares!
 													</h5>
 												</GridItem>
@@ -479,6 +495,7 @@ class ProductSection extends React.Component {
 														adicionales. Consulta con tu banco.
 													</h6>
 												</GridItem>
+
 												<GridItem xs={12} sm={12} md={8}>
 													<Button
 														color='transparent'
