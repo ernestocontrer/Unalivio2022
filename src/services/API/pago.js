@@ -1,18 +1,17 @@
 import axios from 'axios-https-proxy-fix';
-// npm i --save axios-https-proxy-fix
 
 const url = 'https://sandbox.123pago.net/msBotonDePago/index.jsp';
 
 const requestPago = async (email, to, amount) => {
 	const data = {
 		nbproveedor: 'UNALIVIO TEST',
-		nb: 'asdddlmk',
-		ap: 'trtttmk',
+		nb: 'anonymous',
+		ap: 'test_123Pago',
 		ci: '99888127',
 		em: email,
 		cs: '9bb4cde193775ec6f4cb8c4a724432a0',
 		nai: `${Date.now()}`,
-		co: 'qweljgjvjg',
+		co: 'anonymous',
 		mt: amount,
 		tl: +to,
 		width: '190px',

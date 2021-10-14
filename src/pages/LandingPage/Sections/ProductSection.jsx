@@ -41,7 +41,8 @@ import productStyle from 'assets/jss/material-kit-react/views/landingPageSection
 import { destroyCookie } from 'nookies';
 
 import { AsYouType, parsePhoneNumberFromString } from 'libphonenumber-js';
-import requestPago from '../../../services/pago';
+import requestPago from '../../../services/API/pago';
+import Button123Pago from '../../../components/Button123Pago/Button123Pago';
 
 class ProductSection extends React.Component {
 	defaultState = {
@@ -223,8 +224,8 @@ class ProductSection extends React.Component {
 		let then = this;
 		requestPago(this.state.from, this.state.to, this.state.amount).then(
 			response => {
-				then.setState({ data: response });
-				then.setState({ mode: true });
+				this.setState({ data: response });
+				this.setState({ mode: true });
 			}
 		);
 
@@ -273,6 +274,20 @@ class ProductSection extends React.Component {
 			persist: true,
 		});
 	};
+	clearForms = () => {
+		setTimeout(() => {
+			this.setState({
+				data: '',
+				mode: false,
+				from: '',
+				to: '',
+				amount: '',
+				coupon: '',
+				product: '',
+			});
+		}, 2000);
+	};
+
 	generateOrder = firebase => {
 		const { product, amount, from, to, coupon } = this.state;
 		return orders(firebase).create({
@@ -472,13 +487,10 @@ class ProductSection extends React.Component {
 															Recargar
 														</Button>
 													) : (
-														<iframe
-															srcdoc={this.state.data}
-															width='200px'
-															height='100px'
-															scrolling='no'
-															style={{border:"none"}}
-														></iframe>
+														<Button123Pago
+															data={this.state.data}
+															clearForms={this.clearForms}
+														></Button123Pago>
 													)}
 												</GridItem>
 
