@@ -69,7 +69,7 @@ class Header extends React.Component {
 	}
 
 	handleScroll = () => {
-		if (window.pageYOffset > 160) {
+		if (window.pageYOffset > 1) {
 			if (!this.state.className) {
 				this.setState({
 					className: '#fff',

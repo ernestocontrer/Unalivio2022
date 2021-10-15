@@ -25,30 +25,39 @@ const MasterPage = ({
 	children,
 	seo,
 	poster,
-	// video,
+	video,
 	firebase,
 	...rest
 }) => {
-	// useEffect(
-	// 	() => {
-	// 		return () => {
-	// 			/* cleanup */
-	// 		};
-	// 	},
-	// 	[
-	// 		/* input */
-	// 	]
-	// );
+	const init = () => {
+		if (firebase.analytics()) {
+			firebase.analytics().logEvent('page_view', {
+				page_path: seo.pathname,
+				page_title: seo.title,
+			});
+		}
+	};
+
+	useEffect(
+		() => {
+			init();
+			return () => {
+				/* cleanup */
+			};
+		},
+		[
+			/* input */
+		]
+	);
 	return (
-		<div>
-			{/* <SEO {...seo} /> */}
-			<div
-				className={classes.background}
-				style={{
-					background: `url(` + image + `) 0 50px /auto 100vh no-repeat`,
-					filter: ' opacity(100%)',
-				}}
-			></div>
+<div>
+	<div
+        className={classes.background}
+        style={{
+          background: `url(` + image + `) 0 50px /auto 100vh no-repeat`,
+          filter: ' opacity(100%)',
+        }}
+      ></div>
 			<Header
 				color='white'
 				routes={dashboardRoutes}

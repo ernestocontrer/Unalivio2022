@@ -19,8 +19,12 @@ class MisionVisionSection extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.section}>
-        <h1 className={classes.title}>Política de Privacidad</h1>
+      <div className={classes.section} style={{
+        marginTop:'120px'
+      }}>
+        <h1 className={classes.title} style={{
+          marginTop:'-20px'
+        }}>Política de Privacidad</h1>
         <h4 className={classes.title}>Última actualización al Jueves 10 de Diciembre del 2020.</h4>
         <p className={classes.description}>
         En cumplimiento a lo establecido por la LEY FEDERAL DE PROTECCIÓN DE DATOS PERSONALES EN POSESIÓN DE LOS PARTICULARES vigente en México para UNALIVIO S. A. P. I. DE C. V., con domicilio en Av. Central #175, Col. Tolteca, Alcaldía Álvaro Obregón, C. P. 01150, Ciudad de México, México; UNALIVIO S. A. P. I. DE C. V. es la única responsable de la protección y tratamiento de tus datos personales.<br />
