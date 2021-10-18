@@ -27,8 +27,8 @@ const headerLinksStyle = theme => ({
 			background: '#038DDA',
 			boxShadow: '0 2px 5px #e85d04',
 		},
-		'@media (max-width: 1280px)': {
-			padding:'12px 18px'
+		'@media (max-width: 1281px)': {
+			padding:'12px 18px',
 		},
 	},
 	list: {

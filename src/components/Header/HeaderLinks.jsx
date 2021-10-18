@@ -130,7 +130,21 @@ function HeaderLinks({ ...props }) {
 					</Button>
 				</Tooltip>
 			</ListItem>
-			<Button className={classes.buttonRecargaYa}>Recarga Ya</Button>
+			{/* <Button 
+			// id='topup'
+			// href='/#topup'		
+			className={classes.buttonRecargaYa}
+			>Recarga Ya</Button> */}
+								<AnchorLink to='/#topup'>
+								<Button
+									color='secondary'
+									size='lg'
+									onClick={() => {}}
+									rel='noopener noreferrer'
+									round
+									className={classes.buttonRecargaYa}
+								> Recarga Ya </Button>
+							</AnchorLink>
 		</List>
 	);
 }

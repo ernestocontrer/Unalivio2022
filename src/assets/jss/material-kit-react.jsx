@@ -44,9 +44,13 @@ const container = {
 		maxWidth: '960px',
 	},
 	'@media (min-width: 1200px)': {
-		// paddingRight: '24px',
-		// paddingLeft: '24px',
+		paddingRight: '10px',
+		paddingLeft: '10px',
 		maxWidth: '1280px',
+	},
+	'@media (max-width: 1279.9px)': {
+		paddingRight: '40px',
+		paddingLeft: '40px',
 	},
 };
 

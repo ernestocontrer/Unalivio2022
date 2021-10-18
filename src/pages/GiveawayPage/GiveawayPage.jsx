@@ -67,7 +67,7 @@ const GiveawayPage = ({seo, classes, firebase, ...rest}) => (<MasterPage
               rel="noopener noreferrer"
               round
             >
-              RECARGAR SALDO
+              RECARGAR SALDO 
             </Button>
           </AnchorLink>
           <br />
