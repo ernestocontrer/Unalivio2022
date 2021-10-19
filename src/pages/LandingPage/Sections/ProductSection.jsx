@@ -361,172 +361,184 @@ class ProductSection extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (
-			<div className={classes.background} id='topup'>
-				<div className={classes.section}>
-					<CustomModal id='modal' {...this.state.modal} />
-					<div>
-						<GridContainer justify='center'>
-							<GridItem xs={12} sm={12} md={4}>
-								<Card>
-									<form className={classes.form} onSubmit={this.confirm}>
-										<CardHeader color='primary' className={classes.cardHeader}>
-											<h1 className={classes.title}>¡Alívialo ya!</h1>
-										</CardHeader>
-										<CardBody>
-											<CustomInput
-												labelText='email_de@contacto.com'
-												id='from'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputProps={{
-													type: 'email',
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<ContactMail
-																className={classes.inputIconsColor}
-															/>
-														</InputAdornment>
-													),
-													onChange: this.handleChange('from'),
-													value: this.state.from,
-												}}
-											/>
-											<CustomInput
-												labelText='0412-1234567'
-												id='to'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												error={this.state.error.to}
-												inputProps={{
-													type: 'tel',
-													pattern: '[0-9]{4}-[0-9]{7}',
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<PhoneForwarded
-																className={classes.inputIconsColor}
-															/>
-														</InputAdornment>
-													),
-													onChange: this.handlePhone,
-													value: this.state.to,
-												}}
-											/>
-											<CustomInput
-												labelText='Monto'
-												id='amount'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputSelections={this.state.amounts}
-												inputProps={{
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<span className={classes.inputIconsColor}>
-																{this.formatAmount(
-																	this.state.amount,
-																	this.state.rate
-																)}
-															</span>
-														</InputAdornment>
-													),
-													onChange: this.handleChange('amount'),
-													value: this.state.amount,
-												}}
-											/>
-											<CustomInput
-												labelText='Compañia'
-												id='product'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputSelections={this.state.products}
-												inputProps={{
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<Category className={classes.inputIconsColor} />
-														</InputAdornment>
-													),
-													onChange: this.handleChange('product'),
-													value: this.state.product,
-												}}
-											/>
-											<CustomInput
-												labelText='CUPON'
-												id='coupon'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputProps={{
-													type: 'text',
-													endAdornment: (
-														<InputAdornment position='end'>
-															<Redeem className={classes.inputIconsColor} />
-														</InputAdornment>
-													),
-													onChange: this.handleCoupon,
-													value: this.state.coupon,
-												}}
-											/>
-										</CardBody>
-										<CardFooter className={classes.cardFooter}>
-											<GridContainer>
-												<GridItem xs={12} sm={12} md={6}>
-													{!this.state.mode ? (
-														<Button
-															type='submit'
-															color='secondary'
-															size='lg'
-															round
-														>
-															Recargar
-														</Button>
-													) : (
-														<Button123Pago
-															data={this.state.data}
-															clearForms={this.clearForms}
-														></Button123Pago>
-													)}
-												</GridItem>
+			<div>
+				<div className={S.form}>
+				<BasicSelect
+					error={this.state.error.to}
+					handlePhone={this.handlePhone}
+					to={this.state.to}
+					product={this.state.product}
+					handleChange={this.handleChange('product')}
+					a={this.state.products}
+					inputSelections={this.state.products}/>
+			</div>
+				<div className={classes.background} id='topup'>
+					<div className={classes.section}>
+						<CustomModal id='modal' {...this.state.modal} />
+						<div>
+							<GridContainer justify='center'>
+								<GridItem xs={12} sm={12} md={4}>
+									<Card>
+										<form className={classes.form} onSubmit={this.confirm}>
+											<CardHeader color='primary' className={classes.cardHeader}>
+												<h1 className={classes.title}>¡Alívialo ya!</h1>
+											</CardHeader>
+											<CardBody>
+												<CustomInput
+													labelText='email_de@contacto.com'
+													id='from'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputProps={{
+														type: 'email',
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<ContactMail
+																	className={classes.inputIconsColor}
+																/>
+															</InputAdornment>
+														),
+														onChange: this.handleChange('from'),
+														value: this.state.from,
+													}}
+												/>
+												<CustomInput
+													labelText='0412-1234567'
+													id='to'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													error={this.state.error.to}
+													inputProps={{
+														type: 'tel',
+														pattern: '[0-9]{4}-[0-9]{7}',
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<PhoneForwarded
+																	className={classes.inputIconsColor}
+																/>
+															</InputAdornment>
+														),
+														onChange: this.handlePhone,
+														value: this.state.to,
+													}}
+												/>
+												<CustomInput
+													labelText='Monto'
+													id='amount'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputSelections={this.state.amounts}
+													inputProps={{
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<span className={classes.inputIconsColor}>
+																	{this.formatAmount(
+																		this.state.amount,
+																		this.state.rate
+																	)}
+																</span>
+															</InputAdornment>
+														),
+														onChange: this.handleChange('amount'),
+														value: this.state.amount,
+													}}
+												/>
+												<CustomInput
+													labelText='Compañia'
+													id='product'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputSelections={this.state.products}
+													inputProps={{
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<Category className={classes.inputIconsColor} />
+															</InputAdornment>
+														),
+														onChange: this.handleChange('product'),
+														value: this.state.product,
+													}}
+												/>
+												<CustomInput
+													labelText='CUPON'
+													id='coupon'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputProps={{
+														type: 'text',
+														endAdornment: (
+															<InputAdornment position='end'>
+																<Redeem className={classes.inputIconsColor} />
+															</InputAdornment>
+														),
+														onChange: this.handleCoupon,
+														value: this.state.coupon,
+													}}
+												/>
+											</CardBody>
+											<CardFooter className={classes.cardFooter}>
+												<GridContainer>
+													<GridItem xs={12} sm={12} md={6}>
+														{!this.state.mode ? (
+															<Button
+																type='submit'
+																color='secondary'
+																size='lg'
+																round
+															>
+																Recargar
+															</Button>
+														) : (
+															<Button123Pago
+																data={this.state.data}
+																clearForms={this.clearForms}
+															></Button123Pago>
+														)}
+													</GridItem>
 
-												<GridItem xs={12} sm={12} md={6}>
-													<h5 className={classes.subtitle}>
-														¡Por cada peso recibes{' '}
-														<span id='rate'>{this.state.rate}</span> bolívares!
-													</h5>
-												</GridItem>
-												<GridItem xs={12} sm={12} md={12}>
-													<h6 className={classes.description}>
-														El precio está expresado en pesos mexicanos, para
-														tarjetas de otros países puede haber cargos
-														adicionales. Consulta con tu banco.
-													</h6>
-												</GridItem>
-
-												<GridItem xs={12} sm={12} md={8}>
-													<Button
-														color='transparent'
-														href='/privacy'
-														target='_blank'
-														className={classes.navLink}
-													>
+													<GridItem xs={12} sm={12} md={6}>
+														<h5 className={classes.subtitle}>
+															¡Por cada peso recibes{' '}
+															<span id='rate'>{this.state.rate}</span> bolívares!
+														</h5>
+													</GridItem>
+													<GridItem xs={12} sm={12} md={12}>
 														<h6 className={classes.description}>
-															¡Tu privacidad es importante para nosotros!
+															El precio está expresado en pesos mexicanos, para
+															tarjetas de otros países puede haber cargos
+															adicionales. Consulta con tu banco.
 														</h6>
-													</Button>
-												</GridItem>
-											</GridContainer>
-										</CardFooter>
-									</form>
-								</Card>
-							</GridItem>
-							<GridItem xs={0} sm={0} md={4} />
-						</GridContainer>
+													</GridItem>
+
+													<GridItem xs={12} sm={12} md={8}>
+														<Button
+															color='transparent'
+															href='/privacy'
+															target='_blank'
+															className={classes.navLink}
+														>
+															<h6 className={classes.description}>
+																¡Tu privacidad es importante para nosotros!
+															</h6>
+														</Button>
+													</GridItem>
+												</GridContainer>
+											</CardFooter>
+										</form>
+									</Card>
+								</GridItem>
+								<GridItem xs={0} sm={0} md={4} />
+							</GridContainer>
+						</div>
 					</div>
 				</div>
 			</div>
