@@ -411,6 +411,7 @@ class ProductSection extends React.Component {
 		return (
 			<div>
 				<div className={S.form}>
+<<<<<<< HEAD
 					<BasicSelect
 						error={this.state.error.to}
 						handlePhone={this.handlePhone}
@@ -421,6 +422,17 @@ class ProductSection extends React.Component {
 						inputSelections={this.state.products}
 					/>
 				</div>
+=======
+				<BasicSelect
+					error={this.state.error.to}
+					handlePhone={this.handlePhone}
+					to={this.state.to}
+					product={this.state.product}
+					handleChange={this.handleChange('product')}
+					a={this.state.products}
+					inputSelections={this.state.products}/>
+			</div>
+>>>>>>> f47125f853d213626a9e5aba7b8f7e79ade95883
 				<div className={classes.background} id='topup'>
 					<div className={classes.section}>
 						<CustomModal id='modal' {...this.state.modal} />
@@ -429,10 +441,14 @@ class ProductSection extends React.Component {
 								<GridItem xs={12} sm={12} md={4}>
 									<Card>
 										<form className={classes.form} onSubmit={this.confirm}>
+<<<<<<< HEAD
 											<CardHeader
 												color='primary'
 												className={classes.cardHeader}
 											>
+=======
+											<CardHeader color='primary' className={classes.cardHeader}>
+>>>>>>> f47125f853d213626a9e5aba7b8f7e79ade95883
 												<h1 className={classes.title}>¡Alívialo ya!</h1>
 											</CardHeader>
 											<CardBody>
@@ -540,15 +556,53 @@ class ProductSection extends React.Component {
 											<CardFooter className={classes.cardFooter}>
 												<GridContainer>
 													<GridItem xs={12} sm={12} md={6}>
+<<<<<<< HEAD
+=======
+														{!this.state.mode ? (
+															<Button
+																type='submit'
+																color='secondary'
+																size='lg'
+																round
+															>
+																Recargar
+															</Button>
+														) : (
+															<Button123Pago
+																data={this.state.data}
+																clearForms={this.clearForms}
+															></Button123Pago>
+														)}
+													</GridItem>
+
+													<GridItem xs={12} sm={12} md={6}>
+														<h5 className={classes.subtitle}>
+															¡Por cada peso recibes{' '}
+															<span id='rate'>{this.state.rate}</span> bolívares!
+														</h5>
+													</GridItem>
+													<GridItem xs={12} sm={12} md={12}>
+														<h6 className={classes.description}>
+															El precio está expresado en pesos mexicanos, para
+															tarjetas de otros países puede haber cargos
+															adicionales. Consulta con tu banco.
+														</h6>
+													</GridItem>
+
+													<GridItem xs={12} sm={12} md={8}>
+>>>>>>> f47125f853d213626a9e5aba7b8f7e79ade95883
 														<Button
-															type='submit'
-															color='secondary'
-															size='lg'
-															round
+															color='transparent'
+															href='/privacy'
+															target='_blank'
+															className={classes.navLink}
 														>
-															Recargar
+															<h6 className={classes.description}>
+																¡Tu privacidad es importante para nosotros!
+															</h6>
 														</Button>
 													</GridItem>
+<<<<<<< HEAD
 													<GridItem xs={12} sm={12} md={6}>
 														<h5 className={classes.subtitle}>
 															¡Por cada peso recibes{' '}
@@ -575,6 +629,8 @@ class ProductSection extends React.Component {
 															</h6>
 														</Button>
 													</GridItem>
+=======
+>>>>>>> f47125f853d213626a9e5aba7b8f7e79ade95883
 												</GridContainer>
 											</CardFooter>
 										</form>
