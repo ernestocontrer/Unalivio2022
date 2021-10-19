@@ -12,6 +12,7 @@
   },
   "hosting": {
     "public": "public",
+    "site": "aliviame-mvp",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -21,5 +22,5 @@
   "storage": {
     "rules": "storage.rules"
   }
-  
+
 }

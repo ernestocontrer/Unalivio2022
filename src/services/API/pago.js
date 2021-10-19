@@ -1,32 +1,36 @@
 import axios from 'axios-https-proxy-fix';
 
-const url = process.env.PAGO_SANDBOX_URL;
+// const url = process.env.PAGO_SANDBOX_URL;
 
-const requestPago = async (email, to, amount) => {
+
+const pago_config = {
+	sandbox_url: 'https://sandbox.123pago.net/msBotonDePago/index.jsp',
+	provider_name: 'UNALIVIO TEST',
+	api_key: '9bb4cde193775ec6f4cb8c4a724432a0',
+	btn_width: '190px'
+}
+const requestPago = (email, to, amount) => {
 	const data = {
-		nbproveedor: process.env.PAGO_NAMEPROVIDER,
+		nbproveedor: pago_config.provider_name,
 		nb: 'anonymous',
 		ap: 'test_123Pago',
 		ci: '99888127',
 		em: email,
-		cs: process.env.PAGO_APIKEY,
+		cs: pago_config.api_key,
 		nai: `${Date.now()}`,
 		co: 'anonymous',
 		mt: amount,
 		tl: +to,
-		width: process.env.PAGO_WIDTH,
+		width: pago_config.btn_width,
 	};
-	let res;
-	await axios({
+	return axios({
 		method: 'post',
-		url: url,
+		url: pago_config.sandbox_url,
 		headers: {
 			'Content-type': 'application/x-www-form-urlencoded',
 		},
 		params: data,
-	}).then(response => {
-		res = response;
 	});
-	return res;
+
 };
 export default requestPago;
