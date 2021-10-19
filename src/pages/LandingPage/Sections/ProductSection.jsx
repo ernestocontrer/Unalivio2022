@@ -295,7 +295,6 @@ class ProductSection extends React.Component {
 					});
 					return;
 				}
-				console.log(result);
 				const intent = result.data;
 				if (!intent.client_secret) {
 					console.error('Intent sin client secret');
