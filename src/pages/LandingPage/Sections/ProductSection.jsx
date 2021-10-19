@@ -370,6 +370,7 @@ class ProductSection extends React.Component {
 	};
 
 	openModal = () => {
+		console.log('parfagor');
 		const { open, ...modal } = this.state.modal;
 		this.setState({
 			modal: {
