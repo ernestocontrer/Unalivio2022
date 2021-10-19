@@ -1,15 +1,166 @@
-import * as functions from 'firebase-functions';//import Timeout from 'await-timeout';
+import * as functions from 'firebase-functions'; //import Timeout from 'await-timeout';
 import * as moment from 'moment-timezone';
 
 import sendmail from './sendmail';
+import { validate } from './orders/validate';
+
 //import FetchRequest from './soapApi';
 
 const locale = 'es-MX';
 const options = {
 	timeZone: 'America/Mexico_City',
 };
+const currentRate = async (db: FirebaseFirestore.Firestore) => {
+	const ratesQuery = await db
+		.collection('rates')
+		.where('pair', '==', db.doc('pairs/VESMXN'))
+		.orderBy('time', 'desc')
+		.limit(1)
+		.get();
 
+	const rate = ratesQuery.docs[0]; //.data()
+	return rate;
+};
+const currentCoupon = async (db: FirebaseFirestore.Firestore, code: string) => {
+	const couponsQuery = await db
+		.collection('coupons')
+		.where('name', '==', code)
+		.limit(1)
+		.get();
 
+	const coupon: any = couponsQuery.empty
+		? undefined
+		: couponsQuery.docs[0].data();
+	return coupon;
+};
+const validAmounts = async (db: FirebaseFirestore.Firestore) =>
+	(await db.collection('amounts').get()).docs.map(
+		(doc): number => doc.data().value
+	);
+const validProducts = async (db: FirebaseFirestore.Firestore) =>
+	(await db.collection('products').get()).docs.map((doc): string => doc.id);
+const validCoupons = async (db: FirebaseFirestore.Firestore) =>
+	(await db.collection('coupons').get()).docs.map(
+		(doc): string => doc.data().name
+	);
+
+const computePrice = (
+	amount: number,
+	rate: number,
+	discount: any,
+): number => {
+if (!discount) {
+	discount = 0
+}else{
+	discount = discount.gift
+}
+console.log(rate,'rate');
+
+	return Math.ceil(((amount - discount) / rate + Number.EPSILON) * 100) / 100;
+};
+
+export const generate = (db: FirebaseFirestore.Firestore) =>
+	functions.https.onCall(async (order, context) => {
+		const { product, amount, from, to, coupon, giveaway } = order;
+		console.log(order);
+
+		if (!giveaway) {
+			if (!product || !amount || !from || !to) {
+				const up = new functions.https.HttpsError(
+					'invalid-argument',
+					'Por favor rellena todos los campos correctamente'
+				);
+				throw up;
+			}
+		} else if (!product || !from || !to) {
+			const up = new functions.https.HttpsError(
+				'invalid-argument',
+				'Por favor rellena todos los campos correctamente'
+			);
+			throw up;
+		}
+
+		const amounts = await validAmounts(db);
+		const rate = await currentRate(db);
+		const products = await validProducts(db);
+		const coupons = await validCoupons(db);
+		console.log(coupons,rate.data(), 'validCoupons');
+
+		try {
+			await validate.email('from', from, 'es');
+			validate.phone('phone', to, 'es');
+			validate.product('product', product, 'es', products);
+
+			if (giveaway) {
+				validate.product('coupon', coupon, 'es', coupons);
+			} else {
+				validate.amount('amount', amount, 'es', amounts, rate.data().price);
+			}
+		} catch (error) {
+			const up = new functions.https.HttpsError(
+				'invalid-argument',
+				error.message
+			);
+			throw up;
+		}
+
+		try {
+			const coupon_ = await currentCoupon(db, coupon);
+			const price = computePrice(amount, rate.data().price, coupon_);
+			const timestamp = new Date();
+			console.log(price);
+
+			const order_: any = {
+				product: db.doc(`products/${product}`),
+				from,
+				to,
+				price,
+				rate: rate.ref,
+				method: db.doc('methods/card'),
+				created: timestamp,
+			};
+
+			// if (!!coupon_) {
+			// 	order_.coupon = coupon;
+			// 	order_.gift = coupon_.gift;
+			// }
+
+			console.log(order_.gift, 'gift','price' ,order_.price);
+
+			let intent: any = { data: { giveaway: true } };
+			if (!giveaway) {
+				// intent = await stripe.paymentIntents.create({
+				// 	amount: Math.ceil(price * 100),
+				// 	currency: 'mxn',
+				// });
+				intent = {
+					amount: Math.ceil(price * 100),
+					currency: 'mxn',
+				};
+				order_.intent = intent; //id
+				order_.amount = amount;
+			} else {
+				order_.amount = 0;
+				order_.giveaway = true;
+			}
+
+			const o = await db.collection('orders').add(order_);
+
+			console.log('Created:', o.id);
+			console.log('maricón');
+
+			//			FetchRequest(to, amount, o.id);
+
+			return intent;
+		} catch (err) {
+			console.error(err);
+			const up = new functions.https.HttpsError(
+				'internal',
+				'No pudimos procesar el pago:' + err.message
+			);
+			throw up;
+		}
+	});
 export const notifyCreation = () =>
 	functions.firestore
 		.document('orders/{orderId}')

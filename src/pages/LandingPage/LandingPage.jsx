@@ -53,33 +53,6 @@ const LandingPage = ({ seo, classes, firebase, ...rest }) => {
 		>
 			<Parallax>
 				<div className={[classes.container, page.block].join(' ')}>
-					<GridContainer>
-						<GridItem xs={12} sm={12} md={6}>
-							<h1 className={classes.title}>
-								Alivia a tus seres queridos en Venezuela con una recarga
-							</h1>
-							<h4 className={classes.note}>
-								<span style={{ fontWeight: 'bold' }}>Unalivio</span> es la única
-								plataforma que te permite recargar los teléfonos de tus seres
-								queridos en{' '}
-								<span style={{ fontWeight: 'bold' }}>Venezuela</span> de forma
-								fácil, rápida y segura.
-							</h4>
-							<br />
-							<AnchorLink to='/#topup'>
-								<Button
-									color='secondary'
-									size='lg'
-									onClick={() => {}}
-									rel='noopener noreferrer'
-									round
-								>
-									RECARGAR SALDO
-								</Button>
-							</AnchorLink>
-							<br />
-						</GridItem>
-					</GridContainer>
 				</div>
 			</Parallax>
 			<div className={classNames(classes.main, classes.mainRaised)}>
