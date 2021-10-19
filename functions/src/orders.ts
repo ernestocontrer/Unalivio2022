@@ -44,19 +44,9 @@ const validCoupons = async (db: FirebaseFirestore.Firestore) =>
 		(doc): string => doc.data().name
 	);
 
-const computePrice = (
-	amount: number,
-	rate: number,
-	discount: any,
-): number => {
-if (!discount) {
-	discount = 0
-}else{
-	discount = discount.gift
-}
-console.log(rate,'rate');
-
-	return Math.ceil(((amount - discount) / rate + Number.EPSILON) * 100) / 100;
+const computePrice = (amount: number, rate: number, discount: any,): number => {
+	const discountValue = !discount ? 0 : +discount.gift;
+	return Math.ceil(((amount - discountValue) / rate + Number.EPSILON) * 100) / 100;
 };
 
 export const generate = (db: FirebaseFirestore.Firestore) =>

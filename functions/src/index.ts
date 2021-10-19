@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
+import { pagoPaymentResponse } from './getPagoPaymentResult';
 import { main as _fetchPrice } from './fetchPrice';
 import {
 	generate as _generateOrder,
@@ -17,3 +18,4 @@ export const fetchPrice = _fetchPrice(db);
 export const generateOrder = _generateOrder(db);
 export const notifyCreation = _notifyCreation();
 export const notifyUpdate = _notifyUpdate(admin.firestore.FieldValue.delete());
+export const getPagoPaymentResponse = pagoPaymentResponse(db);
