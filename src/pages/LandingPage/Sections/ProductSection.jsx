@@ -537,8 +537,13 @@ class ProductSection extends React.Component {
 												/>
 											</CardBody>
 											<CardFooter className={classes.cardFooter}>
-												<GridContainer>
-													<GridItem xs={12} sm={12} md={6}>
+												<GridContainer className={S.formText}>
+													<GridItem
+														xs={12}
+														sm={12}
+														md={12}
+														className={S.formText}
+													>
 														<Button
 															type='submit'
 															color='secondary'
@@ -548,21 +553,12 @@ class ProductSection extends React.Component {
 															Recargar
 														</Button>
 													</GridItem>
-													<GridItem xs={12} sm={12} md={6}>
-														<h5 className={classes.subtitle}>
-															¡Por cada peso recibes{' '}
-															<span id='rate'>{this.state.rate}</span>{' '}
-															bolívares!
-														</h5>
-													</GridItem>
-													<GridItem xs={12} sm={12} md={12}>
-														<h6 className={classes.description}>
-															El precio está expresado en pesos mexicanos, para
-															tarjetas de otros países puede haber cargos
-															adicionales. Consulta con tu banco.
-														</h6>
-													</GridItem>
-													<GridItem xs={12} sm={12} md={8}>
+													<GridItem
+														xs={12}
+														sm={12}
+														md={12}
+														className={S.formText}
+													>
 														<Button
 															color='transparent'
 															href='/privacy'
