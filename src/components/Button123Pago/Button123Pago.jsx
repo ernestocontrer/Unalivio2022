@@ -1,8 +1,9 @@
 import React from 'react';
 import Iframe from 'react-iframe-click';
-import productClasses from './ProductSection.module.css';
+import productClasses from './Button123Pago.module.css';
 
 function Button123Pago(props) {
+
 	return (
 		<div
 			className={[productClasses.pagoButton, productClasses.bounce].join(' ')}
@@ -13,10 +14,8 @@ function Button123Pago(props) {
 				height='110px'
 				scrolling='no'
 				className={productClasses.iframe}
-				style={{
-					border: 'none',
-				}}
-				onInferredClick={() => props.clearForms()}
+				style={{ border: 'none' }}
+				onInferredClick={props.clearForms}
 			></Iframe>
 		</div>
 	);

@@ -30,7 +30,6 @@ const conatinerFluid = {
 	marginRight: 'auto',
 	marginLeft: 'auto',
 	width: '100%',
-	
 };
 const container = {
 	...conatinerFluid,
@@ -44,8 +43,8 @@ const container = {
 		maxWidth: '960px',
 	},
 	'@media (min-width: 1200px)': {
-		// paddingRight: '24px',
-		// paddingLeft: '24px',
+		paddingRight: '10px',
+		paddingLeft: '10px',
 		maxWidth: '1280px',
 	},
 };

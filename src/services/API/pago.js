@@ -25,7 +25,7 @@ const requestPago = async (email, to, amount) => {
 		},
 		params: data,
 	}).then(response => {
-		res = response.data;
+		res = response;
 	});
 	return res;
 };

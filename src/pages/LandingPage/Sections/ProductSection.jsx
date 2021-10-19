@@ -37,15 +37,15 @@ import rates from 'services/rates';
 // JSX
 import productStyle from 'assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx';
 
-// dates
-import { destroyCookie } from 'nookies';
-
 import { AsYouType, parsePhoneNumberFromString } from 'libphonenumber-js';
 import requestPago from '../../../services/API/pago';
 import Button123Pago from '../../../components/Button123Pago/Button123Pago';
+// import FormsButton from '../../../components/FormsButton/FormsButton';
 
 class ProductSection extends React.Component {
 	defaultState = {
+		guise: false,
+		status: '',
 		data: '',
 		mode: false,
 		from: '',
@@ -54,17 +54,9 @@ class ProductSection extends React.Component {
 		coupon: '',
 		amounts: [{ name: 'Cargando...', value: -1 }],
 		product: '',
-		products: [
-			// this will be prefetched from firebase
-			{ name: 'Cargando...', value: -1 },
-		],
+		products: [{ name: 'Cargando...', value: -1 }],
 		method: '',
-		methods: [
-			// this will be prefetched from firebase
-			{ name: 'Tarjeta (Débito o Crédito)', value: 1 },
-			//{name: "Transferencia (SPEI)", value: 2},
-			//{name: "Tienda de Conveniencia (OXXO, 7/11, etc.)", value: 3},
-		],
+		methods: [{ name: 'Tarjeta (Débito o Crédito)', value: 1 }],
 		rate: '...',
 		base: 1,
 		error: {
@@ -179,7 +171,6 @@ class ProductSection extends React.Component {
 
 	handleCoupon = event => {
 		const coupon = event.target.value;
-
 		this.setState({
 			coupon: coupon.toUpperCase().replace(/\s/g, '').substr(0, 19),
 		});
@@ -221,11 +212,14 @@ class ProductSection extends React.Component {
 	checkout = () => {
 		this.setState({ modal: this.defaultState.modal });
 
-		let then = this;
 		requestPago(this.state.from, this.state.to, this.state.amount).then(
 			response => {
-				this.setState({ data: response });
-				this.setState({ mode: true });
+				this.setState({
+					data: response.data,
+					mode: true,
+					status: response.status,
+				});
+				this.closeModal();
 			}
 		);
 
@@ -244,39 +238,76 @@ class ProductSection extends React.Component {
 		});
 		const { elements, firebase } = this.props;
 
-		if (!elements || !firebase) {
-			// Make  sure to disable form submission until they're loaded.
-			console.error('Services not loaded yet');
-			this.showModal(
-				'Por favor verifica tu conexión de internet y recarga la página de nuevo',
-				{
-					variant: 'warning',
-					persist: false,
-				}
-			);
+		// if (!elements || !firebase) {
+		// 	console.error('Services not loaded yet');
+		// 	this.showModal(null, {
+		// 		variant: 'warning',
+		// 		persist: false,
+		// 	});
 
-			return;
-		}
+		// 	return;
+		// }
 
-		if (firebase.apps.length == 0) {
-			// Make sure this Firebase app is loaded
-			console.error('Error fetching Firebase app');
-			this.showModal('Por favor recarga la página de nuevo', {
-				variant: 'danger',
-				persist: true,
-			});
-			return;
-		}
+		// if (firebase.apps.length == 0) {
+		// 	// Make sure this Firebase app is loaded
+		// 	console.error('Error fetching Firebase app');
+		// 	this.showModal('Por favor recarga la página de nuevo', {
+		// 		variant: 'danger',
+		// 		persist: true,
+		// 	});
+		// 	return;
+		// }
 
 		// call a firebase function
 		this.showModal('Validando orden...', {
 			variant: 'info',
 			persist: true,
 		});
+		this.generateOrder(firebase)
+			.then(result => {
+				if (!result.data) {
+					console.error('Respuesta sin intent!');
+					this.showModal('Por favor intenta de nuevo', {
+						variant: 'warning',
+						persist: false,
+					});
+					return;
+				}
+
+				const intent = result.data;
+				if (!intent.client_secret) {
+					console.error('Intent sin client secret');
+					this.showModal('Por favor intenta de nuevo', {
+						variant: 'warning',
+						persist: false,
+					});
+					return;
+				}
+
+				const secret = intent.client_secret;
+				/*this.handlePayment(intent.client_secret, stripe, elements)*/
+
+				this.showModal('Procesando pago...', {
+					variant: 'info',
+					persist: true,
+				});
+			})
+			.catch(error => {
+				this.showModal(error.message, {
+					variant: 'danger',
+					persist: false,
+				});
+			});
 	};
-	clearForms = () => {
-		setTimeout(() => {
+
+	handle = _ => {
+		console.log(0);
+	};
+
+	handleEvent = _ => {
+		if (this.state.status === 200 && this.state.guise) {
 			this.setState({
+				guise: false,
 				data: '',
 				mode: false,
 				from: '',
@@ -285,7 +316,11 @@ class ProductSection extends React.Component {
 				coupon: '',
 				product: '',
 			});
-		}, 2000);
+		}
+	};
+
+	clearForms = _ => {
+		this.setState({ guise: true });
 	};
 
 	generateOrder = firebase => {
@@ -361,172 +396,205 @@ class ProductSection extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (
-			<div className={classes.background} id='topup'>
-				<div className={classes.section}>
-					<CustomModal id='modal' {...this.state.modal} />
-					<div>
-						<GridContainer justify='center'>
-							<GridItem xs={12} sm={12} md={4}>
-								<Card>
-									<form className={classes.form} onSubmit={this.confirm}>
-										<CardHeader color='primary' className={classes.cardHeader}>
-											<h1 className={classes.title}>¡Alívialo ya!</h1>
-										</CardHeader>
-										<CardBody>
-											<CustomInput
-												labelText='email_de@contacto.com'
-												id='from'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputProps={{
-													type: 'email',
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<ContactMail
-																className={classes.inputIconsColor}
-															/>
-														</InputAdornment>
-													),
-													onChange: this.handleChange('from'),
-													value: this.state.from,
-												}}
-											/>
-											<CustomInput
-												labelText='0412-1234567'
-												id='to'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												error={this.state.error.to}
-												inputProps={{
-													type: 'tel',
-													pattern: '[0-9]{4}-[0-9]{7}',
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<PhoneForwarded
-																className={classes.inputIconsColor}
-															/>
-														</InputAdornment>
-													),
-													onChange: this.handlePhone,
-													value: this.state.to,
-												}}
-											/>
-											<CustomInput
-												labelText='Monto'
-												id='amount'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputSelections={this.state.amounts}
-												inputProps={{
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<span className={classes.inputIconsColor}>
-																{this.formatAmount(
-																	this.state.amount,
-																	this.state.rate
-																)}
-															</span>
-														</InputAdornment>
-													),
-													onChange: this.handleChange('amount'),
-													value: this.state.amount,
-												}}
-											/>
-											<CustomInput
-												labelText='Compañia'
-												id='product'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputSelections={this.state.products}
-												inputProps={{
-													required: true,
-													endAdornment: (
-														<InputAdornment position='end'>
-															<Category className={classes.inputIconsColor} />
-														</InputAdornment>
-													),
-													onChange: this.handleChange('product'),
-													value: this.state.product,
-												}}
-											/>
-											<CustomInput
-												labelText='CUPON'
-												id='coupon'
-												formControlProps={{
-													fullWidth: true,
-												}}
-												inputProps={{
-													type: 'text',
-													endAdornment: (
-														<InputAdornment position='end'>
-															<Redeem className={classes.inputIconsColor} />
-														</InputAdornment>
-													),
-													onChange: this.handleCoupon,
-													value: this.state.coupon,
-												}}
-											/>
-										</CardBody>
-										<CardFooter className={classes.cardFooter}>
-											<GridContainer>
-												<GridItem xs={12} sm={12} md={6}>
-													{!this.state.mode ? (
-														<Button
-															type='submit'
-															color='secondary'
-															size='lg'
-															round
-														>
-															Recargar
-														</Button>
-													) : (
-														<Button123Pago
-															data={this.state.data}
-															clearForms={this.clearForms}
-														></Button123Pago>
-													)}
-												</GridItem>
-
-												<GridItem xs={12} sm={12} md={6}>
-													<h5 className={classes.subtitle}>
-														¡Por cada peso recibes{' '}
-														<span id='rate'>{this.state.rate}</span> bolívares!
-													</h5>
-												</GridItem>
-												<GridItem xs={12} sm={12} md={12}>
-													<h6 className={classes.description}>
-														El precio está expresado en pesos mexicanos, para
-														tarjetas de otros países puede haber cargos
-														adicionales. Consulta con tu banco.
-													</h6>
-												</GridItem>
-
-												<GridItem xs={12} sm={12} md={8}>
-													<Button
-														color='transparent'
-														href='/privacy'
-														target='_blank'
-														className={classes.navLink}
-													>
+			<div>
+				{/* <div
+					style={{
+						position: 'absolute',
+						bottom: '107%',
+						right:'20%',
+						zIndex: '100',
+						background: '#fff',
+						borderRadius:'10px',
+						padding: '5px 10px'
+					}}
+				>
+					<FormsButton
+						error={this.state.error.to}
+						handlePhone={this.handlePhone}
+						to={this.state.to}
+						classes={classes}
+					/>
+				</div> */}
+				<div className={classes.background} id='topup'>
+					<div className={classes.section}>
+						<CustomModal id='modal' {...this.state.modal} />
+						<div>
+							<GridContainer justify='center'>
+								<GridItem xs={12} sm={12} md={4}>
+									<Card>
+										<form className={classes.form} onSubmit={this.confirm}>
+											<CardHeader
+												color='primary'
+												className={classes.cardHeader}
+											>
+												<h1 className={classes.title}>¡Alívialo ya!</h1>
+											</CardHeader>
+											<CardBody>
+												<CustomInput
+													labelText='email_de@contacto.com'
+													id='from'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputProps={{
+														type: 'email',
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<ContactMail
+																	className={classes.inputIconsColor}
+																/>
+															</InputAdornment>
+														),
+														onChange: this.handleChange('from'),
+														value: this.state.from,
+													}}
+												/>
+												<CustomInput
+													labelText='0412-1234567'
+													id='to'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													error={this.state.error.to}
+													inputProps={{
+														type: 'tel',
+														pattern: '[0-9]{4}-[0-9]{7}',
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<PhoneForwarded
+																	className={classes.inputIconsColor}
+																/>
+															</InputAdornment>
+														),
+														onChange: this.handlePhone,
+														value: this.state.to,
+													}}
+												/>
+												<CustomInput
+													labelText='Monto'
+													id='amount'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputSelections={this.state.amounts}
+													inputProps={{
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<span className={classes.inputIconsColor}>
+																	{this.formatAmount(
+																		this.state.amount,
+																		this.state.rate
+																	)}
+																</span>
+															</InputAdornment>
+														),
+														onChange: this.handleChange('amount'),
+														value: this.state.amount,
+													}}
+												/>
+												<CustomInput
+													labelText='Compañia'
+													id='product'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputSelections={this.state.products}
+													inputProps={{
+														required: true,
+														endAdornment: (
+															<InputAdornment position='end'>
+																<Category className={classes.inputIconsColor} />
+															</InputAdornment>
+														),
+														onChange: this.handleChange('product'),
+														value: this.state.product,
+													}}
+												/>
+												<CustomInput
+													labelText='CUPON'
+													id='coupon'
+													formControlProps={{
+														fullWidth: true,
+													}}
+													inputProps={{
+														type: 'text',
+														endAdornment: (
+															<InputAdornment position='end'>
+																<Redeem className={classes.inputIconsColor} />
+															</InputAdornment>
+														),
+														onChange: this.handleCoupon,
+														value: this.state.coupon,
+													}}
+												/>
+											</CardBody>
+											<CardFooter className={classes.cardFooter}>
+												<GridContainer>
+													<GridItem xs={12} sm={12} md={6}>
+														{!this.state.mode ? (
+															<Button
+																type='submit'
+																color='secondary'
+																size='lg'
+																round
+															>
+																Recargar
+															</Button>
+														) : (
+															<div
+																onMouseOut={this.handleEvent}
+																style={{
+																	width: '210px',
+																	margin: '0 auto',
+																	draggable: 'false',
+																	cursor: 'pointer',
+																	padding: 'absolute',
+																}}
+															>
+																<Button123Pago
+																	data={this.state.data}
+																	clearForms={this.clearForms}
+																></Button123Pago>
+															</div>
+														)}
+													</GridItem>
+													<GridItem xs={12} sm={12} md={6}>
+														<h5 className={classes.subtitle}>
+															¡Por cada peso recibes{' '}
+															<span id='rate'>{this.state.rate}</span>{' '}
+															bolívares!
+														</h5>
+													</GridItem>
+													<GridItem xs={12} sm={12} md={12}>
 														<h6 className={classes.description}>
-															¡Tu privacidad es importante para nosotros!
+															El precio está expresado en pesos mexicanos, para
+															tarjetas de otros países puede haber cargos
+															adicionales. Consulta con tu banco.
 														</h6>
-													</Button>
-												</GridItem>
-											</GridContainer>
-										</CardFooter>
-									</form>
-								</Card>
-							</GridItem>
-							<GridItem xs={0} sm={0} md={4} />
-						</GridContainer>
+													</GridItem>
+													<GridItem xs={12} sm={12} md={8}>
+														<Button
+															color='transparent'
+															href='/privacy'
+															target='_blank'
+															className={classes.navLink}
+														>
+															<h6 className={classes.description}>
+																¡Tu privacidad es importante para nosotros!
+															</h6>
+														</Button>
+													</GridItem>
+												</GridContainer>
+											</CardFooter>
+										</form>
+									</Card>
+								</GridItem>
+								<GridItem xs={0} sm={0} md={4} />
+							</GridContainer>
+						</div>
 					</div>
 				</div>
 			</div>
