@@ -18,7 +18,7 @@ function Button123Pago(props) {
           border: "none",
         }}
         onInferredClick={() => {
-          console.log("zzzzzzzz");
+			props.closeModal()
         }}
       ></Iframe>
     </div>
