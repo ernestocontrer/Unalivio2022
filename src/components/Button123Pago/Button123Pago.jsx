@@ -1,6 +1,6 @@
 import React from "react";
 import Iframe from "react-iframe-click";
-import productClasses from "./ProductSection.module.css";
+import productClasses from "./Button123Pago.module.css";
 
 function Button123Pago(props) {
   return (
