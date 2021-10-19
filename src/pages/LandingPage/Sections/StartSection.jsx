@@ -83,7 +83,6 @@ class StartSection extends React.Component {
 								<Button
 									color='secondary'
 									size='lg'
-									onClick={() => {}}
 									rel='noopener noreferrer'
 									round
 									className={section.buttonRecargar}
