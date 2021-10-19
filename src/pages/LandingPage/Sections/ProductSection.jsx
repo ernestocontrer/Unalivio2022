@@ -295,11 +295,11 @@ class ProductSection extends React.Component {
 					});
 					return;
 				}
-
+				console.log(result);
 				const intent = result.data;
 				if (!intent.client_secret) {
 					console.error('Intent sin client secret');
-					this.showModal('Por favor intenta de nuevo', {
+					this.showModal('Por favor intenta de nuevo ಥ_ಥ', {
 						variant: 'warning',
 						persist: false,
 					});
@@ -308,7 +308,6 @@ class ProductSection extends React.Component {
 
 				const secret = intent.client_secret;
 				/*this.handlePayment(intent.client_secret, stripe, elements)*/
-
 				this.showModal('Procesando pago...', {
 					variant: 'info',
 					persist: true,
