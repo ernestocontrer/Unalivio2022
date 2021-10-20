@@ -205,6 +205,7 @@ class ProductSection extends React.Component {
   };
 
   generate = () => {
+    const { elements, firebase } = this.props;
     this.generateOrder(firebase)
       .then((result) => {
         if (!result.data) {
