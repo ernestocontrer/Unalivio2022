@@ -14,11 +14,11 @@ function Button123Pago(props) {
         scrolling="no"
         className={productClasses.iframe}
         style={{
-          /*      display: "none", */
+          paddingRight: "15px",
           border: "none",
         }}
         onInferredClick={() => {
-			props.closeModal()
+          props.closeModal();
         }}
       ></Iframe>
     </div>
