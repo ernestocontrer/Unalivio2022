@@ -46,13 +46,14 @@ const validCoupons = async (db: FirebaseFirestore.Firestore) =>
 
 const computePrice = (amount: number, rate: number, discount: any,): number => {
 	const discountValue = !discount ? 0 : +discount.gift;
+    console.log(Math.ceil(((amount - discountValue) / rate + Number.EPSILON) * 100) / 100)
 	return Math.ceil(((amount - discountValue) / rate + Number.EPSILON) * 100) / 100;
 };
 
 export const generate = (db: FirebaseFirestore.Firestore) =>
 	functions.https.onCall(async (order, context) => {
 		const { product, amount, from, to, coupon, giveaway } = order;
-		console.log(order);
+		console.log("ХУЙ",order);
 
 		if (!giveaway) {
 			if (!product || !amount || !from || !to) {
