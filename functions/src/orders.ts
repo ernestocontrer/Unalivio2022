@@ -75,7 +75,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
 		const rate = await currentRate(db);
 		const products = await validProducts(db);
 		const coupons = await validCoupons(db);
-		console.log(coupons,rate.data(), 'validCoupons');
+		console.log("PUTA!!!&",rate.createTime.seconds);
 
 		try {
 			await validate.email('from', from, 'es');

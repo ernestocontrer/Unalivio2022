@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
+/* import test from './fetchtest';  */
 import { pagoPaymentResponse } from './getPagoPaymentResult';
 import { main as _fetchPrice } from './fetchPrice';
 import {
@@ -12,7 +13,7 @@ import {
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
-
+/* test(db); */
 // export const requestPago = requestPaso()
 export const fetchPrice = _fetchPrice(db);
 export const generateOrder = _generateOrder(db);

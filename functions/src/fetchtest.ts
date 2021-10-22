@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+
 import {default as fetch, AxiosRequestConfig} from 'axios';
 
 const urls = {
@@ -33,20 +33,19 @@ const options = {
 };
 
 
-export const main = (
+ const main = async (
   db: FirebaseFirestore.Firestore
-) => functions
-  .runWith(options.functions)
-  .pubsub.schedule('every 6 hours')
-  .onRun(async (context: functions.EventContext) => {
+) => {
+
+
     const timestamp = new Date();
     
     console.log(`Starting fetchPrice at ${timestamp}.`);
 
     const btcmxn: number = +((await fetch(options.price.bitso('btc', 'mxn'))).data["payload"]["last"]);
     
-    const btcves: number = +((await fetch(options.price.yadio('btc', 'ves'))).data["rate"]);
-            console.log('btcves',btcves);
+    const btcves: number = +((await fetch(options.price.yadio('btc', 'ves'))).data["rate"]); 
+            console.log('btcves',btcves ,btcmxn);
     console.log(`Inserting BTC/MXN rate ${btcmxn}`);
     await db.collection('rates').add({
       pair: db.doc('pairs/BTCMXN'),
@@ -61,10 +60,10 @@ export const main = (
       price: btcves
     });
     
-    const commission = 0.10 // biyuyo 6% 
+   const commission = 0.10 // biyuyo 6% 
     const referral = 0.02
-    const utility = 0.05
-    const vesmxn = (btcves / btcmxn) * (1 - (commission + referral + utility));
+    const utility = 0.05 
+    const vesmxn =((btcves/btcmxn )*(1 - (commission + referral + utility) ));
 
 
 
@@ -75,6 +74,7 @@ export const main = (
       price: vesmxn
     });
     console.log('OK')
-  });
 
+}
 
+export default main;
