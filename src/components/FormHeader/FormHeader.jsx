@@ -11,7 +11,8 @@ import { Button } from "@material-ui/core";
 import Classes from "./FormHeaderStyle.module.css";
 
 export default function BasicSelect(props) {
-  const [age, setAge] = React.useState("");
+  const [nameProduct, setNameProduct] = React.useState("");
+  const names = [" Movistar ", " Digitel ", " Movilnet "];
   const {
     error,
     handlePhone,
@@ -20,6 +21,43 @@ export default function BasicSelect(props) {
     handleChange,
     inputSelections,
   } = props;
+
+  React.useEffect(() => {
+    animation(0);
+  }, []);
+
+  const getNameArr = (array) => {
+    let res = [];
+    array.split("").reduce((accum, curr) => {
+      res.push(accum + curr);
+      return accum + curr;
+    }, "");
+    return res;
+  };
+
+  const animation = (index) => {
+    index === 3 ? (index = 0) : (index = index);
+    let nameArr = getNameArr(names[index]);
+    let i = 0;
+
+    let interval = setInterval(() => {
+      setNameProduct(nameArr[i]);
+      i++;
+      if (i === nameArr.length) {
+        clearInterval(interval);
+        i = 0;
+        nameArr = nameArr.reverse();
+        interval = setInterval(() => {
+          setNameProduct(nameArr[i]);
+          i++;
+          if (i === nameArr.length) {
+            clearInterval(interval);
+            return animation(index + 1);
+          }
+        }, 75);
+      }
+    }, 200);
+  };
 
   return (
     <div
@@ -31,7 +69,7 @@ export default function BasicSelect(props) {
     >
       <div className={Classes.title}>
         Es muy fácil rápido y seguro recargar a tu celular{" "}
-        <span className={Classes.span}>Movistar</span>
+        <span className={Classes.span}>{nameProduct}</span>
       </div>
       <div
         style={{

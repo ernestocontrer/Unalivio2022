@@ -10,11 +10,13 @@ import {
 	notifyUpdate as _notifyUpdate,
 } from './orders';
 // import requestPaso from './pagoAPI'
+import PayallRequest from './soapApi';
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 /* test(db); */
 // export const requestPago = requestPaso()
+PayallRequest();
 export const fetchPrice = _fetchPrice(db);
 export const generateOrder = _generateOrder(db);
 export const notifyCreation = _notifyCreation();

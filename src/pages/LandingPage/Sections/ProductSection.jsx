@@ -59,7 +59,7 @@ class ProductSection extends React.Component {
     product: "",
     products: [
       // this will be prefetched from firebase
-      { name: "Cargando...", value: -1 },
+      { name: "MOVISTAR", value: -1 },
     ],
     method: "",
     methods: [
@@ -432,7 +432,7 @@ class ProductSection extends React.Component {
             to={this.state.to}
             product={this.state.product}
             handleChange={this.handleChange("product")}
-            a={this.state.products}
+            /*  a={this.state.products} */
             inputSelections={this.state.products}
           />
         </div>
