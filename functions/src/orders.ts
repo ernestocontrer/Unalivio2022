@@ -7,7 +7,7 @@ import { validate } from "./orders/validate";
 //import FetchRequest from './soapApi';
 
 const locale = "es-MX";
-let orderInfo: any;
+
 const options = {
   timeZone: "America/Mexico_City",
 };
@@ -59,7 +59,6 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
   functions.https.onCall(async (order, context) => {
     const { product, amount, from, to, coupon, giveaway } = order;
     console.log("ХУЙ", order);
-    orderInfo = order;
 
     if (!giveaway) {
       if (!product || !amount || !from || !to) {
@@ -339,5 +338,3 @@ export const notifyUpdate = (deleter: FirebaseFirestore.FieldValue) =>
       }
       return;
     });
-
-export { orderInfo };
