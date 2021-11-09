@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { AnchorLink } from "gatsby-plugin-anchor-links";
-import { Button } from "@material-ui/core";
+import { Button, Input } from "@material-ui/core";
 import Classes from "./FormHeaderStyle.module.css";
 
 export default function BasicSelect(props) {
@@ -101,7 +101,7 @@ export default function BasicSelect(props) {
               error={error}
               id="outlined-basic"
               label="Número"
-              variant="outlined"
+              /*   variant="outlined" */
             />
           </Box>
         </div>
@@ -121,30 +121,28 @@ export default function BasicSelect(props) {
         </div>
         <div>
           <Box
-            sx={{ minWidth: 120 }}
+            sx={{ "& > :not(style)": { width: "380px" } }}
+            noValidate
+            autoComplete="off"
             style={{
+              margin: "0px",
               width: "380px",
               backgroundColor: "white",
               borderRadius: "5px",
             }}
           >
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Compañia</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={product}
-                label="Compañia"
-                onChange={handleChange}
-              >
-                {inputSelections.map((option, key) => (
-                  <MenuItem value={option.value} key={key}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TextField
+              readOnly
+              value={product}
+              error={error}
+              id="outlined-basic"
+              label="Compañia"
+              variant="outlined"
+            />
           </Box>
+          <FormControl fullWidth>
+            {/*   <InputLabel id="demo-simple-select-label">Compañia</InputLabel> */}
+          </FormControl>
         </div>
       </div>
       <AnchorLink to="/#topup">

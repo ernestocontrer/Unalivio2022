@@ -10,7 +10,7 @@ const PayallRequest = () => {
     arg0: {
       uuid: uuid,
       numero: "04249070899",
-      monto: "9000",
+      monto: "4",
       operadora: "Movistar",
       producto: "01",
       pv: "4348",

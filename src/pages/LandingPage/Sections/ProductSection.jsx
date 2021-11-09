@@ -109,8 +109,7 @@ class ProductSection extends React.Component {
 
   formatRate = (rate) => Math.floor((rate + Number.EPSILON) * 100) / 100;
 
-  formatAmount = (amount, rate) =>
-    `${Math.ceil((amount / rate + Number.EPSILON) * 100) / 100} MXN`;
+  formatAmount = (amount, rate) => `${amount * 1.05} MXN`;
 
   refreshAmounts = () => {
     if (this.props.firebase.apps.length == 0)
@@ -164,6 +163,19 @@ class ProductSection extends React.Component {
 
   handlePhone = (event) => {
     const phone = new AsYouType("VE").input(event.target.value);
+    const products = {
+      "0424": "Movistar",
+      "0414": "Movistar",
+      "0416": "Movilnet",
+      "0414": "Movilnet",
+      "0412": "Digitel",
+    };
+    if (Object.keys(products).includes(phone.slice(0, 4))) {
+      this.setState({ product: products[phone.slice(0, 4)] });
+    }
+    if (phone.length < 4) {
+      this.setState({ product: "" });
+    }
     const phoneNumber = parsePhoneNumberFromString(phone, "VE");
     const error = this.state.error;
     error.to = phoneNumber ? !phoneNumber.isValid() : true;
@@ -522,8 +534,9 @@ class ProductSection extends React.Component {
                           formControlProps={{
                             fullWidth: true,
                           }}
-                          inputSelections={this.state.products}
+                          /*  inputSelections={this.state.products} */
                           inputProps={{
+                            readOnly: true,
                             required: true,
                             endAdornment: (
                               <InputAdornment position="end">
