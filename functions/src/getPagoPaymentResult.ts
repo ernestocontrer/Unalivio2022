@@ -1,15 +1,15 @@
 import * as functions from "firebase-functions";
-import PayallRequest from "./soapApi";
+/* import PayallRequest from "./soapApi";
+import { generateOrder } from "./index"; */
 
 export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
-  console.log("PAGO");
   return functions.https.onRequest((req: any, res: any) => {
     const body = req.body;
 
     try {
       switch (body.code) {
         case "00":
-          PayallRequest();
+          /*  PayallRequest(generateOrder); */
           break;
         default:
           console.log("PAGO BAD CODE");

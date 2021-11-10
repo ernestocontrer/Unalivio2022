@@ -49,6 +49,7 @@ import { padding } from "@mui/system";
 
 class ProductSection extends React.Component {
   defaultState = {
+    productName: "",
     data: "",
     mode: false,
     from: "",
@@ -109,7 +110,7 @@ class ProductSection extends React.Component {
 
   formatRate = (rate) => Math.floor((rate + Number.EPSILON) * 100) / 100;
 
-  formatAmount = (amount, rate) => `${amount * 1.05} MXN`;
+  formatAmount = (amount, rate) => `${amount * 1.05} Bs.S`;
 
   refreshAmounts = () => {
     if (this.props.firebase.apps.length == 0)
@@ -152,6 +153,7 @@ class ProductSection extends React.Component {
           this.setState({
             products: products,
           });
+          console.log(products);
         })
         .catch(console.error);
     }
@@ -163,18 +165,25 @@ class ProductSection extends React.Component {
 
   handlePhone = (event) => {
     const phone = new AsYouType("VE").input(event.target.value);
-    const products = {
+    const productsPair = {
       "0424": "Movistar",
       "0414": "Movistar",
       "0416": "Movilnet",
       "0414": "Movilnet",
       "0412": "Digitel",
     };
-    if (Object.keys(products).includes(phone.slice(0, 4))) {
-      this.setState({ product: products[phone.slice(0, 4)] });
+
+    const phoneNum = phone.slice(0, 4);
+    if (Object.keys(productsPair).includes(phoneNum)) {
+      this.state.products.map((e) => {
+        if (e.name === productsPair[phoneNum]) {
+          this.setState({ product: e.value });
+        }
+      });
+      this.setState({ productName: productsPair[phoneNum] });
     }
     if (phone.length < 4) {
-      this.setState({ product: "" });
+      this.setState({ productName: "" });
     }
     const phoneNumber = parsePhoneNumberFromString(phone, "VE");
     const error = this.state.error;
@@ -353,6 +362,7 @@ class ProductSection extends React.Component {
 
   clearForms = () => {
     this.setState({
+      productName: "",
       mode: false,
       from: "",
       to: "",
@@ -363,8 +373,10 @@ class ProductSection extends React.Component {
   };
 
   generateOrder = (firebase) => {
-    const { product, amount, from, to, coupon } = this.state;
+    const { productName, product, amount, from, to, coupon } = this.state;
+
     return orders(firebase).create({
+      productName,
       product,
       amount,
       from,
@@ -544,7 +556,7 @@ class ProductSection extends React.Component {
                               </InputAdornment>
                             ),
                             onChange: this.handleChange("product"),
-                            value: this.state.product,
+                            value: this.state.productName,
                           }}
                         />
                         <CustomInput

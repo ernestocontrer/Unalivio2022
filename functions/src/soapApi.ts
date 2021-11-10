@@ -3,15 +3,17 @@ import generateUuid from "./generateUuid";
 import { mailSuccess, mailUnsuccess } from "./mailPayall";
 import sendmail from "./sendmail";
 
-const PayallRequest = () => {
+const PayallRequest = (data: any) => {
   const uuid = generateUuid("123456789", 17);
   const url = "http://164.52.144.203:9967/payall/ws?wsdl";
+  const phoneNumber = data.to.replace(/-/g, "");
+  console.log("data", data);
   let args = {
     arg0: {
       uuid: uuid,
-      numero: "04249070899",
-      monto: "4",
-      operadora: "Movistar",
+      numero: phoneNumber,
+      monto: /* `${data.price}` */ "12",
+      operadora: data.product,
       producto: "01",
       pv: "4348",
       pin: "81264062",
@@ -19,16 +21,20 @@ const PayallRequest = () => {
       code: "####",
     },
   };
+  console.log(args);
   soap
     .createClient(url)
     .then((client: any) => {
       client
         .recargar(args)
         .then((responce: any) => {
+          console.log(responce);
           if (responce.return.codigo_respuesta === "00") {
-            sendmail(mailSuccess);
+            console.log("TTTTTTTTTTTTTTTTTTTTTT");
+            sendmail(mailSuccess(data.from));
           } else {
-            sendmail(mailUnsuccess);
+            console.log("XXXXXXXXXXXXXXXXXXXXXX");
+            sendmail(mailUnsuccess(data.from));
           }
         })
         .catch((error: any) => {
