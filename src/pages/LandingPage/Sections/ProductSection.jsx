@@ -450,15 +450,14 @@ class ProductSection extends React.Component {
     return (
       <div>
         <div className={S.form}>
-          <BasicSelect
+          {/*   <BasicSelect
             error={this.state.error.to}
             handlePhone={this.handlePhone}
             to={this.state.to}
-            product={this.state.product}
-            handleChange={this.handleChange("product")}
-            /*  a={this.state.products} */
+            productName={this.state.productName}
+             a={this.state.products} 
             inputSelections={this.state.products}
-          />
+          /> */}
         </div>
         <div className={classes.background} id="topup">
           <div className={classes.section}>

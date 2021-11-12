@@ -1,16 +1,21 @@
 import * as functions from "firebase-functions"; //import Timeout from 'await-timeout';
 import * as moment from "moment-timezone";
-
 /* import sendmail from "./sendmail"; */
 import { validate } from "./orders/validate";
 /* import PayallRequest from "./soapApi"; */
-//import FetchRequest from './soapApi';
-
+/* import FetchRequest from "./soapApi"; */
+import { setData } from "./store";
 /* const locale = "es-MX"; */
 
 /* const options = {
   timeZone: "America/Mexico_City",
 }; */
+/* const orderData = (data: any) => {
+  return () => {
+    return data;
+  };
+}; */
+
 const currentRate = async (db: FirebaseFirestore.Firestore) => {
   const ratesQuery = await db
     .collection("rates")
@@ -59,7 +64,6 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
   functions.https.onCall(async (order, context) => {
     const { product, amount, from, to, coupon, giveaway, productName } = order;
     console.log("Х12Й", order);
-
     if (!giveaway) {
       if (!product || !amount || !from || !to) {
         const up = new functions.https.HttpsError(
@@ -112,8 +116,6 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
         from,
         to,
         price,
-        rate: rate.ref,
-        method: db.doc("methods/card"),
         created: timestamp,
       };
 
@@ -140,11 +142,12 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
         order_.amount = 0;
         order_.giveaway = true;
       } */
-
+      /* await set("key", order_); */
       await db.collection("orders").add(order_);
-
-      console.log("Created:", order_);
-      /* PayallRequest(order_); */
+      setData(order_);
+      /*  console.log("Created:", order_); */
+      /*  PayallRequest(); */
+      /*   PayallRequest(order_, true); */
       return order_;
     } catch (err) {
       console.error(err);
@@ -166,12 +169,12 @@ export const notifyCreation = () =>
         return;
       }
 
-      const rate = (await order.rate.get()).data();
+      /*  const rate = (await order.rate.get()).data(); */
 
-      if (!rate) {
+      /*  if (!rate) {
         console.error("Tasa vacía");
         return;
-      }
+      } */
 
       /*  const mail = {
         from: functions.config().gmail.user,

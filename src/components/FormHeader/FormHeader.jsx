@@ -13,14 +13,7 @@ import Classes from "./FormHeaderStyle.module.css";
 export default function BasicSelect(props) {
   const [nameProduct, setNameProduct] = React.useState("");
   const names = [" Movistar ", " Digitel ", " Movilnet "];
-  const {
-    error,
-    handlePhone,
-    to,
-    product,
-    handleChange,
-    inputSelections,
-  } = props;
+  const { error, handlePhone, to, productName, inputSelections } = props;
 
   React.useEffect(() => {
     animation(0);
@@ -133,7 +126,7 @@ export default function BasicSelect(props) {
           >
             <TextField
               readOnly
-              value={product}
+              value={productName}
               error={error}
               id="outlined-basic"
               label="Compañia"

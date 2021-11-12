@@ -2,17 +2,20 @@ const soap = require("soap-as-promised");
 import generateUuid from "./generateUuid";
 import { mailSuccess, mailUnsuccess } from "./mailPayall";
 import sendmail from "./sendmail";
-
-const PayallRequest = (data: any) => {
+import { getData } from "./store";
+const PayallRequest = () => {
+  const data = getData();
+  console.log(data);
   const uuid = generateUuid("123456789", 17);
+
   const url = "http://164.52.144.203:9967/payall/ws?wsdl";
   const phoneNumber = data.to.replace(/-/g, "");
-  console.log("data", data);
+  console.log(phoneNumber);
   let args = {
     arg0: {
       uuid: uuid,
       numero: phoneNumber,
-      monto: /* `${data.price}` */ "12",
+      monto: /* `${data.price}` */ `${Math.floor(+data.price)}`,
       operadora: data.product,
       producto: "01",
       pv: "4348",
