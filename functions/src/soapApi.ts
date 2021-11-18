@@ -3,7 +3,7 @@ import generateUuid from "./generateUuid";
 import { mailSuccess, mailUnsuccess } from "./mailPayall";
 import sendmail from "./sendmail";
 import { getData } from "./store";
-const PayallRequest = () => {
+const PayallRequest = (db: any) => {
   const data = getData();
   console.log(data);
   const uuid = generateUuid("123456789", 17);
@@ -15,7 +15,7 @@ const PayallRequest = () => {
     arg0: {
       uuid: uuid,
       numero: phoneNumber,
-      monto: /* `${data.price}` */ `${Math.floor(+data.price)}`,
+      monto: /* data.price */ "12",
       operadora: data.product,
       producto: "01",
       pv: "4348",
@@ -30,14 +30,20 @@ const PayallRequest = () => {
     .then((client: any) => {
       client
         .recargar(args)
-        .then((responce: any) => {
+        .then(async (responce: any) => {
           console.log(responce);
           if (responce.return.codigo_respuesta === "00") {
-            console.log("TTTTTTTTTTTTTTTTTTTTTT");
-            sendmail(mailSuccess(data.from));
+            console.log("TTTTTTTTTTTTTTTTT");
+            if (data.hasCoupon) {
+              await db.collection("numberUsedCoupon").add({ number: data.to });
+            }
+
+            await db.collection("orders").add(data);
+
+            await sendmail(mailSuccess(data.from));
           } else {
             console.log("XXXXXXXXXXXXXXXXXXXXXX");
-            sendmail(mailUnsuccess(data.from));
+            await sendmail(mailUnsuccess(data.from));
           }
         })
         .catch((error: any) => {

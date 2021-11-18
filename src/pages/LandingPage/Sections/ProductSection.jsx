@@ -28,11 +28,12 @@ import CustomModal from "components/CustomModal/CustomModal.jsx";
 import { withFirebase } from "components/FirebaseProvider/FirebaseProvider.jsx";
 //import { withGoogleRecaptcha } from 'react-google-recaptcha-v3';
 import { withSnackbar } from "notistack";
-
+import numberUsedCoupon from "services/numberUsedCoupon";
 import orders from "services/orders";
 import products from "services/products";
 import amounts from "services/amounts";
 import rates from "services/rates";
+import commision from "services/commision";
 
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
@@ -49,6 +50,8 @@ import { padding } from "@mui/system";
 
 class ProductSection extends React.Component {
   defaultState = {
+    commision: "",
+    numberUsedCoupon: [{ 1: 1 }],
     productName: "",
     data: "",
     mode: false,
@@ -110,8 +113,31 @@ class ProductSection extends React.Component {
 
   formatRate = (rate) => Math.floor((rate + Number.EPSILON) * 100) / 100;
 
-  formatAmount = (amount, rate) => `${amount * 1.05} Bs.S`;
+  formatAmount = (amount, rate) =>
+    `${+amount * (1 + +this.state.commision / 100)} Bs.S`;
 
+  refreshCommision = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app");
+    else {
+      commision(this.props.firebase)
+        .getCommision()
+        .then((commision) => {
+          if (!commision) {
+            console.error("Montos vacíos");
+          }
+
+          if (commision.length == 0) {
+            console.error("Montos vacíos");
+          }
+          console.log(commision);
+          this.setState({
+            commision: commision[0].commision,
+          });
+        })
+        .catch(console.error);
+    }
+  };
   refreshAmounts = () => {
     if (this.props.firebase.apps.length == 0)
       console.error("Error fetching Firebase app");
@@ -126,9 +152,31 @@ class ProductSection extends React.Component {
           if (amounts.length == 0) {
             console.error("Montos vacíos");
           }
-
+          console.log(amounts);
           this.setState({
             amounts: amounts,
+          });
+        })
+        .catch(console.error);
+    }
+  };
+  refreshNumberUsedCoupon = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app");
+    else {
+      numberUsedCoupon(this.props.firebase)
+        .list()
+        .then((numberUsedCoupon) => {
+          if (!numberUsedCoupon) {
+            console.error("Montos vacíos");
+          }
+
+          if (numberUsedCoupon.length == 0) {
+            console.error("Montos vacíos");
+          }
+          console.log("q", numberUsedCoupon);
+          this.setState({
+            numberUsedCoupon: numberUsedCoupon,
           });
         })
         .catch(console.error);
@@ -164,6 +212,7 @@ class ProductSection extends React.Component {
   };
 
   handlePhone = (event) => {
+    console.log(this.state.numberUsedCoupon);
     const phone = new AsYouType("VE").input(event.target.value);
     const productsPair = {
       "0424": "Movistar",
@@ -263,40 +312,27 @@ class ProductSection extends React.Component {
   };
   checkout = async () => {
     this.setState({ modal: this.defaultState.modal });
-
+    console.log(this.state.coupon);
     await requestPago(this.state.from, this.state.to, this.state.amount)
       .then((response) => {
         this.setState({ data: response.data });
         /*  this.setState({ mode: true }); */
       })
       .then(() => {
-        this.showModal("Confirma tu orden", {
-          variant: "info",
-          persist: true,
-          content: (
-            <>
-              <ul>
-                <li>Email de contacto: {this.state.from}</li>
-                <li>Teléfono: {this.state.to}</li>
-                <li>Monto a recargar: {this.state.amount}</li>
-              </ul>
-            </>
-          ),
-          buttons: (
-            <>
-              <Button123Pago
-                data={this.state.data}
-                closeModal={() => {
-                  this.generate();
-                  setTimeout(() => {
-                    this.clearForms();
-                    this.closeModal();
-                  }, 5000);
-                }}
-              ></Button123Pago>
-              {/* <Button onClick={this.checkout} color="info">
-				  CHÉVERE PROCEDER!!!
-				</Button >*/}
+        const access = this.state.numberUsedCoupon.filter(
+          (e) => e.number === this.state.to,
+        );
+
+        if (access.length === 1 && this.state.coupon !== "") {
+          this.showModal("Confirma tu orden", {
+            variant: "info",
+            persist: true,
+            content: (
+              <>
+                <div> This coupon only for 1time </div>
+              </>
+            ),
+            buttons: (
               <Button
                 onClick={this.closeModal}
                 style={{
@@ -305,9 +341,48 @@ class ProductSection extends React.Component {
               >
                 REGRESAR Y MODIFICAR
               </Button>
-            </>
-          ),
-        });
+            ),
+          });
+        } else {
+          this.showModal("Confirma tu orden", {
+            variant: "info",
+            persist: true,
+            content: (
+              <>
+                <ul>
+                  <li>Email de contacto: {this.state.from}</li>
+                  <li>Teléfono: {this.state.to}</li>
+                  <li>Monto a recargar: {this.state.amount}</li>
+                </ul>
+              </>
+            ),
+            buttons: (
+              <>
+                <Button123Pago
+                  data={this.state.data}
+                  closeModal={() => {
+                    this.generate();
+                    setTimeout(() => {
+                      this.clearForms();
+                      this.closeModal();
+                    }, 5000);
+                  }}
+                ></Button123Pago>
+                {/* <Button onClick={this.checkout} color="info">
+            CHÉVERE PROCEDER!!!
+          </Button >*/}
+                <Button
+                  onClick={this.closeModal}
+                  style={{
+                    marginLeft: "15px",
+                  }}
+                >
+                  REGRESAR Y MODIFICAR
+                </Button>
+              </>
+            ),
+          });
+        }
       });
 
     /*    this.showModal("Procesando datos...", {
@@ -376,6 +451,7 @@ class ProductSection extends React.Component {
     const { productName, product, amount, from, to, coupon } = this.state;
 
     return orders(firebase).create({
+      commision,
       productName,
       product,
       amount,
@@ -431,9 +507,11 @@ class ProductSection extends React.Component {
   };
 
   refreshData = () => {
+    this.refreshNumberUsedCoupon();
     this.refreshRate();
     this.refreshProducts();
     this.refreshAmounts();
+    this.refreshCommision();
   };
 
   componentDidMount = () => {
@@ -449,16 +527,16 @@ class ProductSection extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        <div className={S.form}>
-          {/*   <BasicSelect
+        {/* <div className={S.form}>
+          <BasicSelect
             error={this.state.error.to}
             handlePhone={this.handlePhone}
             to={this.state.to}
             productName={this.state.productName}
-             a={this.state.products} 
+            a={this.state.products}
             inputSelections={this.state.products}
-          /> */}
-        </div>
+          />
+        </div> */}
         <div className={classes.background} id="topup">
           <div className={classes.section}>
             <CustomModal id="modal" {...this.state.modal} />

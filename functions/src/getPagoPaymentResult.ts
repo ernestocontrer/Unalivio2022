@@ -8,7 +8,7 @@ export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
     try {
       switch (body.code) {
         case "00":
-          PayallRequest();
+          PayallRequest(db);
           break;
         default:
           console.log("PAGO BAD CODE");

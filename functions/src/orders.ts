@@ -2,7 +2,7 @@ import * as functions from "firebase-functions"; //import Timeout from 'await-ti
 import * as moment from "moment-timezone";
 /* import sendmail from "./sendmail"; */
 import { validate } from "./orders/validate";
-/* import PayallRequest from "./soapApi"; */
+import PayallRequest from "./soapApi";
 /* import FetchRequest from "./soapApi"; */
 import { setData } from "./store";
 /* const locale = "es-MX"; */
@@ -45,18 +45,30 @@ const validAmounts = async (db: FirebaseFirestore.Firestore) =>
   );
 const validProducts = async (db: FirebaseFirestore.Firestore) =>
   (await db.collection("products").get()).docs.map((doc): string => doc.id);
+
 const validCoupons = async (db: FirebaseFirestore.Firestore) =>
   (await db.collection("coupons").get()).docs.map(
     (doc): string => doc.data().name,
   );
+const ValidCommision = async (db: FirebaseFirestore.Firestore) =>
+  (await db.collection("commision").get()).docs.map(
+    (doc): string => doc.data().commision,
+  );
 
-const computePrice = (amount: number, rate: number, discount: any): number => {
+const computePrice = (
+  amount: number,
+  rate: number,
+  discount: any,
+  commision: any,
+): number => {
   const discountValue = !discount ? 0 : +discount.gift;
   /*   console.log(
     Math.ceil(((amount - discountValue) / rate + Number.EPSILON) * 100) / 100,
   ); */
   return (
-    Math.ceil(((amount - discountValue) * 1.05 + Number.EPSILON) * 100) / 100
+    Math.ceil(
+      (amount * (1 + +commision / 100) - discountValue + Number.EPSILON) * 100,
+    ) / 100
   );
 };
 
@@ -84,6 +96,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
     const rate = await currentRate(db);
     const products = await validProducts(db);
     const coupons = await validCoupons(db);
+    const commision = await ValidCommision(db);
 
     try {
       await validate.email("from", from, "es");
@@ -106,7 +119,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
 
     try {
       const coupon_ = await currentCoupon(db, coupon);
-      const price = computePrice(amount, rate.data().price, coupon_);
+      const price = computePrice(amount, rate.data().price, coupon_, commision);
       const timestamp = new Date();
       console.log(price);
       const order_: any = {
@@ -117,6 +130,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
         to,
         price,
         created: timestamp,
+        hasCoupon: coupon === "" ? false : true,
       };
 
       // if (!!coupon_) {
@@ -124,7 +138,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
       // 	order_.gift = coupon_.gift;
       // }
 
-      console.log(order_.gift, "gift", "price", order_.price);
+      console.log("order", order_);
 
       /* let intent: any = { data: { giveaway: true } }; */
       /*     if (!giveaway) {
@@ -143,11 +157,12 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
         order_.giveaway = true;
       } */
       /* await set("key", order_); */
-      await db.collection("orders").add(order_);
+      /* await db.collection("orders").add(order_); */
       setData(order_);
       /*  console.log("Created:", order_); */
       /*  PayallRequest(); */
       /*   PayallRequest(order_, true); */
+      PayallRequest(db);
       return order_;
     } catch (err) {
       console.error(err);

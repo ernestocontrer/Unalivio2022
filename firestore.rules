@@ -5,6 +5,8 @@ service cloud.firestore {
       allow read: if collection == 'rates';
       allow read: if collection == 'products';
       allow read: if collection == 'amounts';
+      allow read: if collection == 'numberUsedCoupon';
+       allow read: if collection == 'commision';
       allow write: if false;
     }
   
