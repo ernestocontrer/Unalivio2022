@@ -1,4 +1,9 @@
-import { cardTitle, title, primaryColor, primaryForeground } from "assets/jss/material-kit-react.jsx";
+import {
+  cardTitle,
+  title,
+  primaryColor,
+  primaryForeground,
+} from "assets/jss/material-kit-react.jsx";
 import imagesStyle from "assets/jss/material-kit-react/imagesStyles.jsx";
 
 const stepsStyle = {
@@ -13,15 +18,16 @@ const stepsStyle = {
     width: "auto",
     height: "auto",
     //transform: "translateX(-50%) translateY(-50%)",
-    backgroundImage: "url(/yellow.jpg)",
-    backgroundColor: primaryColor,
-    backgroundRepeat: 'no-repeat',
-    position: 'relative',
-    backgroundSize: "cover"
+    backgroundImage: " linear-gradient(107deg, #004fe0 12%, #0037e0 81%)",
+    /*  backgroundColor: "linear-gradient(107deg, #004fe0 12%, #0037e0 81%)", */
+
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+    backgroundSize: "cover",
   },
   section: {
     padding: "64px 20px",
-    textAlign: "center"
+    textAlign: "center",
   },
   title: {
     ...title,
@@ -29,7 +35,7 @@ const stepsStyle = {
     marginBottom: "1rem",
     marginTop: "30px",
     minHeight: "32px",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   number: {
     ...title,
@@ -37,22 +43,22 @@ const stepsStyle = {
     marginBottom: "0px",
     marginTop: "1rem",
     minHeight: "80px",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   ...imagesStyle,
   itemGrid: {
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
   cardTitle,
   smallTitle: {
-    color: "#6c757d"
+    color: "#6c757d",
   },
   description: {
-    color: "#000"
+    color: "#000",
   },
   justifyCenter: {
-    justifyContent: "center !important"
+    justifyContent: "center !important",
   },
   socials: {
     marginTop: "0",
@@ -63,11 +69,11 @@ const stepsStyle = {
     height: "100%",
     lineHeight: "41px",
     fontSize: "20px",
-    color: "#999"
+    color: "#999",
   },
   margin5: {
-    margin: "5px"
-  }
+    margin: "5px",
+  },
 };
 
 export default stepsStyle;

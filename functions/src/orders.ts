@@ -50,26 +50,17 @@ const validCoupons = async (db: FirebaseFirestore.Firestore) =>
   (await db.collection("coupons").get()).docs.map(
     (doc): string => doc.data().name,
   );
-const ValidCommision = async (db: FirebaseFirestore.Firestore) =>
+/* const ValidCommision = async (db: FirebaseFirestore.Firestore) =>
   (await db.collection("commision").get()).docs.map(
     (doc): string => doc.data().commision,
-  );
+  ); */
 
-const computePrice = (
-  amount: number,
-  rate: number,
-  discount: any,
-  commision: any,
-): number => {
+const computePrice = (amount: number, rate: number, discount: any): number => {
   const discountValue = !discount ? 0 : +discount.gift;
   /*   console.log(
     Math.ceil(((amount - discountValue) / rate + Number.EPSILON) * 100) / 100,
   ); */
-  return (
-    Math.ceil(
-      (amount * (1 + +commision / 100) - discountValue + Number.EPSILON) * 100,
-    ) / 100
-  );
+  return Math.ceil((amount - discountValue + Number.EPSILON) * 100) / 100;
 };
 
 export const generate = (db: FirebaseFirestore.Firestore) =>
@@ -96,8 +87,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
     const rate = await currentRate(db);
     const products = await validProducts(db);
     const coupons = await validCoupons(db);
-    const commision = await ValidCommision(db);
-
+    console.log(coupon, "QWE");
     try {
       await validate.email("from", from, "es");
       validate.phone("phone", to, "es");
@@ -119,12 +109,12 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
 
     try {
       const coupon_ = await currentCoupon(db, coupon);
-      const price = computePrice(amount, rate.data().price, coupon_, commision);
+      const price = computePrice(amount, rate.data().price, coupon_).toString();
       const timestamp = new Date();
       console.log(price);
       const order_: any = {
         /* db.doc(`products/${product}`) */
-
+        oneOff: coupon_ === undefined ? undefined : coupon_.oneOff,
         product: productName,
         from,
         to,
@@ -162,7 +152,6 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
       /*  console.log("Created:", order_); */
       /*  PayallRequest(); */
       /*   PayallRequest(order_, true); */
-      PayallRequest(db);
       return order_;
     } catch (err) {
       console.error(err);

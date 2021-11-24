@@ -1,61 +1,60 @@
 .buttonRecargar {
-	position: relative;
-	left: 45%;
-	bottom: 0px;
-	width: 246px;
-	height: 55px;
-	margin: 17px 0 0 238.5px;
-	padding: 18px 28.5px 18px 29.5px;
-	border-radius: 27.5px;
-	box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14),
-		0 1px 5px 1px rgba(156, 39, 176, 0.5);
-	background-color: #1adc23;
-	font-family: Montserrat;
-	font-size: 16px;
-	font-weight: bold;
-	font-stretch: normal;
-	font-style: normal;
-	line-height: normal;
-	letter-spacing: 0.21px;
-	text-align: center;
-	color: #fff;
+  position: relative;
+  left: 45%;
+  bottom: 0px;
+  width: 246px;
+  height: 55px;
+  margin: 17px 0 0 238.5px;
+  padding: 18px 28.5px 18px 29.5px;
+  border-radius: 27.5px;
+  box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14),
+    0 1px 5px 1px rgba(156, 39, 176, 0.5);
+  background-color: #1adc23;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: 0.21px;
+  text-align: center;
+  color: #fff;
 }
 
 .buttonRecargar:hover {
-	background-color: #1adc23;
-	box-shadow: 0 2px 2px 0 rgb(156 39 176 / 14%);
+  background-color: #1adc23;
+  box-shadow: 0 2px 2px 0 rgb(156 39 176 / 14%);
 }
 .buttonRecargar:focus {
-	background-color: #1adc23;
-	box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14),
-		0 1px 5px 1px rgba(156, 39, 176, 0.5);
+  background-color: #1adc23;
+  box-shadow: 0 2px 2px 0 rgba(156, 39, 176, 0.14),
+    0 1px 5px 1px rgba(156, 39, 176, 0.5);
 }
 
 @media (max-width: 960px) {
-	.buttonRecargar {
-		left: 0px !important;
-		transform: translate(-50%, 0);
-	}
-	.backgroundSection {
-		background-position: 50% !important;
-	}
+  .buttonRecargar {
+    left: 0px !important;
+    transform: translate(-50%, 0);
+  }
+  .backgroundSection {
+    background-position: 50% !important;
+  }
 }
 
 .backgroundSection {
-	background: url('/blue.jpg') 0  / cover no-repeat;
-	/* height: 688px; */
-	height: 100%;
-
+  /* 	background: url('/blue.jpg') 0  / cover no-repeat; */
+  /* height: 688px; */
+  height: 100%;
 }
 
 .title_1 {
-	font-family: Montserrat;
-	color: #fff;
+  font-family: Montserrat;
+  color: #fff;
 }
 .text {
-	font-family: Roboto;
-	color: #000;
-	/* margin-bottom: 72px; */
-	/* margin-top: 40px; */
-	text-align: center;
+  font-family: Roboto;
+  color: #000;
+  /* margin-bottom: 72px; */
+  /* margin-top: 40px; */
+  text-align: center;
 }

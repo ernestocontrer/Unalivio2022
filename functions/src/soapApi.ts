@@ -11,13 +11,28 @@ const PayallRequest = (db: any) => {
   const url = "http://164.52.144.203:9967/payall/ws?wsdl";
   const phoneNumber = data.to.replace(/-/g, "");
   console.log(phoneNumber);
-  let args = {
+  const getProducto = () => {
+    let res;
+    switch (data.product) {
+      case "Movistar":
+        res = "01";
+        break;
+      case "Movilnet":
+        res = 61;
+        break;
+      case "Digitel":
+        res = 14;
+        break;
+    }
+    return res;
+  };
+  const args = {
     arg0: {
       uuid: uuid,
       numero: phoneNumber,
-      monto: /* data.price */ "12",
+      monto: data.price,
       operadora: data.product,
-      producto: "01",
+      producto: getProducto(),
       pv: "4348",
       pin: "81264062",
       key: "HOcpMcgEDA4FEYX",
@@ -34,12 +49,11 @@ const PayallRequest = (db: any) => {
           console.log(responce);
           if (responce.return.codigo_respuesta === "00") {
             console.log("TTTTTTTTTTTTTTTTT");
-            if (data.hasCoupon) {
-              await db.collection("numberUsedCoupon").add({ number: data.to });
-            }
 
             await db.collection("orders").add(data);
-
+            if (data.hasCoupon && data.oneOff) {
+              await db.collection("numberUsedCoupon").add({ number: data.to });
+            }
             await sendmail(mailSuccess(data.from));
           } else {
             console.log("XXXXXXXXXXXXXXXXXXXXXX");

@@ -1,4 +1,8 @@
-import { cardTitle, title, primaryColor } from "assets/jss/material-kit-react.jsx";
+import {
+  cardTitle,
+  title,
+  primaryColor,
+} from "assets/jss/material-kit-react.jsx";
 import imagesStyle from "assets/jss/material-kit-react/imagesStyles.jsx";
 
 const teamStyle = {
@@ -13,37 +17,37 @@ const teamStyle = {
     width: "auto",
     height: "auto",
     //transform: "translateX(-50%) translateY(-50%)",
-    backgroundImage: "url(/blue.jpg)",
+    backgroundImage: "linear-gradient(104deg, #ffd029 4%, #f3b202 64%)",
     backgroundColor: primaryColor,
-    backgroundRepeat: 'no-repeat',
-    position: 'relative',
-    backgroundSize: "cover"
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+    backgroundSize: "cover",
   },
   section: {
     padding: "64px 20px",
-    textAlign: "center"
+    textAlign: "center",
   },
   title: {
     ...title,
     marginBottom: "1rem",
     marginTop: "30px",
     minHeight: "32px",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   ...imagesStyle,
   itemGrid: {
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
   cardTitle,
   smallTitle: {
-    color: "#6c757d"
+    color: "#6c757d",
   },
   description: {
-    color: "#000"
+    color: "#000",
   },
   justifyCenter: {
-    justifyContent: "center !important"
+    justifyContent: "center !important",
   },
   socials: {
     marginTop: "0",
@@ -54,10 +58,10 @@ const teamStyle = {
     height: "100%",
     lineHeight: "41px",
     fontSize: "20px",
-    color: "#999"
+    color: "#999",
   },
   margin5: {
-    margin: "5px"
+    margin: "5px",
   },
   number: {
     ...title,
@@ -65,8 +69,8 @@ const teamStyle = {
     marginBottom: "0px",
     marginTop: "1rem",
     minHeight: "80px",
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
 };
 
 export default teamStyle;

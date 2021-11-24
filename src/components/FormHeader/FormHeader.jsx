@@ -62,7 +62,9 @@ export default function BasicSelect(props) {
     >
       <div className={Classes.title}>
         Es muy fácil rápido y seguro recargar a tu celular{" "}
-        <span className={Classes.span}>{nameProduct}</span>
+        <span className={Classes.span} style={{ color: "#ffd60a" }}>
+          {nameProduct}
+        </span>
       </div>
       <div
         style={{
@@ -118,6 +120,7 @@ export default function BasicSelect(props) {
             noValidate
             autoComplete="off"
             style={{
+              color: "ffd60a",
               margin: "0px",
               width: "380px",
               backgroundColor: "white",
@@ -149,8 +152,8 @@ export default function BasicSelect(props) {
             width: "380px",
             height: "50px",
             borderRadius: "30px",
-            backgroundColor: "#038DDA",
-            color: "white",
+            backgroundColor: "#ffd60a",
+            color: "#0a7aff",
           }}
         >
           {" "}

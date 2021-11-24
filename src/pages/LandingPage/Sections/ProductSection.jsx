@@ -34,7 +34,7 @@ import products from "services/products";
 import amounts from "services/amounts";
 import rates from "services/rates";
 import commision from "services/commision";
-
+import coupons from "services/coupons";
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
@@ -50,8 +50,9 @@ import { padding } from "@mui/system";
 
 class ProductSection extends React.Component {
   defaultState = {
+    coupons: [],
     commision: "",
-    numberUsedCoupon: [{ 1: 1 }],
+    numberUsedCoupon: [],
     productName: "",
     data: "",
     mode: false,
@@ -87,7 +88,28 @@ class ProductSection extends React.Component {
     },
   };
   state = this.defaultState;
+  refreshCoupons = () => {
+    if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app");
+    else {
+      coupons(this.props.firebase)
+        .list()
+        .then((coupons) => {
+          if (!coupons) {
+            console.error("Montos vacíos");
+          }
 
+          if (coupons.length == 0) {
+            console.error("Montos vacíos");
+          }
+          console.log(coupons);
+          this.setState({
+            coupons: [...coupons],
+          });
+        })
+        .catch(console.error);
+    }
+  };
   refreshRate = () => {
     if (this.props.firebase.apps.length == 0)
       console.error("Error fetching Firebase app");
@@ -113,8 +135,8 @@ class ProductSection extends React.Component {
 
   formatRate = (rate) => Math.floor((rate + Number.EPSILON) * 100) / 100;
 
-  formatAmount = (amount, rate) =>
-    `${+amount * (1 + +this.state.commision / 100)} Bs.S`;
+  formatAmount = (amount) =>
+    +(amount * (1 + +this.state.commision / 100)).toFixed(2);
 
   refreshCommision = () => {
     if (this.props.firebase.apps.length == 0)
@@ -138,6 +160,7 @@ class ProductSection extends React.Component {
         .catch(console.error);
     }
   };
+
   refreshAmounts = () => {
     if (this.props.firebase.apps.length == 0)
       console.error("Error fetching Firebase app");
@@ -160,6 +183,7 @@ class ProductSection extends React.Component {
         .catch(console.error);
     }
   };
+
   refreshNumberUsedCoupon = () => {
     if (this.props.firebase.apps.length == 0)
       console.error("Error fetching Firebase app");
@@ -310,10 +334,15 @@ class ProductSection extends React.Component {
         });
       });
   };
+
   checkout = async () => {
     this.setState({ modal: this.defaultState.modal });
     console.log(this.state.coupon);
-    await requestPago(this.state.from, this.state.to, this.state.amount)
+    await requestPago(
+      this.state.from,
+      this.state.to,
+      +this.formatAmount(this.state.amount),
+    )
       .then((response) => {
         this.setState({ data: response.data });
         /*  this.setState({ mode: true }); */
@@ -322,8 +351,18 @@ class ProductSection extends React.Component {
         const access = this.state.numberUsedCoupon.filter(
           (e) => e.number === this.state.to,
         );
+        /*  const accessLocalStorage = () => {
+          const data = localStorage.getItem("numberUsedCoupon");
+          return data.filter((e) => e === this.state.to).length === 1
+            ? false
+            : true;
+        }; */
 
-        if (access.length === 1 && this.state.coupon !== "") {
+        if (
+          access.length === 1 &&
+          this.state.coupon !== ""
+          /*  accessLocalStorage() */
+        ) {
           this.showModal("Confirma tu orden", {
             variant: "info",
             persist: true,
@@ -352,7 +391,9 @@ class ProductSection extends React.Component {
                 <ul>
                   <li>Email de contacto: {this.state.from}</li>
                   <li>Teléfono: {this.state.to}</li>
-                  <li>Monto a recargar: {this.state.amount}</li>
+                  <li>
+                    Monto a recargar: {+this.formatAmount(this.state.amount)}
+                  </li>
                 </ul>
               </>
             ),
@@ -512,6 +553,7 @@ class ProductSection extends React.Component {
     this.refreshProducts();
     this.refreshAmounts();
     this.refreshCommision();
+    this.refreshCoupons();
   };
 
   componentDidMount = () => {
@@ -527,7 +569,7 @@ class ProductSection extends React.Component {
     const { classes } = this.props;
     return (
       <div>
-        {/* <div className={S.form}>
+        <div className={S.form}>
           <BasicSelect
             error={this.state.error.to}
             handlePhone={this.handlePhone}
@@ -536,7 +578,7 @@ class ProductSection extends React.Component {
             a={this.state.products}
             inputSelections={this.state.products}
           />
-        </div> */}
+        </div>
         <div className={classes.background} id="topup">
           <div className={classes.section}>
             <CustomModal id="modal" {...this.state.modal} />
@@ -606,10 +648,9 @@ class ProductSection extends React.Component {
                             endAdornment: (
                               <InputAdornment position="end">
                                 <span className={classes.inputIconsColor}>
-                                  {this.formatAmount(
+                                  {`${this.formatAmount(
                                     this.state.amount,
-                                    this.state.rate,
-                                  )}
+                                  )} Bs.S`}
                                 </span>
                               </InputAdornment>
                             ),
