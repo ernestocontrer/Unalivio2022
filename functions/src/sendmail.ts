@@ -1,6 +1,6 @@
 import * as nodemailer from "nodemailer";
 //import * as sgMail from '@sendgrid/mail';
-/* import * as functions from "firebase-functions"; */
+import * as functions from "firebase-functions";
 
 const sgTransport = require("nodemailer-sendgrid-transport");
 
@@ -10,7 +10,7 @@ const sgTransport = require("nodemailer-sendgrid-transport");
 const options = {
   //service: 'gmail',
   auth: {
-    /* api_key: functions.config().sendgrid.api_key, */
+    api_key: functions.config().sendgrid.api_key,
     //user: functions.config().gmail.user,
     //pass: functions.config().gmail.pass // naturally, replace both with your real credentials or an application-specific password
   },

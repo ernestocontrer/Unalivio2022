@@ -86,7 +86,7 @@ function HeaderLinks({ ...props }) {
           {link.href == count ? (
             <div
               style={{
-                borderBottom: "3px solid #038dda",
+                borderBottom: "3px solid white",
                 width: "23px",
                 position: "absolute",
                 bottom: "5px",

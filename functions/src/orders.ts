@@ -2,7 +2,7 @@ import * as functions from "firebase-functions"; //import Timeout from 'await-ti
 import * as moment from "moment-timezone";
 /* import sendmail from "./sendmail"; */
 import { validate } from "./orders/validate";
-import PayallRequest from "./soapApi";
+/* import PayallRequest from "./soapApi"; */
 /* import FetchRequest from "./soapApi"; */
 import { setData } from "./store";
 /* const locale = "es-MX"; */
@@ -148,10 +148,11 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
       } */
       /* await set("key", order_); */
       /* await db.collection("orders").add(order_); */
-      setData(order_);
+
       /*  console.log("Created:", order_); */
       /*  PayallRequest(); */
       /*   PayallRequest(order_, true); */
+      setData(order_);
       return order_;
     } catch (err) {
       console.error(err);

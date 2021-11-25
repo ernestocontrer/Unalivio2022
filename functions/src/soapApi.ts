@@ -3,11 +3,11 @@ import generateUuid from "./generateUuid";
 import { mailSuccess, mailUnsuccess } from "./mailPayall";
 import sendmail from "./sendmail";
 import { getData } from "./store";
-const PayallRequest = (db: any) => {
-  const data = getData();
+const PayallRequest = async (db: any) => {
+  const data = await getData();
   console.log(data);
   const uuid = generateUuid("123456789", 17);
-
+  let order = "";
   const url = "http://164.52.144.203:9967/payall/ws?wsdl";
   const phoneNumber = data.to.replace(/-/g, "");
   console.log(phoneNumber);
@@ -50,14 +50,14 @@ const PayallRequest = (db: any) => {
           if (responce.return.codigo_respuesta === "00") {
             console.log("TTTTTTTTTTTTTTTTT");
 
-            await db.collection("orders").add(data);
+            order = await db.collection("orders").add(data);
             if (data.hasCoupon && data.oneOff) {
               await db.collection("numberUsedCoupon").add({ number: data.to });
             }
-            await sendmail(mailSuccess(data.from));
+            await sendmail(mailSuccess(data, order));
           } else {
             console.log("XXXXXXXXXXXXXXXXXXXXXX");
-            await sendmail(mailUnsuccess(data.from));
+            await sendmail(mailUnsuccess(data, order));
           }
         })
         .catch((error: any) => {
