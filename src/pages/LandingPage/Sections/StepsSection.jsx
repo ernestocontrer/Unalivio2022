@@ -10,7 +10,6 @@ import GridItem from "components/Grid/GridItem.jsx";
 import InfoArea from "components/InfoArea/InfoArea.jsx";
 
 import clickIcon from "assets/img/icons/click.png";
-import emailIcon from "assets/img/icons/email.png";
 import formIcon from "assets/img/icons/formulario.png";
 import cardIcon from "assets/img/icons/tarjeta.png";
 
@@ -18,10 +17,15 @@ import stepsStyle from "assets/jss/material-kit-react/views/landingPageSections/
 
 const NumberIcon = (n, className) => () => <h1 className={className}>{n}</h1>;
 
-const ClickIcon = () => <img src={clickIcon} style={{ maxHeight: "40px" }} />;
-const EmailIcon = () => <img src={emailIcon} style={{ maxHeight: "40px" }} />;
-const FormIcon = () => <img src={formIcon} style={{ maxHeight: "40px" }} />;
-const CardIcon = () => <img src={cardIcon} style={{ maxHeight: "40px" }} />;
+const ClickIcon = () => (
+  <img src={clickIcon} style={{ maxHeight: "40px" }} alt={"ClickIcon"} />
+);
+const FormIcon = () => (
+  <img src={formIcon} style={{ maxHeight: "40px" }} alt={"FormIcon"} />
+);
+const CardIcon = () => (
+  <img src={cardIcon} style={{ maxHeight: "40px" }} alt={"CardIcon"} />
+);
 
 class StepsSection extends React.Component {
   render() {
@@ -36,13 +40,10 @@ class StepsSection extends React.Component {
                 className={classes.description}
                 style={{ color: "white", fontWeight: "bold" }}
               >
-                Sólo sigue éstos{" "}
-                <span style={{ fontWeight: "bold", color: "#ffd60a" }}>
-                  3 simples pasos
-                </span>
-                , y así podrás recargarle saldo a tus seres queridos en{" "}
+                Solo sigue estos 3 simples pasos y así podras recargar tu
+                teléfono, o el de cualquier persona que desees aliviar en
                 Venezuela. Te avisaremos por correo el estatus de tu recarga
-                para que siempre estés tranquilo.
+                para que no te preocupes
               </h4>
               <GridContainer justify="center">
                 <GridItem xs={12} sm={12} md={4}>
@@ -54,7 +55,8 @@ class StepsSection extends React.Component {
                         </h3>
                         <span>
                           <b>
-                            Nuestra plataforma funciona todo el año 24/7 para tí
+                            Llena el formulario de recarga para el número que
+                            desees aliviar
                           </b>
                         </span>
                         <br />
@@ -76,8 +78,7 @@ class StepsSection extends React.Component {
                         </h3>
                         <span>
                           <b>
-                            Las mejores medidas de seguridad para proteger tus
-                            datos
+                            Verifica tus datos y abre el link para pago movil
                           </b>
                         </span>
                         <br />
@@ -99,8 +100,8 @@ class StepsSection extends React.Component {
                         </h3>
                         <span>
                           <b>
-                            Tu dinero no se deprecia en el tiempo por inflación
-                            o riesgo cambiario
+                            Completa tu pago movil con el numero de transaccion
+                            y listo! Te notificaremos la recarga por correo!
                           </b>
                         </span>
                       </>

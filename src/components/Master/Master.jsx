@@ -8,14 +8,14 @@ import classNames from "classnames";
 //import { FaPlay } from 'react-icons/fa';
 
 // core components
-import { isMobile } from "react-device-detect";
+
 import Header from "components/Header/Header.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import HeaderLinks from "components/Header/HeaderLinks.jsx";
 //import Parallax from "components/Parallax/Parallax.jsx";
 //import GridContainer from "components/Grid/GridContainer.jsx";
 //import GridItem from "components/Grid/GridItem.jsx";
-import SEO from "components/SEO/SEO.jsx";
+
 import image from "assets/img/v1.png";
 
 const dashboardRoutes = [];
@@ -38,17 +38,9 @@ const MasterPage = ({
     }
   };
 
-  useEffect(
-    () => {
-      init();
-      return () => {
-        /* cleanup */
-      };
-    },
-    [
-      /* input */
-    ],
-  );
+  useEffect(() => {
+    init();
+  }, []);
   return (
     <div>
       <div

@@ -78,6 +78,7 @@ const headerStyle = {
     },
   },
   appResponsive: {
+    paddingRight: "100px",
     margin: "20px 10px",
   },
   primary: {
@@ -141,6 +142,7 @@ const headerStyle = {
     boxShadow: "none",
   },
   drawerPaper: {
+    backgroundColor: "#0030e0",
     border: "none",
     bottom: "0",
     transitionProperty: "top, bottom, width",

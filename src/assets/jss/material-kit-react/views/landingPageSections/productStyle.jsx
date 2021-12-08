@@ -1,4 +1,9 @@
-import { title, subtitle, primaryColor, secondaryColor, grayColor } from "assets/jss/material-kit-react.jsx";
+import {
+  title,
+  subtitle,
+  primaryColor,
+  grayColor,
+} from "assets/jss/material-kit-react.jsx";
 
 const productStyle = {
   background: {
@@ -14,20 +19,20 @@ const productStyle = {
     //transform: "translateX(-50%) translateY(-50%)",
     backgroundImage: "url(/recarga.jpg)",
     backgroundColor: primaryColor,
-    backgroundRepeat: 'no-repeat',
-    position: 'relative',
-    backgroundSize: "cover"
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+    backgroundSize: "cover",
   },
   section: {
     padding: "64px 40px",
-    textAlign: "center"
+    textAlign: "center",
   },
   title: {
     ...title,
     marginBottom: "1rem",
     marginTop: "30px",
     minHeight: "32px",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   subtitle: {
     ...subtitle,
@@ -35,14 +40,15 @@ const productStyle = {
     marginTop: "30px",
     minHeight: "32px",
     textDecoration: "none",
-    color: primaryColor
+    color: primaryColor,
   },
   description: {
-    color: grayColor
+    color: grayColor,
   },
   form: {
-    minHeight: "600px"
-  }
+    wordWrap: "break-word",
+    minHeight: "600px",
+  },
 };
 
 export default productStyle;

@@ -2,7 +2,6 @@ import React from "react";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // @material-ui/core components
-import PropTypes from "prop-types";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 
@@ -23,12 +22,6 @@ import StepsSection from "./Sections/StepsSection.jsx";
 import ProductSection from "./Sections/ProductSection.jsx";
 
 import Parallax from "components/Parallax/Parallax.jsx";
-import GridContainer from "components/Grid/GridContainer.jsx";
-import { Divider } from "@material-ui/core";
-import GridItem from "components/Grid/GridItem.jsx";
-import Button from "components/CustomButtons/Button.jsx";
-
-import { AnchorLink } from "gatsby-plugin-anchor-links";
 
 import { withFirebase } from "components/FirebaseProvider/FirebaseProvider.jsx";
 

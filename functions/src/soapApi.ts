@@ -1,16 +1,20 @@
 const soap = require("soap-as-promised");
 import generateUuid from "./generateUuid";
-import { mailSuccess, mailUnsuccess } from "./mailPayall";
+import { getTime } from "./orders";
+import { mailSuccess, mailUnSuccess } from "./emails";
 import sendmail from "./sendmail";
-import { getData } from "./store";
-const PayallRequest = async (db: any) => {
-  const data = await getData();
-  console.log(data);
+
+const PayallRequest = async (
+  db: any,
+  data: any,
+  timePagoResponce: any,
+  id: any,
+) => {
   const uuid = generateUuid("123456789", 17);
-  let order = "";
   const url = "http://164.52.144.203:9967/payall/ws?wsdl";
   const phoneNumber = data.to.replace(/-/g, "");
   console.log(phoneNumber);
+
   const getProducto = () => {
     let res;
     switch (data.product) {
@@ -18,10 +22,10 @@ const PayallRequest = async (db: any) => {
         res = "01";
         break;
       case "Movilnet":
-        res = 61;
+        res = "61";
         break;
       case "Digitel":
-        res = 14;
+        res = "14";
         break;
     }
     return res;
@@ -48,16 +52,33 @@ const PayallRequest = async (db: any) => {
         .then(async (responce: any) => {
           console.log(responce);
           if (responce.return.codigo_respuesta === "00") {
-            console.log("TTTTTTTTTTTTTTTTT");
-
-            order = await db.collection("orders").add(data);
             if (data.hasCoupon && data.oneOff) {
               await db.collection("numberUsedCoupon").add({ number: data.to });
             }
-            await sendmail(mailSuccess(data, order));
+            await sendmail(mailSuccess(data, getTime(), timePagoResponce, id));
+            await db
+              .collection("orders")
+              .doc(`${id}`)
+              .set(data);
+            console.log("TTTTTTTTTTTTTTTTT");
           } else {
             console.log("XXXXXXXXXXXXXXXXXXXXXX");
-            await sendmail(mailUnsuccess(data, order));
+            await db
+              .collection("ordersWithProblems")
+              .doc(`${data.id}`)
+              .set({
+                ...data,
+                message: responce.return.string,
+                problemWith: "Payall",
+              });
+            await sendmail(
+              mailUnSuccess(
+                responce.return.codigo_respuesta,
+                data,
+                getTime(),
+                id,
+              ),
+            );
           }
         })
         .catch((error: any) => {

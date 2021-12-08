@@ -35,21 +35,25 @@ import amounts from "services/amounts";
 import rates from "services/rates";
 import commision from "services/commision";
 import coupons from "services/coupons";
+/* import amountTest from "services/amountTest"; */
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
 
 // dates
-import { destroyCookie } from "nookies";
+/* import { destroyCookie } from "nookies"; */
 
 import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
 import requestPago from "../../../services/API/pago";
 import Button123Pago from "../../../components/Button123Pago/Button123Pago";
 import S from "./style/ProductSection.module.css";
 import BasicSelect from "../../../components/FormHeader/FormHeader";
-import { padding } from "@mui/system";
+/* import { padding } from "@mui/system";
+import { cosh } from "core-js/library/es6/number"; */
 
 class ProductSection extends React.Component {
   defaultState = {
+    id: [],
+    amountStorage: [],
     coupons: [],
     commision: "",
     numberUsedCoupon: [],
@@ -60,7 +64,7 @@ class ProductSection extends React.Component {
     to: "",
     amount: "",
     coupon: "",
-    amounts: [{ name: "Cargando...", value: -1 }],
+    amounts: [],
     product: "",
     products: [
       // this will be prefetched from firebase
@@ -88,8 +92,32 @@ class ProductSection extends React.Component {
     },
   };
   state = this.defaultState;
-  refreshCoupons = () => {
+
+  /*  refreshAmountTest = () => {
     if (this.props.firebase.apps.length == 0)
+      console.error("Error fetching Firebase app");
+    else {
+      amountTest(this.props.firebase)
+        .list()
+        .then((amountTest) => {
+          if (!amountTest) {
+            console.error("Montos vacíos");
+          }
+
+          if (amountTest.length == 0) {
+            console.error("Montos vacíos");
+          }
+          console.log("ssssss", amountTest);
+          this.setState({
+            amountTest: [...amountTest],
+          });
+        })
+        .catch(console.error);
+    }
+  }; */
+
+  refreshCoupons = () => {
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       coupons(this.props.firebase)
@@ -99,10 +127,10 @@ class ProductSection extends React.Component {
             console.error("Montos vacíos");
           }
 
-          if (coupons.length == 0) {
+          if (coupons.length === 0) {
             console.error("Montos vacíos");
           }
-          console.log(coupons);
+          console.log("PROPS", this.props);
           this.setState({
             coupons: [...coupons],
           });
@@ -111,7 +139,7 @@ class ProductSection extends React.Component {
     }
   };
   refreshRate = () => {
-    if (this.props.firebase.apps.length == 0)
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       rates(this.props.firebase)
@@ -139,7 +167,7 @@ class ProductSection extends React.Component {
     +(amount * (1 + +this.state.commision / 100)).toFixed(2);
 
   refreshCommision = () => {
-    if (this.props.firebase.apps.length == 0)
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       commision(this.props.firebase)
@@ -149,7 +177,7 @@ class ProductSection extends React.Component {
             console.error("Montos vacíos");
           }
 
-          if (commision.length == 0) {
+          if (commision.length === 0) {
             console.error("Montos vacíos");
           }
           console.log(commision);
@@ -162,7 +190,7 @@ class ProductSection extends React.Component {
   };
 
   refreshAmounts = () => {
-    if (this.props.firebase.apps.length == 0)
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       amounts(this.props.firebase)
@@ -172,12 +200,12 @@ class ProductSection extends React.Component {
             console.error("Montos vacíos");
           }
 
-          if (amounts.length == 0) {
+          if (amounts.length === 0) {
             console.error("Montos vacíos");
           }
           console.log(amounts);
           this.setState({
-            amounts: amounts,
+            amountStorage: amounts,
           });
         })
         .catch(console.error);
@@ -185,7 +213,7 @@ class ProductSection extends React.Component {
   };
 
   refreshNumberUsedCoupon = () => {
-    if (this.props.firebase.apps.length == 0)
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       numberUsedCoupon(this.props.firebase)
@@ -195,7 +223,7 @@ class ProductSection extends React.Component {
             console.error("Montos vacíos");
           }
 
-          if (numberUsedCoupon.length == 0) {
+          if (numberUsedCoupon.length === 0) {
             console.error("Montos vacíos");
           }
           console.log("q", numberUsedCoupon);
@@ -208,7 +236,7 @@ class ProductSection extends React.Component {
   };
 
   refreshProducts = () => {
-    if (this.props.firebase.apps.length == 0)
+    if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
     else {
       products(this.props.firebase)
@@ -218,7 +246,7 @@ class ProductSection extends React.Component {
             console.error("Productos vacíos");
           }
 
-          if (products.length == 0) {
+          if (products.length === 0) {
             console.error("productos vacíos");
           }
 
@@ -242,16 +270,28 @@ class ProductSection extends React.Component {
       "0424": "Movistar",
       "0414": "Movistar",
       "0416": "Movilnet",
-      "0414": "Movilnet",
+      "0426": "Movilnet",
       "0412": "Digitel",
     };
 
     const phoneNum = phone.slice(0, 4);
     if (Object.keys(productsPair).includes(phoneNum)) {
       this.state.products.map((e) => {
+        console.log("2", e);
         if (e.name === productsPair[phoneNum]) {
           this.setState({ product: e.value });
+          this.state.amountStorage.map((elem) => {
+            console.log(1, elem.name, e.value);
+            if (elem.name === e.name) {
+              console.log(2);
+              const data = elem.data.data.map((e) => e);
+              console.log("aaaaa", data);
+              this.setState({ amounts: [...data] });
+            }
+            return 0;
+          });
         }
+        return 0;
       });
       this.setState({ productName: productsPair[phoneNum] });
     }
@@ -286,9 +326,9 @@ class ProductSection extends React.Component {
   };
 
   getPaymentName = (code) => {
-    const currentPayment = this.state.methods.filter((_) => _.value == code);
+    const currentPayment = this.state.methods.filter((_) => _.value === code);
 
-    return currentPayment.length == 0
+    return currentPayment.length === 0
       ? "Selecciona un método de pago primero"
       : currentPayment[0].name;
   };
@@ -299,7 +339,7 @@ class ProductSection extends React.Component {
   };
 
   generate = () => {
-    const { elements, firebase } = this.props;
+    const { firebase } = this.props;
     this.generateOrder(firebase)
       .then((result) => {
         if (!result.data) {
@@ -310,7 +350,7 @@ class ProductSection extends React.Component {
           });
           return;
         }
-        const intent = result.data;
+        /*         const intent = result.data; */
         /* 	if (!intent.client_secret) {
         console.error('Intent sin client secret');
         this.showModal('Por favor intenta de nuevo ಥ_ಥ', {
@@ -320,7 +360,7 @@ class ProductSection extends React.Component {
         return;
       } */
 
-        const secret = intent.client_secret;
+        /*   const secret = intent.client_secret; */
         /*this.handlePayment(intent.client_secret, stripe, elements)*/
         /*  this.showModal("Procesando pago...", {
         variant: "info",
@@ -344,7 +384,7 @@ class ProductSection extends React.Component {
       +this.formatAmount(this.state.amount),
     )
       .then((response) => {
-        this.setState({ data: response.data });
+        this.setState({ data: response.data, id: response.config.params.nai });
         /*  this.setState({ mode: true }); */
       })
       .then(() => {
@@ -439,7 +479,7 @@ class ProductSection extends React.Component {
         </>
       ),
     }); */
-    const { elements, firebase } = this.props;
+    /*  const { elements, firebase } = this.props; */
 
     /*   if (!elements || !firebase) {
       // Make  sure to disable form submission until they're loaded.
@@ -489,9 +529,11 @@ class ProductSection extends React.Component {
   };
 
   generateOrder = (firebase) => {
-    const { productName, product, amount, from, to, coupon } = this.state;
+    const { productName, product, amount, from, to, coupon, id } = this.state;
 
     return orders(firebase).create({
+      id,
+      code: "default",
       commision,
       productName,
       product,
@@ -499,6 +541,7 @@ class ProductSection extends React.Component {
       from,
       to,
       coupon,
+      password: "",
     });
   };
 
@@ -548,6 +591,7 @@ class ProductSection extends React.Component {
   };
 
   refreshData = () => {
+    /*   this.refreshAmountTest(); */
     this.refreshNumberUsedCoupon();
     this.refreshRate();
     this.refreshProducts();
@@ -591,7 +635,7 @@ class ProductSection extends React.Component {
                         color="primary"
                         className={classes.cardHeader}
                       >
-                        <h1 className={classes.title}>¡Alívialo ya!</h1>
+                        <h1 className={classes.title}>Aliviate ya!</h1>
                       </CardHeader>
                       <CardBody>
                         <CustomInput
@@ -718,16 +762,15 @@ class ProductSection extends React.Component {
                             md={12}
                             className={S.formText}
                           >
-                            <Button
-                              color="transparent"
-                              href="/privacy"
-                              target="_blank"
-                              className={classes.navLink}
-                            >
-                              <h6 className={classes.description}>
+                            <h6 className={classes.description}>
+                              <a
+                                href="/privacy"
+                                target="_blank"
+                                style={{ color: "grey" }}
+                              >
                                 ¡Tu privacidad es importante para nosotros!
-                              </h6>
-                            </Button>
+                              </a>
+                            </h6>
                           </GridItem>
                         </GridContainer>
                       </CardFooter>

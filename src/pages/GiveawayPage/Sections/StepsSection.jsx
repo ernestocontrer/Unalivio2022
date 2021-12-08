@@ -10,7 +10,7 @@ import GridItem from "components/Grid/GridItem.jsx";
 import InfoArea from "components/InfoArea/InfoArea.jsx";
 
 import clickIcon from "assets/img/icons/click.png";
-import emailIcon from "assets/img/icons/email.png";
+
 import formIcon from "assets/img/icons/formulario.png";
 import cardIcon from "assets/img/icons/tarjeta.png";
 
@@ -18,10 +18,16 @@ import stepsStyle from "assets/jss/material-kit-react/views/landingPageSections/
 
 const NumberIcon = (n, className) => () => <h1 className={className}>{n}</h1>;
 
-const ClickIcon = () => <img src={clickIcon} style={{ maxHeight: "40px" }} />;
-const EmailIcon = () => <img src={emailIcon} style={{ maxHeight: "40px" }} />;
-const FormIcon = () => <img src={formIcon} style={{ maxHeight: "40px" }} />;
-const CardIcon = () => <img src={cardIcon} style={{ maxHeight: "40px" }} />;
+const ClickIcon = () => (
+  <img src={clickIcon} style={{ maxHeight: "40px" }} alt={"ClickIcon"} />
+);
+
+const FormIcon = () => (
+  <img src={formIcon} style={{ maxHeight: "40px" }} alt={"FormIcon"} />
+);
+const CardIcon = () => (
+  <img src={cardIcon} style={{ maxHeight: "40px" }} alt={"CardIcon"} />
+);
 
 class StepsSection extends React.Component {
   render() {

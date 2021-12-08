@@ -1,19 +1,16 @@
 // import React from 'react';
 import * as React from "react";
 import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { AnchorLink } from "gatsby-plugin-anchor-links";
-import { Button, Input } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import Classes from "./FormHeaderStyle.module.css";
-
+import { isMobile } from "react-device-detect";
 export default function BasicSelect(props) {
   const [nameProduct, setNameProduct] = React.useState("");
   const names = [" Movistar ", " Digitel ", " Movilnet "];
-  const { error, handlePhone, to, productName, inputSelections } = props;
+  const { error, handlePhone, to, productName } = props;
 
   React.useEffect(() => {
     animation(0);
@@ -29,7 +26,7 @@ export default function BasicSelect(props) {
   };
 
   const animation = (index) => {
-    index === 3 ? (index = 0) : (index = index);
+    if (index === 3) index = 0;
     let nameArr = getNameArr(names[index]);
     let i = 0;
 
@@ -61,8 +58,18 @@ export default function BasicSelect(props) {
       }}
     >
       <div className={Classes.title}>
-        Es muy fácil rápido y seguro recargar a tu celular{" "}
-        <span className={Classes.span} style={{ color: "#ffd60a" }}>
+        Es muy fácil, rápido, y seguro recargar a tu celular{" "}
+        <span
+          className={Classes.span}
+          style={
+            !isMobile
+              ? { color: "#ffd60a" }
+              : {
+                  color: "#white",
+                  textShadow: "2px 2px 4px #000000",
+                }
+          }
+        >
           {nameProduct}
         </span>
       </div>
@@ -91,11 +98,12 @@ export default function BasicSelect(props) {
             }}
           >
             <TextField
+              autoComplete="off"
               value={to}
               onChange={handlePhone}
               error={error}
               id="outlined-basic"
-              label="Número"
+              /*   label="Número" */
               /*   variant="outlined" */
             />
           </Box>
@@ -128,11 +136,12 @@ export default function BasicSelect(props) {
             }}
           >
             <TextField
+              autoComplete="off"
               readOnly
               value={productName}
               error={error}
               id="outlined-basic"
-              label="Compañia"
+              /*     label="Compañia" */
               variant="outlined"
             />
           </Box>

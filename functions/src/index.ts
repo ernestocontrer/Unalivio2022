@@ -2,13 +2,13 @@ import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 
 /* import test from './fetchtest';  */
-import { pagoPaymentResponse } from "./getPagoPaymentResult";
+import { pagoPaymentResponse } from "./orders";
 import { main as _fetchPrice } from "./fetchPrice";
+import { generate as _generateOrder } from "./orders";
 import {
-  generate as _generateOrder,
   notifyCreation as _notifyCreation,
   notifyUpdate as _notifyUpdate,
-} from "./orders";
+} from "./notifyStore";
 // import requestPaso from './pagoAPI'
 /* import PayallRequest from "./soapApi"; */
 

@@ -29,11 +29,7 @@ class Header extends React.Component {
   handleDrawerToggle() {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   }
-  componentDidMount() {
-    if (this.props.changeColorOnScroll) {
-      window.addEventListener("scroll", this.headerColorChange);
-    }
-  }
+
   headerColorChange() {
     const { classes, color, changeColorOnScroll } = this.props;
     const windowsScrollTop =
@@ -63,11 +59,9 @@ class Header extends React.Component {
   }
 
   state = { className: "" };
-
   componentDidMount() {
     window.addEventListener("scroll", this.handleScroll);
   }
-
   handleScroll = () => {
     if (window.pageYOffset > 1) {
       if (!this.state.className) {
@@ -128,11 +122,11 @@ class Header extends React.Component {
           </Hidden>
           <Hidden lgUp>
             <IconButton
-              color="inherit"
+              color="white"
               aria-label="open drawer"
               onClick={this.handleDrawerToggle}
             >
-              <Menu />
+              <Menu style={{ color: "white" }} />
             </IconButton>
           </Hidden>
         </Toolbar>
@@ -146,10 +140,7 @@ class Header extends React.Component {
             }}
             onClose={this.handleDrawerToggle}
           >
-            <div className={classes.appResponsive}>
-              {leftLinks}
-              {rightLinks}
-            </div>
+            <div className={classes.appResponsive}>{rightLinks}</div>
           </Drawer>
         </Hidden>
       </AppBar>

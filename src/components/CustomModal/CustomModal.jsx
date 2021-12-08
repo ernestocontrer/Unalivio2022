@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 
 // material-ui components
@@ -8,9 +8,9 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
+
 // @material-ui/icons
-import Close from "@material-ui/icons/Close";
+
 // core components
 import customModalStyle from "assets/jss/material-kit-react/modalStyle.jsx";
 
@@ -18,7 +18,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Fade ref={ref} {...props} />;
 });
 
-function CustomModal({...props}) {
+function CustomModal({ ...props }) {
   const {
     id,
     title,
@@ -38,7 +38,7 @@ function CustomModal({...props}) {
     <Dialog
       classes={{
         root: classes.center,
-        paper: classes.modal
+        paper: classes.modal,
       }}
       id={id}
       open={open}
@@ -65,10 +65,7 @@ function CustomModal({...props}) {
         </IconButton> */}
         <h4 className={classes.modalTitle}>{title}</h4>
       </DialogTitle>
-      <DialogContent
-        className={classes.modalBody}
-        {...contentProps}
-      >
+      <DialogContent className={classes.modalBody} {...contentProps}>
         {content}
       </DialogContent>
       <DialogActions
