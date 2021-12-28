@@ -40,19 +40,14 @@ class StepsSection extends React.Component {
                 className={classes.description}
                 style={{ color: "white", fontWeight: "bold" }}
               >
-                Solo sigue estos 3 simples pasos y así podras recargar tu
-                teléfono, o el de cualquier persona que desees aliviar en
-                Venezuela. Te avisaremos por correo el estatus de tu recarga
-                para que no te preocupes
+                Sigue tres pasos y podras recargar cualquier teléfono en
+                Venezuela. ¡Te avisaremos por correo el estatus de tu recarga!
               </h4>
               <GridContainer justify="center">
                 <GridItem xs={12} sm={12} md={4}>
                   <InfoArea
                     title={
                       <>
-                        <h3>
-                          <b> Siempre disponible</b>
-                        </h3>
                         <span>
                           <b>
                             Llena el formulario de recarga para el número que
@@ -73,9 +68,6 @@ class StepsSection extends React.Component {
                   <InfoArea
                     title={
                       <>
-                        <h3>
-                          <b> Siempre seguro</b>
-                        </h3>
                         <span>
                           <b>
                             Verifica tus datos y abre el link para pago movil
@@ -95,9 +87,6 @@ class StepsSection extends React.Component {
                   <InfoArea
                     title={
                       <>
-                        <h3>
-                          <b> Siempre conviene</b>
-                        </h3>
                         <span>
                           <b>
                             Completa tu pago movil con el numero de transaccion

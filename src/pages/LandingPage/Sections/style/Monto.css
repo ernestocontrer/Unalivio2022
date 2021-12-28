@@ -1,0 +1,17 @@
+.customInput-monto {
+  width: 100%;
+}
+
+.customSpan-monto {
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+.customDivider-monto {
+  margin: 0 10px;
+}
+
+.customDisplay-monto {
+  width: max-content;
+}

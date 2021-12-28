@@ -1,27 +1,18 @@
 import * as functions from "firebase-functions";
 
 import sendmail from "./sendmail";
-import { mailPreOrder, mailUnSuccess } from "./emails";
-
-import PayallRequest from "./soapApi";
+import { mailPreOrder } from "./emails";
+import { addElemToCurrentOrder, getTime } from "./api";
 import { validate } from "./orders/validate";
-import { excelExport } from "./excelExport";
+
 import {
   currentRate,
   currentCoupon,
   validCoupons,
   validProducts,
   computePrice,
-} from "./data";
-
-import * as moment from "moment-timezone";
-
-export const getTime = () =>
-  `${moment()
-    .tz("America/Caracas")
-    .format("DD/MM/YYYY")},${moment()
-    .tz("America/Caracas")
-    .format("LTS")}`;
+} from "./api";
+import PayallRequest from "./soapApi";
 
 export const generate = (db: FirebaseFirestore.Firestore) =>
   functions.https.onCall(async (order) => {
@@ -34,14 +25,7 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
       coupon,
       giveaway,
       productName,
-      code,
-      password,
     } = order;
-    if (code === "ADMIN") {
-      console.log(password);
-      await excelExport(db, from);
-      return;
-    }
 
     console.log("Х12Й", order);
     if (!giveaway) {
@@ -98,8 +82,30 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
         hasCoupon: coupon === "" ? false : true,
       };
 
-      const order = await db.collection("currentOrder").add(order_);
-      await sendmail(mailPreOrder(order_, order));
+      const order = await addElemToCurrentOrder(db, order_);
+      console.log(order.id);
+      await sendmail(mailPreOrder(order_, order.id));
+      const option = {
+        data: order_,
+        id: order.id,
+        time: getTime(),
+      };
+      PayallRequest(db, option);
+      /*  const soap = require("soap-as-promised");
+      const url = "http://164.52.144.203:9967/payall/ws?wsdl";
+      const args = {
+        arg0: {
+          pv: "4348", //idPV
+          pin: "81264062", //pin
+          key: "HOcpMcgEDA4FEYX", //IMEI
+          code: "####", //mac
+        },
+      };
+      soap.createClient(url).then((client: any) => {
+        client.saldo(args).then((responce: any) => {
+          console.log(responce);
+        });
+      }); */
       return order_;
     } catch (err) {
       console.error(err);
@@ -110,67 +116,3 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
       throw up;
     }
   });
-// \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
-  return functions.https.onRequest(async (req: any, res: any) => {
-    const body = req.body;
-    const checkOrder = async () => {
-      const dataRef = await db
-        .collection("currentOrder")
-        .where("id", "==", body.nai)
-        .limit(1)
-        .get();
-      setTimeout(async () => {
-        if (dataRef.size === 0) {
-          checkOrder();
-        } else {
-          PayallRequest(
-            db,
-            dataRef.docs[0].data(),
-            getTime(),
-            dataRef.docs[0].id,
-          );
-        }
-      }, 2500);
-    };
-
-    try {
-      if (body.code === "00") {
-        checkOrder();
-        console.log(body);
-      } else {
-        const dataRef = await db
-          .collection("currentOrder")
-          .where("id", "==", body.nai)
-          .limit(1)
-          .get();
-        await db
-          .collection("ordersWithProblems")
-          .doc(`${dataRef.docs[0].id}`)
-          .set({
-            ...dataRef.docs[0].data(),
-            message: body.message,
-            problemWith: "Pago",
-          });
-        await sendmail(
-          mailUnSuccess(
-            body.message,
-            dataRef.docs[0].data(),
-            getTime(),
-            dataRef.docs[0].id,
-          ),
-        );
-        console.log("PAGO BAD CODE");
-      }
-
-      return res.json({ response: body });
-    } catch (err) {
-      console.error(err);
-      const up = new functions.https.HttpsError(
-        "internal",
-        "Pago error:" + err.message,
-      );
-      throw up;
-    }
-  });
-};

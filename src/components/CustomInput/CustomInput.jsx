@@ -27,67 +27,76 @@ function CustomInput({ ...props }) {
     error,
     white,
     inputRootCustomClasses,
-    success
+    success,
+    customLabelClass,
+    customSelectClass,
   } = props;
 
   const labelClasses = classNames({
     [" " + classes.labelRootError]: error,
-    [" " + classes.labelRootSuccess]: success && !error
+    [" " + classes.labelRootSuccess]: success && !error,
   });
   const underlineClasses = classNames({
     [classes.underlineError]: error,
     [classes.underlineSuccess]: success && !error,
     [classes.underline]: true,
-    [classes.whiteUnderline]: white
+    [classes.whiteUnderline]: white,
   });
   const marginTop = classNames({
-    [inputRootCustomClasses]: inputRootCustomClasses !== undefined
+    [inputRootCustomClasses]: inputRootCustomClasses !== undefined,
   });
   const inputClasses = classNames({
     [classes.input]: true,
-    [classes.whiteInput]: white
+    [classes.whiteInput]: white,
   });
   var formControlClasses;
   if (formControlProps !== undefined) {
     formControlClasses = classNames(
       formControlProps.className,
-      classes.formControl
+      classes.formControl,
     );
   } else {
     formControlClasses = classes.formControl;
   }
 
-
-
   const renderInput = () => {
-    return (<Input
-      {...inputProps}
-    />);
-  }
+    return <Input {...inputProps} />;
+  };
 
   return (
     <FormControl {...formControlProps} className={formControlClasses}>
       {labelText !== undefined ? (
         <InputLabel
-          className={classes.labelRoot + " " + labelClasses}
+          className={
+            classes.labelRoot + " " + labelClasses + (customLabelClass || "")
+          }
           htmlFor={id}
           {...labelProps}
         >
           {labelText}
         </InputLabel>
       ) : null}
-      {(inputSelections !== undefined)? <Select
-        classes={{
-          input: inputClasses,
-          root: marginTop,
-          disabled: classes.disabled,
-          underline: underlineClasses
-        }}
-        id={id}
-        {...inputProps}
-      >{inputSelections.map((option, key) => (
-        <MenuItem value={option.value} key={key}>{option.name}</MenuItem>
-      ))}</Select> : renderInput()}
+      {inputSelections !== undefined ? (
+        <Select
+          className={customSelectClass}
+          classes={{
+            input: inputClasses,
+            root: marginTop,
+            disabled: classes.disabled,
+            underline: underlineClasses,
+          }}
+          id={id}
+          {...inputProps}
+        >
+          {inputSelections.map((option, key) => (
+            <MenuItem value={option.value} key={key}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
+      ) : (
+        renderInput()
+      )}
     </FormControl>
   );
 }
@@ -103,7 +112,7 @@ CustomInput.propTypes = {
   inputRootCustomClasses: PropTypes.string,
   error: PropTypes.bool,
   success: PropTypes.bool,
-  white: PropTypes.bool
+  white: PropTypes.bool,
 };
 
 export default withStyles(customInputStyle)(CustomInput);

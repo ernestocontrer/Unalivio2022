@@ -1,18 +1,12 @@
 import * as functions from "firebase-functions";
 
-/* const locale = "es-MX";
-
-const options = {
-  timeZone: "America/Mexico_City",
-}; */
-export const test = (from: string, filename: any, buffer: any) => {
+export const maileExcel = (from: string, filename: any, buffer: any) => {
   return {
     from: functions.config().gmail.user,
     to: from,
     bcc: functions.config().unalivio.bcc,
     subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
     html: `<div>
-    Hello
   </div>`,
     attachments: [
       {
@@ -24,7 +18,7 @@ export const test = (from: string, filename: any, buffer: any) => {
     ],
   };
 };
-export const mailPreOrder = (data: any, order: any) => {
+export const mailPreOrder = (data: any, id: any) => {
   return {
     from: functions.config().gmail.user,
     to: data.from,
@@ -34,7 +28,7 @@ export const mailPreOrder = (data: any, order: any) => {
     <a href="https://unalivio.com"><img src="cid:unique@header.ee"></a>
     <h1>¡Recibimos tu solicitud!</h1>
     <br />
-    <p>Hemos recibido tu orden con código ${order.id}:</p>
+    <p>Hemos recibido tu orden con código ${id}:</p>
     <ul>
       <li>Teléfono: ${data.to}</li>
       <li>Recarga: ${data.price} Bs. S</li>
@@ -55,28 +49,23 @@ export const mailPreOrder = (data: any, order: any) => {
   };
 };
 
-export const mailSuccess = (
-  data: any,
-  timePayollResponce: any,
-  timePagoResponce: any,
-  id: any,
-) => {
+export const mailSuccess = (options: any) => {
   return {
     from: functions.config().gmail.user,
-    to: data.from,
+    to: options.data.from,
     bcc: functions.config().unalivio.bcc,
     subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
     html: `<div>
     <a href="https://unalivio.com"><img src="cid:unique@success.ee"></a>
     <h1>¡Tu orden fue procesada y Recargada!</h1>
     <br />
-    <p>Hemos recibido tu orden con código ${id}:</p>
+    <p>Hemos recibido tu orden con código ${options.id}:</p>
     <ul>
-      <li>Teléfono: ${data.to}</li>
-      <li>Recarga: ${data.price} Bs. S</li>
-      <li>Fecha y hora de recepción: ${data.created}</li>
-      <li>Fecha y hora de cobro: ${timePagoResponce}</li>
-      <li>Fecha y hora de recarga: ${timePayollResponce}</li>
+      <li>Teléfono: ${options.data.to}</li>
+      <li>Recarga: ${options.data.price} Bs. S</li>
+      <li>Fecha y hora de recepción: ${options.data.created}</li>
+      <li>Fecha y hora de cobro: ${options.timePagoResponce}</li>
+      <li>Fecha y hora de recarga: ${options.time}</li>
     </ul>
     <br />
     <p>El celular que querías recargar ha sido aliviado, llama que ya tiene saldo!</p>
@@ -99,21 +88,21 @@ export const mailSuccess = (
     ],
   };
 };
-export const mailUnSuccess = (message: any, data: any, time: any, id: any) => {
+export const mailUnSuccess = (options: any) => {
   return {
     from: functions.config().gmail.user,
-    to: data.from,
+    to: options.data.from,
     bcc: functions.config().unalivio.bcc,
     subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
     html: `<div>
-     <h1>${message}</h1>
+     <h1>${options.code}</h1>
     <h1>¡Hubo un problema en tu solicitud!</h1>
     <br />
-    <p>Hemos recibido tu orden con código ${id}:</p>
+    <p>Hemos recibido tu orden con código ${options.id}:</p>
     <ul>
-      <li>Teléfono: ${data.to}</li>
-      <li>Recarga: ${data.price} Bs. S</li>
-      <li>Fecha y hora de recepción: ${time}</li>
+      <li>Teléfono: ${options.data.to}</li>
+      <li>Recarga: ${options.data.price} Bs. S</li>
+      <li>Fecha y hora de recepción: ${options.time}</li>
     </ul>
     <br />
     <p>Sin embargo, al intentar cobrar tu orden la misma registró una falla y no fue cobrada, por loque no se hará la rearga, ni el cobro. Por favor te pedimos ingresar de nuevo a unalivio.com y recargar el número que deseas! Seguimos en contacto, te esperamos!
@@ -129,22 +118,5 @@ export const mailUnSuccess = (message: any, data: any, time: any, id: any) => {
     <br/>
     <p>Carlos de Unalivio.com!</p>
   </div>`,
-  };
-};
-export const mailExcel = (email: string) => {
-  return {
-    from: functions.config().gmail.user,
-    to: email,
-    bcc: functions.config().unalivio.bcc,
-    subject: `orders`,
-    html: `<div>
-    orders
-  </div>`,
-    attachments: [
-      {
-        filename: "orders.xlsx",
-        path: "./orders.xlsx",
-      },
-    ],
   };
 };

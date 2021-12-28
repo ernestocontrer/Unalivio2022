@@ -3,7 +3,7 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import PropTypes from "prop-types";
-
+import "./style/Monto.css";
 // @material-ui/icons
 import ContactMail from "@material-ui/icons/ContactMail";
 import Redeem from "@material-ui/icons/Redeem";
@@ -47,6 +47,7 @@ import requestPago from "../../../services/API/pago";
 import Button123Pago from "../../../components/Button123Pago/Button123Pago";
 import S from "./style/ProductSection.module.css";
 import BasicSelect from "../../../components/FormHeader/FormHeader";
+import { width } from "@mui/system";
 /* import { padding } from "@mui/system";
 import { cosh } from "core-js/library/es6/number"; */
 
@@ -342,6 +343,7 @@ class ProductSection extends React.Component {
     const { firebase } = this.props;
     this.generateOrder(firebase)
       .then((result) => {
+        console.log("result", result);
         if (!result.data) {
           console.error("Respuesta sin intent!");
           this.showModal("Por favor intenta de nuevo", {
@@ -381,7 +383,7 @@ class ProductSection extends React.Component {
     await requestPago(
       this.state.from,
       this.state.to,
-      +this.formatAmount(this.state.amount),
+      /* +this.formatAmount(this.state.amount) */ 5,
     )
       .then((response) => {
         this.setState({ data: response.data, id: response.config.params.nai });
@@ -680,18 +682,42 @@ class ProductSection extends React.Component {
                             value: this.state.to,
                           }}
                         />
+
                         <CustomInput
-                          labelText="Monto"
+                          customLabelClass="customInput-monto"
+                          labelText={
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                width: "100%",
+                              }}
+                            >
+                              <span className="customSpan-monto">
+                                Monto recarga
+                              </span>
+                              <span className="customDivider-monto">
+                                {" | "}
+                              </span>
+                              <span className="customSpan-monto">
+                                Monto a pagar incluyendo comision
+                              </span>
+                            </div>
+                          }
                           id="amount"
                           formControlProps={{
                             fullWidth: true,
                           }}
                           inputSelections={this.state.amounts}
+                          customSelectClass="customSelect-monto"
                           inputProps={{
+                            style: { width: "100%" },
                             required: true,
                             endAdornment: (
                               <InputAdornment position="end">
-                                <span className={classes.inputIconsColor}>
+                                <span
+                                  className={`${classes.inputIconsColor} customDisplay-monto`}
+                                >
                                   {`${this.formatAmount(
                                     this.state.amount,
                                   )} Bs.S`}

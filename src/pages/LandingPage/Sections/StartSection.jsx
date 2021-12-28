@@ -42,31 +42,32 @@ class StartSection extends React.Component {
       >
         <div className={classes.section}>
           <GridContainer justify="center">
-            <GridItem cs={12} sm={12} md={8}>
-              <h2 className={classes.title + " " + section.title_1}>
-                ¿Por qué recargar tu teléfono, o aliviar el telefono de tus
-                seres queridos con unalivio?
+            <GridItem cs={12} sm={12} md={7}>
+              <h2
+                className={classes.title + " " + section.title_1}
+                style={{ color: "rgb(0, 48, 224)" }}
+              >
+                ¿Por qué recargar con unalivio?
               </h2>
               <h4
                 className={classes.description + " " + section.text}
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "bold", color: "white" }}
               >
-                Al llenar el formulario, sólo te pedimos tu email, número de
-                celular y monto a recargar, compañia a recargar. Seleccionas el
-                método de pago y listo.
-                <span style={{ fontWeight: "bold", color: "#0084ff" }}>
-                  {" "}
-                  ¡Es muy sencillo!
-                </span>
+                ¡Es rápido y siempre sirve! Ingresa email, número celular y
+                monto! Pagas con pago movil y ya!
               </h4>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={4}>
                   <InfoArea
-                    title={<b>Siempre disponible</b>}
+                    title={
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
+                        Siempre disponible
+                      </b>
+                    }
                     description={
-                      <b>
-                        Nl te preocupes por la hora o si estas en lista.
-                        ¡Siempre puedes recargar!
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
+                        No te preocupes por la hora o estar en lista. ¡Siempre
+                        puedes recargar!
                       </b>
                     }
                     icon={AnytimeIcon}
@@ -74,11 +75,16 @@ class StartSection extends React.Component {
                     vertical
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={4}>
                   <InfoArea
-                    title={<b> Siempre seguro</b>}
+                    title={
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
+                        {" "}
+                        Siempre seguro
+                      </b>
+                    }
                     description={
-                      <b>
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
                         Las mejores medidas de seguridad para proteger tus datos{" "}
                       </b>
                     }
@@ -87,16 +93,25 @@ class StartSection extends React.Component {
                     vertical
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={4}>
                   <InfoArea
-                    title={<b> Siempre conviene</b>}
-                    description={<b>Paga con minima comisión y ofertas!</b>}
+                    title={
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
+                        {" "}
+                        Siempre conviene
+                      </b>
+                    }
+                    description={
+                      <b style={{ color: "rgb(0, 48, 224)" }}>
+                        Paga con baja comisión y ofertas! Utilizando pago movil!
+                      </b>
+                    }
                     icon={MoneyIcon}
                     iconColor="white"
                     vertical
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                {/* <GridItem xs={12} sm={12} md={3}>
                   <InfoArea
                     title={<b> Pago móvil</b>}
                     description={<b>Utiliza tu pago movil sin problemas!</b>}
@@ -104,20 +119,10 @@ class StartSection extends React.Component {
                     iconColor="white"
                     vertical
                   />
-                </GridItem>
+                </GridItem> */}
               </GridContainer>
 
-              <AnchorLink to="/#topup">
-                {/* <Button
-									color='secondary'
-									size='lg'
-									rel='noopener noreferrer'
-									round
-									className={section.buttonRecargar}
-								>
-									RECARGAR SALDO
-								</Button> */}
-              </AnchorLink>
+              <AnchorLink to="/#topup"></AnchorLink>
             </GridItem>
           </GridContainer>
         </div>

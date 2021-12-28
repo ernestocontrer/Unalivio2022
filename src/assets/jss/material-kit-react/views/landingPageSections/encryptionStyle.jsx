@@ -1,4 +1,10 @@
-import { cardTitle, title, primaryColor, secondaryForeground, defaultFont } from "assets/jss/material-kit-react.jsx";
+import {
+  cardTitle,
+  title,
+  primaryColor,
+  secondaryForeground,
+  defaultFont,
+} from "assets/jss/material-kit-react.jsx";
 import imagesStyle from "assets/jss/material-kit-react/imagesStyles.jsx";
 
 const encryptionStyle = {
@@ -13,18 +19,18 @@ const encryptionStyle = {
     width: "auto",
     height: "auto",
     //transform: "translateX(-50%) translateY(-50%)",
-    backgroundImage: "url(/seguridad.jpg)",
+    backgroundImage: "url(/seguridad.png)",
     backgroundColor: primaryColor,
-    backgroundRepeat: 'no-repeat',
-    position: 'relative',
-    backgroundSize: "cover"
+    backgroundRepeat: "no-repeat",
+    position: "relative",
+    backgroundSize: "cover",
   },
   section: {
     padding: "64px 20px",
     minHeight: "600px",
     display: "flex",
     alignItems: "center",
-    verticalAlign: "middle"
+    verticalAlign: "middle",
   },
   title: {
     ...title,
@@ -33,23 +39,23 @@ const encryptionStyle = {
     marginTop: "30px",
     minHeight: "32px",
     textDecoration: "none",
-    position: "center"
+    position: "center",
   },
   ...imagesStyle,
   itemGrid: {
     marginLeft: "auto",
-    marginRight: "auto"
+    marginRight: "auto",
   },
   cardTitle,
   smallTitle: {
-    color: "#6c757d"
+    color: "#6c757d",
   },
   description: {
     ...defaultFont,
-    color: "#000"
+    color: "#000",
   },
   justifyCenter: {
-    justifyContent: "center !important"
+    justifyContent: "center !important",
   },
   socials: {
     marginTop: "0",
@@ -60,11 +66,11 @@ const encryptionStyle = {
     height: "100%",
     lineHeight: "41px",
     fontSize: "20px",
-    color: "#999"
+    color: "#999",
   },
   margin5: {
-    margin: "5px"
-  }
+    margin: "5px",
+  },
 };
 
 export default encryptionStyle;

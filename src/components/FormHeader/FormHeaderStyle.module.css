@@ -1,18 +1,22 @@
-.container{
- width: 600px;
+.container {
+  width: 600px;
 }
-
+@media (max-width: 1024px) {
+  .container {
+    width: auto;
+  }
+}
 .title {
-    font-size: 28px;
-    font-weight: 500;
-    line-height: 35px;
-    margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 35px;
+  margin-bottom: 20px;
 }
 @media screen and (max-width: 720px) {
-.title{
+  .title {
     width: 400px;
-}
+  }
 }
 .span {
-    color: #038DDA;
+  color: #038dda;
 }

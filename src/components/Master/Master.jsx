@@ -16,7 +16,7 @@ import HeaderLinks from "components/Header/HeaderLinks.jsx";
 //import GridContainer from "components/Grid/GridContainer.jsx";
 //import GridItem from "components/Grid/GridItem.jsx";
 
-import image from "assets/img/v1.png";
+import image from "assets/img/Small_final.png";
 
 const dashboardRoutes = [];
 
@@ -46,8 +46,8 @@ const MasterPage = ({
       <div
         className={classes.background}
         style={{
-          background: `url(` + image + `) 0 0px /auto 100vh no-repeat`,
-          backgroundColor: "#0037e0",
+          background: `url(` + image + `) 0px 0px /auto 100vh no-repeat`,
+          backgroundColor: "#0036e0",
           filter: " opacity(100%)",
         }}
       ></div>
@@ -59,7 +59,7 @@ const MasterPage = ({
             <img
               id="logo"
               alt="UNALIVIO"
-              style={{ maxHeight: 46 }}
+              style={{ maxHeight: 35 }}
               src="/logo.png"
             />
           </a>

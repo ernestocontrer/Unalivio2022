@@ -16,17 +16,20 @@ const options = {
   },
 };
 
-const sendmail = async (mail: any) => {
-  // create a nodemailer transporter using smtp
-  const transporter = nodemailer.createTransport(sgTransport(options));
+const sendmail = (mail: any) => {
+  return new Promise((resolve, reject) => {
+    const transporter = nodemailer.createTransport(sgTransport(options));
 
-  // send mail using transporter
-  try {
-    const info = await transporter.sendMail(mail);
-    console.log(`Preview: ${nodemailer.getTestMessageUrl(info)}`);
-  } catch (err) {
-    console.error(err);
-  }
-}; // test
+    transporter.sendMail(mail, (error, info) => {
+      if (error) {
+        console.log("error is " + error);
+        resolve(false);
+      } else {
+        resolve(true);
+        console.log("Email sent: " + info.response);
+      }
+    });
+  });
+};
 
 export default sendmail;
