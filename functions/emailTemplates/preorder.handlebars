@@ -1,0 +1,355 @@
+{{!-- <html>
+  <head>
+    <title>Document</title>
+  </head>
+  <body style="background-color: #e5e5e5">
+    <div 
+      class="container"
+      style="
+        background-color: white;
+        border-collapse: collapse;
+        padding: 0;
+        max-width: 680px;
+        width: 100%;
+        border: 0;
+        margin: 0 auto;
+        margin-top: 1%;
+        word-break: break-word;
+      "
+    >
+      <div
+        class="header"
+        style="
+          word-break: break-word;
+          background-color: #0037e0;
+          padding-left: 20%;
+          padding-right: 15%;
+        "
+      >
+        <div
+          class="header__content header-logo"
+          style="padding-bottom: 15px; padding-top: 30px"
+        >
+          <a href="https://unalivio.com/">
+            <img
+              src="{{logoURL}}"
+              alt="logo"
+              class="logo"
+              style="height: 35px"
+            />
+          </a>
+        </div>
+        <div
+          class="header__content header-title"
+          style="
+            font-weight: bold;
+            font-family: Calibri;
+            font-size: 15pt;
+            color: white;
+            padding-bottom: 30px;
+          "
+        >
+          ES MUY FÁCIL , RÁPIDO Y SEGURO RECARGAR TU COLULAR
+        </div>
+      </div>
+      <div class="content__container">
+        <div
+          class="content__container-info"
+          style="
+            font-family: Calibri;
+            color: white;
+
+            border-radius: 20px;
+            background-color: #0037e0;
+            margin-top: 30px;
+            margin-left: 7%;
+            margin-right: 7%;
+          "
+        >
+          <div
+            class="title"
+            style="
+              text-align: center;
+              padding-top: 25px;
+              padding-bottom: 25px;
+              font-weight: bold;
+              font-size: 18pt;
+            "
+          >
+            RECIBIMOS TU SOLICITUD!
+          </div>
+          <div
+            class="subtitle"
+            style="text-align: center; padding-bottom: 15px; font-size: 12pt"
+          >
+            HOLA,HEMOS RECIBIDO TU ORDEN CONCÓDIGO
+          </div>
+          <div
+            class="id"
+            style="text-align: center; font-weight: bold; font-size: 15pt"
+          >
+            #{{id}}:
+          </div>
+          <div class="list">
+            <ul
+              class="list"
+              style="padding-left: 80px; font-size: 15pt; padding-bottom: 5px"
+            >
+              <li style="padding-bottom: 10px">Teléfono: {{mobile}}</li>
+              <li style="padding-bottom: 10px">Recarga: {{price}}</li>
+              <li style="padding-bottom: 10px">
+                Fecha y hora de recepción: {{time}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="accompanying"
+          style="
+            font-size: 13pt;
+            font-family: Calibri;
+            margin-left: 7%;
+            margin-right: 7%;
+            margin-top: 30px;
+          "
+        >
+          <div class="accompanying__info1" style="padding-bottom: 15px">
+            El siguiente paso es que tu orden se completará automáticamente, y
+            haremos llegar la recarga al número que nos indicaste!
+          </div>
+          <div class="accompanying__info2" style="padding-bottom: 25px">
+            Relájate que nosotros te mantenemos informados por correo. Es muy
+            rápido!
+          </div>
+        </div>
+      </div>
+      <div
+        class="footer"
+        style="
+          font-size: 13pt;
+          font-family: Calibri;
+          display: flex;
+          justify-content: space-between;
+          padding-left: 7%;
+          padding-right: 7%;
+          padding-top: 25px;
+          background-color: #f7f7f7;
+          padding-bottom: 25px;
+        "
+      >
+        <div style="display: inline-block; text-align: left">
+          TEXT YOU NEED HERE
+          <div><a href="https://unalivio.com"  style="color: black; text-decoration: none">www.unalivio.com</a></div>
+        </div>
+        <div class="social-icons" style="display: inline-block;margin-left: 286px;">
+          <a target="_blank" href="https://www.instagram.com/esunalivio">
+            <img
+              src="{{instagramLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a target="_blank">
+            <img
+              src="{{facebookLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a
+            target="_blank"
+            href="https://twitter.com/esunalivio"
+           
+          >
+            <img
+              src="{{twitterLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+        </div>
+      </div> 
+    </div>
+  </body>
+</html> --}}
+<html>
+  <head>
+    <title>Document</title>
+  </head>
+  <body style="background-color: #e5e5e5">
+    <div
+      class="container"
+      style="
+        background-color: white;
+        border-collapse: collapse;
+        padding: 0;
+        max-width: 680px;
+        width: 100%;
+        border: 0;
+        margin: 0 auto;
+        margin-top: 1%;
+        word-break: break-word;
+      "
+    >
+      <div
+        class="header"
+        style="
+          background-repeat: no-repeat;
+          background-image: url({{headerURL}});
+          word-break: break-word;
+          background-color: #0037e0;
+          padding-left: 29%;
+          padding-right: 15%;
+        "
+      >
+        <div
+          class="header-logo"
+          style="padding-bottom: 15px;
+           padding-top: 50px;"
+        >
+          <a href="https://unalivio.com/">
+            <img
+              src="{{logoURL}}"
+              alt="logo"
+              class="logo"
+              style="height: 50px"
+            />
+          </a>
+        </div>
+        <div
+          class="header__content header-title"
+          style="
+            padding-top: 20px;
+            font-weight: bold;
+            font-family: Calibri;
+            font-size: 15pt;
+            color: white;
+            padding-bottom: 30px;
+          "
+        >
+          ES MUY FÁCIL , RÁPIDO Y SEGURO RECARGAR TU CELULAR
+        </div>
+      </div>
+      <div class="content__container">
+        <div
+          class="content__container-info"
+          style="
+            font-family: Calibri;
+            color: black;
+
+            border-radius: 20px;
+            background-color: #eff6fc;
+            margin-top: 30px;
+            margin-left: 7%;
+            margin-right: 7%;
+          "
+        >
+          <div
+            class="title"
+            style="
+              text-align: center;
+              padding-top: 25px;
+              padding-bottom: 25px;
+              font-weight: bold;
+              font-size: 18pt;
+            "
+          >
+            ¡RECIBIMOS TU SOLICITUD!
+          </div>
+          <div
+            class="subtitle"
+            style="text-align: center; padding-bottom: 15px; font-size: 12pt"
+          >
+            HOLA,HEMOS RECIBIDO TU ORDEN CONCÓDIGO
+          </div>
+          <div
+            class="id"
+            style="text-align: center; font-weight: bold; font-size: 15pt"
+          >
+            #{{id}}:
+          </div>
+          <div class="list">
+            <ul
+              class="list"
+              style="padding-left: 80px; font-size: 15pt; padding-bottom: 5px"
+            >
+              <li style="padding-bottom: 10px">Teléfono: {{mobile}}</li>
+              <li style="padding-bottom: 10px">Recarga: {{price}}</li>
+              <li style="padding-bottom: 10px">
+                Fecha y hora de recepción: {{time}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="accompanying"
+          style="
+            font-size: 13pt;
+            font-family: Calibri;
+            margin-left: 7%;
+            margin-right: 7%;
+            margin-top: 30px;
+          "
+        >
+          <div class="accompanying__info1" style="padding-bottom: 15px">
+            El siguiente paso es que tu orden se completará automáticamente, y
+            haremos llegar la recarga al número que nos indicaste!
+          </div>
+          <div class="accompanying__info2" style="padding-bottom: 25px">
+            Relájate que nosotros te mantenemos informados por correo. Es muy
+            rápido!
+          </div>
+        </div>
+      </div>
+      <div
+        class="footer"
+        style="
+          font-size: 13pt;
+          font-family: Calibri;
+          display: flex;
+          justify-content: space-between;
+          padding-left: 7%;
+          padding-right: 7%;
+          padding-top: 25px;
+          background-color: #f7f7f7;
+          padding-bottom: 25px;
+        "
+      >
+        <div style="display: inline-block; text-align: left; font-size: 7pt">
+          <span> PREGUNTAS A CONTACTO <span    style="color: black; text-decoration: none"> @UNALIVIO.COM</span></span>
+          <span> AV PRINCIPAL DE LAS MERCEDES , CARACAS , VENEZUELA.</span>
+          <div>
+            <a
+              href="https://unalivio.com"
+              style="color: black; text-decoration: none"
+              >WWW.UNALIVIO.COM</a
+            >
+          </div>
+        </div>
+        <div class="social-icons" style="display: flex; margin-left: 286px">
+          <a target="_blank" href="https://www.instagram.com/esunalivio">
+            <img
+              src="{{instagramLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a target="_blank" href="https://www.facebook.com/EsunalivioFB">
+            <img
+              src="{{facebookLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a target="_blank" href="https://twitter.com/esunalivio">
+            <img
+              src="{{twitterLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

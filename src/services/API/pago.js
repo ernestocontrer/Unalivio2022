@@ -1,4 +1,4 @@
-import axios from "axios-https-proxy-fix";
+/* import axios from "axios-https-proxy-fix";
 
 // const url = process.env.PAGO_SANDBOX_URL;
 
@@ -18,7 +18,7 @@ const requestPago = (email, to, amount) => {
     cs: pago_config.api_key,
     nai: `${Date.now()}`,
     co: "anonymous",
-    mt: 5 /* amount, */,
+    mt: 5,
     tl: +to,
     width: pago_config.btn_width,
   };
@@ -32,3 +32,17 @@ const requestPago = (email, to, amount) => {
   });
 };
 export default requestPago;
+ */
+import { spawnApi } from "services/emulator-suite";
+const calls = {
+  create: "pagoApi",
+};
+
+const pagoTest = (firebase) => {
+  const api = spawnApi(firebase);
+  return {
+    create: (cred) => api.httpsCallable(calls.create)(cred),
+  };
+};
+
+export default pagoTest;

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 
 import sendmail from "./sendmail";
-import { mailPreOrder } from "./emails";
+import { mailPreOrder /* mailSuccess, mailUnSuccess */ } from "./emails";
 import { addElemToCurrentOrder, getTime } from "./api";
 import { validate } from "./orders/validate";
 
@@ -12,7 +12,7 @@ import {
   validProducts,
   computePrice,
 } from "./api";
-import PayallRequest from "./soapApi";
+/* import PayallRequest from "./soapApi"; */
 
 export const generate = (db: FirebaseFirestore.Firestore) =>
   functions.https.onCall(async (order) => {
@@ -84,28 +84,21 @@ export const generate = (db: FirebaseFirestore.Firestore) =>
 
       const order = await addElemToCurrentOrder(db, order_);
       console.log(order.id);
-      await sendmail(mailPreOrder(order_, order.id));
       const option = {
         data: order_,
         id: order.id,
         time: getTime(),
       };
-      PayallRequest(db, option);
-      /*  const soap = require("soap-as-promised");
-      const url = "http://164.52.144.203:9967/payall/ws?wsdl";
-      const args = {
-        arg0: {
-          pv: "4348", //idPV
-          pin: "81264062", //pin
-          key: "HOcpMcgEDA4FEYX", //IMEI
-          code: "####", //mac
-        },
-      };
-      soap.createClient(url).then((client: any) => {
-        client.saldo(args).then((responce: any) => {
-          console.log(responce);
-        });
-      }); */
+      /* const emailOptions = {
+        data: order_,
+        time: getTime(),
+        timePagoResponce: getTime(),
+        id: order.id,
+      }; */
+      await sendmail(mailPreOrder(option), "preorder");
+      /*    await sendmail(mailSuccess(emailOptions), "mailSuccess");
+      await sendmail(mailUnSuccess(option), "mailUnSuccess"); */
+
       return order_;
     } catch (err) {
       console.error(err);

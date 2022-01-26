@@ -12,11 +12,11 @@
   line-height: 35px;
   margin-bottom: 20px;
 }
-@media screen and (max-width: 720px) {
+/* @media screen and (max-width: 720px) {
   .title {
     width: 400px;
   }
-}
+} */
 .span {
   color: #038dda;
 }

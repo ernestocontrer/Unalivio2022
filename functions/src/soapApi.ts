@@ -47,7 +47,8 @@ const PayallRequest = async (db: any, options: any) => {
               timePagoResponce: time,
               id: id,
             };
-            await sendmail(mailSuccess(emailOptions));
+
+            await sendmail(mailSuccess(emailOptions), "mailSuccess");
             await addElemToOrder(db, options);
             console.log("TTTTTTTTTTTTTTTTT");
             if (data.hasCoupon && data.oneOff) {
@@ -70,7 +71,7 @@ const PayallRequest = async (db: any, options: any) => {
             };
             await addElemToOrdersWithProblems(db, options);
 
-            await sendmail(mailUnSuccess(emailOptions));
+            await sendmail(mailUnSuccess(emailOptions), "preorder");
           }
         })
         .catch((error: any) => {

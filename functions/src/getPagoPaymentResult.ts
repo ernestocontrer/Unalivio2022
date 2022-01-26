@@ -47,7 +47,7 @@ export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
           time: getTime(),
           id: dataRef.docs[0].id,
         };
-        await sendmail(mailUnSuccess(emailOptions));
+        await sendmail(mailUnSuccess(emailOptions), "mailUnSuccess");
         dataRef.forEach((doc) => {
           doc.ref.delete();
         });

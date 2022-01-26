@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <title>Document</title>
+  </head>
+  <body style="background-color: #e5e5e5">
+    <div
+      class="container"
+      style="
+        background-color: white;
+        border-collapse: collapse;
+        padding: 0;
+        max-width: 680px;
+        width: 100%;
+        border: 0;
+        margin: 0 auto;
+        margin-top: 1%;
+        word-break: break-word;
+      "
+    >
+      <div
+        class="header"
+        style="
+          background-repeat: no-repeat;
+          background-image: url({{headerURL}});
+          word-break: break-word;
+          background-color: #0037e0;
+          padding-left: 29%;
+          padding-right: 15%;
+        "
+      >
+        <div
+          class="header__content header-title"
+          style="
+             padding-top: 47px;
+            font-weight: bold;
+            font-family: Calibri;
+            font-size: 15pt;
+            color: white;
+            padding-bottom: 30px;
+          "
+        >
+          RECARGAR TU TELÉFONO SIN PROBLEMAS, ES
+        </div>
+        <div
+          class="header-logo"
+          style="padding-bottom: 15px; padding-top: 50px"
+        >
+          <a href="https://unalivio.com/">
+            <img
+              src="{{logoURL}}"
+              alt="logo"
+              class="logo"
+              style="height: 50px"
+            />
+          </a>
+        </div>
+      </div>
+      <div class="content__container">
+        <div
+          class="content__container-info"
+          style="
+            font-family: Calibri;
+            color: black;
+
+            border-radius: 20px;
+            background-color: #eff6fc;
+            margin-top: 30px;
+            margin-left: 7%;
+            margin-right: 7%;
+          "
+        >
+          <div
+            class="title"
+            style="
+              text-align: center;
+              padding-top: 25px;
+              padding-bottom: 25px;
+              font-weight: bold;
+              font-size: 18pt;
+            "
+          >
+            ¡TU ORDEN FUE PROCESADA Y RECARGADA!
+          </div>
+          <div
+            class="subtitle"
+            style="text-align: center; padding-bottom: 15px; font-size: 12pt"
+          >
+            TE CONFIRMAMOS QUE HEMOS REALIZADO LA RECARGA DE TU ORDEN CONCÓDIGO
+          </div>
+          <div
+            class="id"
+            style="text-align: center; font-weight: bold; font-size: 15pt"
+          >
+            #{{id}}:
+          </div>
+          <div class="list">
+            <ul
+              class="list"
+              style="padding-left: 80px; font-size: 15pt; padding-bottom: 5px"
+            >
+              <li style="padding-bottom: 10px">Teléfono: {{mobile}}</li>
+              <li style="padding-bottom: 10px">Recarga: {{price}}</li>
+              <li style="padding-bottom: 10px">
+                Fecha y hora de recepción: {{timeCreated}}
+              </li>
+              <li style="padding-bottom: 10px">
+                Fecha y hora de cobro : {{timePagoResponce}}
+              </li>
+              <li style="padding-bottom: 10px">
+               Fecha y hora de recarga: {{timePayallResponce}}
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="accompanying"
+          style="
+            font-size: 13pt;
+            font-family: Calibri;
+            margin-left: 7%;
+            margin-right: 7%;
+            margin-top: 30px;
+          "
+        >
+          <div class="accompanying__info1" style="padding-bottom: 15px">
+            ¡COMPARTE ESTE CORREO PARA QUE ALGÚN PANA GANE SALDO ADICIONAL EN SU
+            RECARGA, COMPÁRTELE EL CÓDIGO SECRETO XXXXX!!
+          </div>
+          <div class="accompanying__info2" style="padding-bottom: 25px">
+            *VALIDO HASTA 31 DIC 2021 ,UNA VEZ POR NÚMERO DE TELÉFONO
+          </div>
+        </div>
+      </div>
+      <div
+        class="footer"
+        style="
+          font-size: 13pt;
+          font-family: Calibri;
+          display: flex;
+          justify-content: space-between;
+          padding-left: 7%;
+          padding-right: 7%;
+          padding-top: 25px;
+          background-color: #f7f7f7;
+          padding-bottom: 25px;
+        "
+      >
+        <div style="display: inline-block; text-align: left; font-size: 7pt">
+          <span>
+            PREGUNTAS A CONTACTO
+            <span style="color: black; text-decoration: none">
+              @UNALIVIO.COM</span
+            ></span
+          >
+          <span> AV PRINCIPAL DE LAS MERCEDES , CARACAS , VENEZUELA.</span>
+          <div>
+            <a
+              href="https://unalivio.com"
+              style="color: black; text-decoration: none"
+              >WWW.UNALIVIO.COM</a
+            >
+          </div>
+        </div>
+        <div class="social-icons" style="display: flex; margin-left: 286px">
+          <a target="_blank" href="https://www.instagram.com/esunalivio">
+            <img
+              src="{{instagramLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a target="_blank" href="https://www.facebook.com/EsunalivioFB">
+            <img
+              src="{{facebookLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+          <a target="_blank" href="https://twitter.com/esunalivio">
+            <img
+              src="{{twitterLogoURL}}"
+              class="icons"
+              style="height: 30px; width: 30px; padding-left: 10px"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

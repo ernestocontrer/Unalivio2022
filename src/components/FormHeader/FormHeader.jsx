@@ -12,6 +12,8 @@ export default function BasicSelect(props) {
   const names = [" Movistar ", " Digitel ", " Movilnet "];
   const { error, handlePhone, to, productName } = props;
 
+  const widthPage = window.innerWidth;
+  const widthInput = isMobile ? `${+widthPage * 0.9}px` : "380px";
   React.useEffect(() => {
     animation(0);
   }, []);
@@ -52,12 +54,18 @@ export default function BasicSelect(props) {
   return (
     <div
       className={Classes.container}
-      style={{
-        position: "absolute",
-        bottom: "100%",
-      }}
+      /*  style={
+        !isMobile
+          ? {
+              position: "relative",
+              right: "100%",
+              top: "0%",
+              bottom: "100%",
+            }
+          : null
+      } */
     >
-      <div className={Classes.title}>
+      <div className={Classes.title} style={{ width: widthInput }}>
         Es muy fácil, rápido, y seguro recargar a tu celular{" "}
         <span
           className={Classes.span}
@@ -86,27 +94,19 @@ export default function BasicSelect(props) {
           Número a recargar
         </div>
         <div>
-          <Box
-            sx={{ "& > :not(style)": { width: "380px" } }}
-            noValidate
-            autoComplete="off"
+          <TextField
             style={{
               margin: "0px",
-              width: "380px",
+              width: widthInput,
               backgroundColor: "white",
               borderRadius: "5px",
             }}
-          >
-            <TextField
-              autoComplete="off"
-              value={to}
-              onChange={handlePhone}
-              error={error}
-              id="outlined-basic"
-              /*   label="Número" */
-              /*   variant="outlined" */
-            />
-          </Box>
+            autoComplete="off"
+            value={to}
+            onChange={handlePhone}
+            error={error}
+            id="outlined-basic"
+          />
         </div>
       </div>
 
@@ -123,31 +123,23 @@ export default function BasicSelect(props) {
           Compañia{" "}
         </div>
         <div>
-          <Box
-            sx={{ "& > :not(style)": { width: "380px" } }}
-            noValidate
-            autoComplete="off"
+          <TextField
             style={{
               color: "ffd60a",
               margin: "0px",
-              width: "380px",
+              width: widthInput,
               backgroundColor: "white",
               borderRadius: "5px",
             }}
-          >
-            <TextField
-              autoComplete="off"
-              readOnly
-              value={productName}
-              error={error}
-              id="outlined-basic"
-              /*     label="Compañia" */
-              variant="outlined"
-            />
-          </Box>
-          <FormControl fullWidth>
-            {/*   <InputLabel id="demo-simple-select-label">Compañia</InputLabel> */}
-          </FormControl>
+            autoComplete="off"
+            readOnly
+            value={productName}
+            error={error}
+            id="outlined-basic"
+            variant="outlined"
+          />
+
+          <FormControl fullWidth></FormControl>
         </div>
       </div>
       <AnchorLink to="/#topup">
@@ -158,7 +150,7 @@ export default function BasicSelect(props) {
           rel="noopener noreferrer"
           round
           style={{
-            width: "380px",
+            width: widthInput,
             height: "50px",
             borderRadius: "30px",
             backgroundColor: "#ffd60a",

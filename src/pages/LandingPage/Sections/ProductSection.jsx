@@ -11,7 +11,8 @@ import Redeem from "@material-ui/icons/Redeem";
 import Category from "@material-ui/icons/Category";
 import PhoneForwarded from "@material-ui/icons/PhoneForwarded";
 // import Payment from '@material-ui/icons/Payment';
-
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 // core components
 import GridContainer from "components/Grid/GridContainer.jsx";
 import GridItem from "components/Grid/GridItem.jsx";
@@ -38,12 +39,12 @@ import coupons from "services/coupons";
 /* import amountTest from "services/amountTest"; */
 // JSX
 import productStyle from "assets/jss/material-kit-react/views/landingPageSections/productStyle.jsx";
-
+import axios from "axios-https-proxy-fix";
 // dates
 /* import { destroyCookie } from "nookies"; */
 
 import { AsYouType, parsePhoneNumberFromString } from "libphonenumber-js";
-import requestPago from "../../../services/API/pago";
+/* import requestPago from "../../../services/API/pago"; */
 import Button123Pago from "../../../components/Button123Pago/Button123Pago";
 import S from "./style/ProductSection.module.css";
 import BasicSelect from "../../../components/FormHeader/FormHeader";
@@ -53,6 +54,7 @@ import { cosh } from "core-js/library/es6/number"; */
 
 class ProductSection extends React.Component {
   defaultState = {
+    sumWithDiscount: "",
     id: [],
     amountStorage: [],
     coupons: [],
@@ -94,29 +96,6 @@ class ProductSection extends React.Component {
   };
   state = this.defaultState;
 
-  /*  refreshAmountTest = () => {
-    if (this.props.firebase.apps.length == 0)
-      console.error("Error fetching Firebase app");
-    else {
-      amountTest(this.props.firebase)
-        .list()
-        .then((amountTest) => {
-          if (!amountTest) {
-            console.error("Montos vacíos");
-          }
-
-          if (amountTest.length == 0) {
-            console.error("Montos vacíos");
-          }
-          console.log("ssssss", amountTest);
-          this.setState({
-            amountTest: [...amountTest],
-          });
-        })
-        .catch(console.error);
-    }
-  }; */
-
   refreshCoupons = () => {
     if (this.props.firebase.apps.length === 0)
       console.error("Error fetching Firebase app");
@@ -129,9 +108,9 @@ class ProductSection extends React.Component {
           }
 
           if (coupons.length === 0) {
-            console.error("Montos vacíos");
+            this.refreshCoupons();
           }
-          console.log("PROPS", this.props);
+
           this.setState({
             coupons: [...coupons],
           });
@@ -179,7 +158,7 @@ class ProductSection extends React.Component {
           }
 
           if (commision.length === 0) {
-            console.error("Montos vacíos");
+            this.refreshCommision();
           }
           console.log(commision);
           this.setState({
@@ -202,6 +181,7 @@ class ProductSection extends React.Component {
           }
 
           if (amounts.length === 0) {
+            this.refreshAmounts();
             console.error("Montos vacíos");
           }
           console.log(amounts);
@@ -225,9 +205,9 @@ class ProductSection extends React.Component {
           }
 
           if (numberUsedCoupon.length === 0) {
-            console.error("Montos vacíos");
+            this.refreshNumberUsedCoupon();
           }
-          console.log("q", numberUsedCoupon);
+
           this.setState({
             numberUsedCoupon: numberUsedCoupon,
           });
@@ -249,6 +229,7 @@ class ProductSection extends React.Component {
 
           if (products.length === 0) {
             console.error("productos vacíos");
+            this.refreshProducts();
           }
 
           this.setState({
@@ -334,8 +315,71 @@ class ProductSection extends React.Component {
       : currentPayment[0].name;
   };
 
-  confirm = (event) => {
+  modalWindowAmount = () => {
+    this.showModal("Procesando datos", {
+      variant: "info",
+      persist: true,
+      content: (
+        <>
+          <div> Enter the amount </div>
+        </>
+      ),
+      buttons: (
+        <Button
+          onClick={this.closeModal}
+          style={{
+            marginLeft: "15px",
+          }}
+        >
+          REGRESAR Y MODIFICAR
+        </Button>
+      ),
+    });
+  };
+
+  modalWindowBalance = () => {
+    this.showModal("maintenance", {
+      variant: "info",
+      persist: false,
+      content: (
+        <>
+          <div> service is temporary unavailable, please try again later </div>
+        </>
+      ),
+      buttons: (
+        <Button
+          onClick={this.closeModal}
+          style={{
+            marginLeft: "15px",
+          }}
+        >
+          REGRESAR Y MODIFICAR
+        </Button>
+      ),
+    });
+  };
+
+  confirm = async (event) => {
     event.preventDefault();
+    /* if (!this.state.amount) {
+      this.modalWindowAmount();
+      return;
+    } */
+    this.showModal("", {
+      content: (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        </>
+      ),
+    });
+    /* this.generate(); */
+    /*  if (!(await this.payallRequest()).data.result) {
+      this.modalWindowBalance();
+      return;
+    } */
+
     this.checkout();
   };
 
@@ -352,22 +396,6 @@ class ProductSection extends React.Component {
           });
           return;
         }
-        /*         const intent = result.data; */
-        /* 	if (!intent.client_secret) {
-        console.error('Intent sin client secret');
-        this.showModal('Por favor intenta de nuevo ಥ_ಥ', {
-          variant: 'warning',
-          persist: false,
-        });
-        return;
-      } */
-
-        /*   const secret = intent.client_secret; */
-        /*this.handlePayment(intent.client_secret, stripe, elements)*/
-        /*  this.showModal("Procesando pago...", {
-        variant: "info",
-        persist: true,
-      }); */
       })
       .catch((error) => {
         this.showModal(error.message, {
@@ -377,34 +405,65 @@ class ProductSection extends React.Component {
       });
   };
 
-  checkout = async () => {
-    this.setState({ modal: this.defaultState.modal });
-    console.log(this.state.coupon);
-    await requestPago(
-      this.state.from,
-      this.state.to,
-      /* +this.formatAmount(this.state.amount) */ 5,
-    )
-      .then((response) => {
-        this.setState({ data: response.data, id: response.config.params.nai });
-        /*  this.setState({ mode: true }); */
+  pagoRequest = async () => {
+    const responce = await axios.post(
+      "https://us-central1-aliviame-mvp.cloudfunctions.net/pagoApi",
+      {
+        data: {
+          email: this.state.from,
+          to: this.state.to,
+          amount: +this.formatAmount(this.state.amount),
+          coupon: this.state.coupon,
+        },
+      },
+    );
+
+    return responce;
+  };
+
+  payallRequest = async () => {
+    const responce = await axios.post(
+      "https://us-central1-aliviame-mvp.cloudfunctions.net/balanceUnalivio",
+      {
+        data: {
+          email: this.state.from,
+          to: this.state.to,
+          amount: +this.formatAmount(this.state.amount),
+          coupon: this.state.coupon,
+        },
+      },
+    );
+    console.log(responce);
+    return responce;
+  };
+
+  couponsRequest = async () => {
+    const responce = await axios.post(
+      "https://us-central1-aliviame-mvp.cloudfunctions.net/validateCoupons",
+      {
+        data: {
+          coupon: this.state.coupon,
+        },
+      },
+    );
+    console.log(responce);
+    return responce;
+  };
+  checkout = () => {
+    this.pagoRequest()
+      .then((res) => {
+        this.setState({
+          data: res.data.result.data,
+          id: res.data.result.id,
+          sumWithDiscount: res.data.result.sum,
+        });
       })
       .then(() => {
         const access = this.state.numberUsedCoupon.filter(
           (e) => e.number === this.state.to,
         );
-        /*  const accessLocalStorage = () => {
-          const data = localStorage.getItem("numberUsedCoupon");
-          return data.filter((e) => e === this.state.to).length === 1
-            ? false
-            : true;
-        }; */
 
-        if (
-          access.length === 1 &&
-          this.state.coupon !== ""
-          /*  accessLocalStorage() */
-        ) {
+        if (access.length === 1 && this.state.coupon !== "") {
           this.showModal("Confirma tu orden", {
             variant: "info",
             persist: true,
@@ -434,7 +493,13 @@ class ProductSection extends React.Component {
                   <li>Email de contacto: {this.state.from}</li>
                   <li>Teléfono: {this.state.to}</li>
                   <li>
-                    Monto a recargar: {+this.formatAmount(this.state.amount)}
+                    Monto a recargar:{" "}
+                    {
+                      +(
+                        /* this.formatAmount(this.state.amount) */ this.state
+                          .sumWithDiscount
+                      )
+                    }
                   </li>
                 </ul>
               </>
@@ -451,9 +516,7 @@ class ProductSection extends React.Component {
                     }, 5000);
                   }}
                 ></Button123Pago>
-                {/* <Button onClick={this.checkout} color="info">
-            CHÉVERE PROCEDER!!!
-          </Button >*/}
+
                 <Button
                   onClick={this.closeModal}
                   style={{
@@ -467,55 +530,6 @@ class ProductSection extends React.Component {
           });
         }
       });
-
-    /*    this.showModal("Procesando datos...", {
-      variant: "info",
-      persist: true,
-      content: (
-        <>
-          <ul>
-            <li>Email de contacto: {this.state.from}</li>
-            <li>Teléfono: {this.state.to}</li>
-            <li>Monto a recargar: {this.state.amount}</li>
-          </ul>
-        </>
-      ),
-    }); */
-    /*  const { elements, firebase } = this.props; */
-
-    /*   if (!elements || !firebase) {
-      // Make  sure to disable form submission until they're loaded.
-      console.error("Services not loaded yet");
-      this.showModal(
-        "Por favor verifica tu conexión de internet y recarga la página de nuevo",
-        {
-          variant: "warning",
-          persist: false,
-        },
-      );
-
-      return;
-    } */
-
-    /*  if (firebase.apps.length == 0) {
-      // Make sure this Firebase app is loaded
-      console.error("Error fetching Firebase app");
-      this.showModal("Por favor recarga la página de nuevo", {
-        variant: "danger",
-        persist: true,
-      });
-      return;
-    } */
-
-    // call a firebase function
-    /*   this.showModal("Validando orden...", {
-      variant: "info",
-      persist: true,
-    }); */
-    // this.showModal('Validando orden...', {
-    // 	variant: 'info',
-    // 	persist: true,
-    // });
   };
 
   clearForms = () => {
@@ -606,7 +620,9 @@ class ProductSection extends React.Component {
     this.refreshData();
     this.interval = setInterval(() => this.refreshRate(), 5 * 60 * 1000);
   };
-
+  /*  componentDidMount = () => {
+    console.log(window.innerWidth);
+  }; */
   componentWillUnmount = () => {
     clearInterval(this.interval);
   };
@@ -700,7 +716,7 @@ class ProductSection extends React.Component {
                                 {" | "}
                               </span>
                               <span className="customSpan-monto">
-                                Monto a pagar incluyendo comision
+                                Monto con comisión
                               </span>
                             </div>
                           }
@@ -734,7 +750,6 @@ class ProductSection extends React.Component {
                           formControlProps={{
                             fullWidth: true,
                           }}
-                          /*  inputSelections={this.state.products} */
                           inputProps={{
                             readOnly: true,
                             required: true,

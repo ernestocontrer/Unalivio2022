@@ -1,5 +1,68 @@
 import * as functions from "firebase-functions";
+export const mailPreOrder = (option: any) => {
+  return {
+    from: functions.config().gmail.user,
+    to: option.data.from,
+    bcc: functions.config().unalivio.bcc,
+    subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
+    template: "preorder",
 
+    context: {
+      headerURL: "https://unalivio.com/headerlogo.png",
+      logoURL: "https://unalivio.com/logo.png",
+      instagramLogoURL: "https://unalivio.com/instagram.png",
+      facebookLogoURL: "https://unalivio.com/facebook.png",
+      twitterLogoURL: "https://unalivio.com/twitter.png",
+      id: option.id,
+      time: option.time,
+      price: option.data.price,
+      mobile: option.data.to,
+    },
+  };
+};
+export const mailSuccess = (option: any) => {
+  return {
+    from: functions.config().gmail.user,
+    to: option.data.from,
+    bcc: functions.config().unalivio.bcc,
+    subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
+    template: "mailSuccess",
+    context: {
+      headerURL: "https://unalivio.com/headerlogo.png",
+      logoURL: "https://unalivio.com/logo.png",
+      instagramLogoURL: "https://unalivio.com/instagram.png",
+      facebookLogoURL: "https://unalivio.com/facebook.png",
+      twitterLogoURL: "https://unalivio.com/twitter.png",
+      id: option.id,
+      timeCreated: option.data.created,
+      timePagoResponce: option.timePagoResponce,
+      timePayallResponce: option.time,
+      price: option.data.price,
+      mobile: option.data.to,
+    },
+  };
+};
+
+export const mailUnSuccess = (option: any) => {
+  return {
+    from: functions.config().gmail.user,
+    to: option.data.from,
+    bcc: functions.config().unalivio.bcc,
+    subject: `Solicitaste UnAlivio a  por  Bs. S  🙌`,
+    template: "mailUnSuccess",
+    context: {
+      headerURL: "https://unalivio.com/headererror.png",
+      logoURL: "https://unalivio.com/logo.png",
+      instagramLogoURL: "https://unalivio.com/instagram.png",
+      facebookLogoURL: "https://unalivio.com/facebook.png",
+      twitterLogoURL: "https://unalivio.com/twitter.png",
+      id: option.id,
+      time: option.time,
+      price: option.data.price,
+      mobile: option.data.to,
+    },
+  };
+};
 export const maileExcel = (from: string, filename: any, buffer: any) => {
   return {
     from: functions.config().gmail.user,
@@ -18,7 +81,7 @@ export const maileExcel = (from: string, filename: any, buffer: any) => {
     ],
   };
 };
-export const mailPreOrder = (data: any, id: any) => {
+/* export const mailPreOrder = (data: any, id: any) => {
   return {
     from: functions.config().gmail.user,
     to: data.from,
@@ -47,9 +110,9 @@ export const mailPreOrder = (data: any, id: any) => {
       },
     ],
   };
-};
+}; */
 
-export const mailSuccess = (options: any) => {
+/* export const mailSuccess = (options: any) => {
   return {
     from: functions.config().gmail.user,
     to: options.data.from,
@@ -87,8 +150,8 @@ export const mailSuccess = (options: any) => {
       },
     ],
   };
-};
-export const mailUnSuccess = (options: any) => {
+}; */
+/* export const mailUnSuccess = (options: any) => {
   return {
     from: functions.config().gmail.user,
     to: options.data.from,
@@ -120,3 +183,4 @@ export const mailUnSuccess = (options: any) => {
   </div>`,
   };
 };
+ */

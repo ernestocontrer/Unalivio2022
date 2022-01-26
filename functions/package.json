@@ -39,6 +39,7 @@
     "node-persist": "^3.1.0",
     "node-sessionstorage": "^1.0.0",
     "nodemailer": "^6.4.8",
+    "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "request": "^2.88.2",
     "soap": "^0.42.0",
