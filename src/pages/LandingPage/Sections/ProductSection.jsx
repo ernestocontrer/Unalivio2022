@@ -259,15 +259,12 @@ class ProductSection extends React.Component {
     const phoneNum = phone.slice(0, 4);
     if (Object.keys(productsPair).includes(phoneNum)) {
       this.state.products.map((e) => {
-        console.log("2", e);
         if (e.name === productsPair[phoneNum]) {
           this.setState({ product: e.value });
           this.state.amountStorage.map((elem) => {
-            console.log(1, elem.name, e.value);
             if (elem.name === e.name) {
-              console.log(2);
               const data = elem.data.data.map((e) => e);
-              console.log("aaaaa", data);
+
               this.setState({ amounts: [...data] });
             }
             return 0;
@@ -361,10 +358,10 @@ class ProductSection extends React.Component {
 
   confirm = async (event) => {
     event.preventDefault();
-    /* if (!this.state.amount) {
+    if (!this.state.amount) {
       this.modalWindowAmount();
       return;
-    } */
+    }
     this.showModal("", {
       content: (
         <>
@@ -620,9 +617,7 @@ class ProductSection extends React.Component {
     this.refreshData();
     this.interval = setInterval(() => this.refreshRate(), 5 * 60 * 1000);
   };
-  /*  componentDidMount = () => {
-    console.log(window.innerWidth);
-  }; */
+
   componentWillUnmount = () => {
     clearInterval(this.interval);
   };
