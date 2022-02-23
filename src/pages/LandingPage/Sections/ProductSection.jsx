@@ -108,7 +108,7 @@ class ProductSection extends React.Component {
           }
 
           if (coupons.length === 0) {
-            this.refreshCoupons();
+            /*    this.refreshCoupons(); */
           }
 
           this.setState({
@@ -158,7 +158,7 @@ class ProductSection extends React.Component {
           }
 
           if (commision.length === 0) {
-            this.refreshCommision();
+            /*     this.refreshCommision(); */
           }
           console.log(commision);
           this.setState({
@@ -181,7 +181,7 @@ class ProductSection extends React.Component {
           }
 
           if (amounts.length === 0) {
-            this.refreshAmounts();
+            /*      this.refreshAmounts(); */
             console.error("Montos vacíos");
           }
           console.log(amounts);
@@ -205,7 +205,7 @@ class ProductSection extends React.Component {
           }
 
           if (numberUsedCoupon.length === 0) {
-            this.refreshNumberUsedCoupon();
+            /*   this.refreshNumberUsedCoupon(); */
           }
 
           this.setState({
@@ -229,7 +229,7 @@ class ProductSection extends React.Component {
 
           if (products.length === 0) {
             console.error("productos vacíos");
-            this.refreshProducts();
+            /*    this.refreshProducts(); */
           }
 
           this.setState({
@@ -423,10 +423,10 @@ class ProductSection extends React.Component {
       "https://us-central1-aliviame-mvp.cloudfunctions.net/balanceUnalivio",
       {
         data: {
-          email: this.state.from,
-          to: this.state.to,
-          amount: +this.formatAmount(this.state.amount),
-          coupon: this.state.coupon,
+          email: "this.state.from",
+          to: "this.state.to",
+          amount: "+this.formatAmount(this.state.amount)",
+          coupon: "this.state.coupon",
         },
       },
     );
@@ -614,6 +614,7 @@ class ProductSection extends React.Component {
   };
 
   componentDidMount = () => {
+    this.payallRequest();
     this.refreshData();
     this.interval = setInterval(() => this.refreshRate(), 5 * 60 * 1000);
   };
