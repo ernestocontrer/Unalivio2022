@@ -23,6 +23,7 @@ export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
 						time: getTime(),
 						id: dataRef.docs[0].id,
 					};
+
 					PayallRequest(db, options);
 				}
 			}, 2500);
