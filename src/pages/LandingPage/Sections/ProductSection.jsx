@@ -228,7 +228,7 @@ class ProductSection extends React.Component {
 					}
 
 					if (products.length === 0) {
-						console.error("productos vacíos");
+						console.error("prsoductos vacíos");
 						// this.refreshProducts();
 					}
 
