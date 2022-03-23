@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 // import axios from "axios-https-proxy-fix";
 
+// todo Move to Node JS
 export const balancePayall = (db: FirebaseFirestore.Firestore) =>
 	functions.https.onCall((data) => {
 		// console.log(data);
