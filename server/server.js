@@ -95,7 +95,7 @@ const getPayallBalance = async (req, res) => {
 }
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World! Server is running on port: " + PORT);
 });
 
 app.post("/recargar", async (req, res) => {
