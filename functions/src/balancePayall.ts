@@ -13,7 +13,7 @@ async function postData(url: string, data: any) {
 
 // todo Move to Node JS
 export const balancePayall = (db: FirebaseFirestore.Firestore) =>
-    functions.https.onCall((data) => {
+    functions.https.onCall(async (data) => {
         try {
 
             let amounts: Array<number> = [];
