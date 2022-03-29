@@ -3,6 +3,7 @@ const soap = require("soap-as-promised");
 const cors = require("cors");
 const {generate_UUID} = require('./config')
 
+const PORT = 3000;
 
 const app = express();
 app.use(cors());
@@ -108,7 +109,7 @@ app.post("/getBalance", async (req, res) => {
   return res.send(result);
 });
 
-const server = app.listen(8080, () => {
+const server = app.listen(PORT, () => {
   const host = server.address().address;
   const port = server.address().port;
 
