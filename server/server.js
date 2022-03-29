@@ -37,15 +37,17 @@ const createPayallTransaction = async (req, res) => {
   try {
     const client = await soap.createClient(PAYALL_TRANSACTION_URL);
 
-    const reacargarResponse = await client.recargar(args);
+    const result = await client.recargar(args);
+
+    const recargarResponse = result.return;
 
     const responseData = {
-      responseCode: reacargarResponse?.return?.codigo_respuesta,
-      message: reacargarResponse?.return?.string,
+      responseCode: recargarResponse.codigo_respuesta,
+      message: recargarResponse.string,
       code: 'Payall'
     }
 
-    if (reacargarResponse.return.codigo_respuesta === "00") {
+    if (recargarResponse.codigo_respuesta === "00") {
       return {
         success: true,
         ...responseData
