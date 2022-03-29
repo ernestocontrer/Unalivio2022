@@ -5,11 +5,10 @@ const middlewareServerUrl = 'http://34.66.120.175:8080/getBalance';
 
 async function postData(url: string, data: any) {
     const result = await fetch(url, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        method: 'POST',
     });
     return await result.json();
 }
-
 
 // todo Move to Node JS
 export const balancePayall = (db: FirebaseFirestore.Firestore) =>
