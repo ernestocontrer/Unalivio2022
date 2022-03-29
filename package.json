@@ -68,7 +68,7 @@
     "https-post": "^0.1.1",
     "interweave": "^12.8.0",
     "libphonenumber-js": "^1.7.55",
-    "nanoid": "^3.1.28",
+
     "net": "^1.0.2",
     "node-sass": "^4.14.1",
     "nodemailer-express-handlebars": "^5.0.0",
@@ -92,6 +92,7 @@
     "smooth-scroll": "^16.1.3",
     "soap": "^0.42.0",
     "strong-soap": "^3.3.1",
+    "nanoid": "^3.1.28",
     "styled-components": "^5.1.0",
     "tls": "0.0.1",
     "typeface-montserrat": "0.0.75",
