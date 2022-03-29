@@ -3,13 +3,13 @@ const soap = require("soap-as-promised");
 const cors = require("cors");
 const {generate_UUID} = require('./config')
 
+
 const PORT = 3000;
 
 const app = express();
 app.use(cors());
 
 const VPN_URL = '10.128.0.11:8080';
-
 
 const PAYALL_TRANSACTION_URL = `${VPN_URL}/payall/ws?wsdl`;
 
@@ -81,7 +81,6 @@ const getPayallBalance = async (req, res) => {
       code: "####", //mac
     },
   };
-
 
   const payallPromise = new Promise((resolve, reject) => {
     soap.createClient(PAYALL_TRANSACTION_URL, (err, client) => {
