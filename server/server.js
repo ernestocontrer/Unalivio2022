@@ -85,6 +85,9 @@ const getPayallBalance = async (req, res) => {
   const payallPromise = new Promise((resolve, reject) => {
     soap.createClient(PAYALL_TRANSACTION_URL, (err, client) => {
       client.saldo(args, (err, response) => {
+        if (err) {
+          return reject(err)
+        }
         console.log(response.return.saldo_disponible);
         return resolve(!(maxAmount * 5 >= response.return.saldo_disponible));
       });
@@ -104,8 +107,14 @@ app.post("/recargar", async (req, res) => {
 });
 
 app.post("/getBalance", async (req, res) => {
-  const result = await getPayallBalance(req, res);
-  return res.send(result);
+  try {
+    const result = await getPayallBalance(req, res);
+    return res.send(result);
+  } catch (e) {
+    console.error(e);
+    return res.send(e);
+  }
+
 });
 
 const server = app.listen(PORT, () => {
