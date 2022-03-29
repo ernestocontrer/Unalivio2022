@@ -13,6 +13,7 @@ const VPN_URL = '10.128.0.11:8080';
 const PAYALL_TRANSACTION_URL = `${VPN_URL}/payall/ws?wsdl`;
 
 const createPayallTransaction = async (req, res) => {
+  console.log('[CREATE PAYALL TRANSACTION] ', req.body);
   const {data, time, id} = req.body.options;
 
 
@@ -68,7 +69,7 @@ const createPayallTransaction = async (req, res) => {
 }
 
 const getPayallBalance = async (req, res) => {
-
+  console.log('[GET PAYALL BALANCE] ', req.body);
   const {maxAmount} = req.body;
 
   const args = {
