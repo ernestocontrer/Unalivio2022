@@ -7,11 +7,16 @@ const {generate_UUID} = require('./config')
 const PORT = 8080;
 
 const app = express();
+app.use(express.json());
 app.use(cors());
 
 const VPN_URL = '10.128.0.11:8080';
 
-const PAYALL_TRANSACTION_URL = `${VPN_URL}/payall/ws?wsdl`;
+
+// const PAYALL_TRANSACTION_URL = `http://164.52.144.203:9967/payall/ws?wsdl`;
+
+const PAYALL_TRANSACTION_URL = `http://10.128.0.11:8080`;
+const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
 
 const createPayallTransaction = async (req, res) => {
   console.log('[CREATE PAYALL TRANSACTION] ', req.body);
@@ -38,9 +43,14 @@ const createPayallTransaction = async (req, res) => {
   console.log(args);
   try {
     const client = await soap.createClient(PAYALL_TRANSACTION_URL);
+    const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
+    console.log({client, client2})
 
     const result = await client.recargar(args);
+    const result2 = await client2.recargar(args);
 
+    console.log({result, result2})
+    
     const recargarResponse = result.return;
 
     const responseData = {
@@ -82,19 +92,34 @@ const getPayallBalance = async (req, res) => {
     },
   };
 
-  const payallPromise = new Promise((resolve, reject) => {
-    soap.createClient(PAYALL_TRANSACTION_URL, (err, client) => {
-      client.saldo(args, (err, response) => {
-        if (err) {
-          return reject(err)
-        }
-        console.log(response.return.saldo_disponible);
-        return resolve(!(maxAmount * 5 >= response.return.saldo_disponible));
-      });
-    });
-  });
+  // const payallPromise = new Promise((resolve, reject) => {
+  //   soap.createClient(PAYALL_TRANSACTION_URL, (err, client) => {
+  //     console.log(client);
+  //     console.log(err);
+  //
+  //     client.saldo(args, (err, response) => {
+  //       if (err) {
+  //         return reject(err)
+  //       }
+  //       console.log(response.return.saldo_disponible);
+  //       return resolve(!(maxAmount * 5 >= response.return.saldo_disponible));
+  //     });
+  //   });
+  // });
 
-  return  await payallPromise;
+  try {
+    const soapClient = await soap.createClient(PAYALL_TRANSACTION_URL);
+    console.log(soapClient);
+
+    const saldoResponse = await soapClient.saldo(args);
+    console.log(saldoResponse);
+
+    return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
+
+  } catch (e) {
+    console.log(e);
+    return e;
+  };
 }
 
 app.get("/", (req, res) => {
