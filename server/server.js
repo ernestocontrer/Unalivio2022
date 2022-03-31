@@ -95,16 +95,16 @@ const getPayallBalance = async (req, res) => {
 
 
   try {
-    const soapClient = await soap.createClient(PAYALL_TRANSACTION_URL);
+    // const soapClient = await soap.createClient(PAYALL_TRANSACTION_URL);
     const soapClient2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
-    console.log({soapClient, soapClient2});
+    // console.log({soapClient, soapClient2});
 
-    const saldoResponse = await soapClient.saldo(args);
-    const saldoResponse2 = await soapClient.saldo(args);
+    // const saldoResponse = await soapClient.saldo(args);
+    const saldoResponse2 = await soapClient2.saldo(args);
 
-    console.log({saldoResponse, saldoResponse2});
+    // console.log({saldoResponse, saldoResponse2});
 
-    return saldoResponse
+    return saldoResponse2
     // return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
 
   } catch (e) {
