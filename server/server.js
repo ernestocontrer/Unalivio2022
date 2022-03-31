@@ -104,7 +104,8 @@ const getPayallBalance = async (req, res) => {
 
     console.log({saldoResponse, saldoResponse2});
 
-    return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
+    return saldoResponse
+    // return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
 
   } catch (e) {
 
