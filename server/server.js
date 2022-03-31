@@ -44,13 +44,14 @@ const createPayallTransaction = async (req, res) => {
   try {
     const client = await soap.createClient(PAYALL_TRANSACTION_URL);
     const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
+
     console.log({client, client2})
 
     const result = await client.recargar(args);
     const result2 = await client2.recargar(args);
 
     console.log({result, result2})
-    
+
     const recargarResponse = result.return;
 
     const responseData = {
@@ -92,32 +93,22 @@ const getPayallBalance = async (req, res) => {
     },
   };
 
-  // const payallPromise = new Promise((resolve, reject) => {
-  //   soap.createClient(PAYALL_TRANSACTION_URL, (err, client) => {
-  //     console.log(client);
-  //     console.log(err);
-  //
-  //     client.saldo(args, (err, response) => {
-  //       if (err) {
-  //         return reject(err)
-  //       }
-  //       console.log(response.return.saldo_disponible);
-  //       return resolve(!(maxAmount * 5 >= response.return.saldo_disponible));
-  //     });
-  //   });
-  // });
 
   try {
     const soapClient = await soap.createClient(PAYALL_TRANSACTION_URL);
-    console.log(soapClient);
+    const soapClient2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
+    console.log({soapClient, soapClient2});
 
     const saldoResponse = await soapClient.saldo(args);
-    console.log(saldoResponse);
+    const saldoResponse2 = await soapClient.saldo(args);
+
+    console.log({saldoResponse, saldoResponse2});
 
     return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
 
   } catch (e) {
-    console.log(e);
+
+    console.error(e);
     return e;
   };
 }
