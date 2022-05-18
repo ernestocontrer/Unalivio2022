@@ -16,7 +16,7 @@ const VPN_URL = '10.128.0.11:8080';
 const PAYALL_TRANSACTION_URL = `http://164.52.144.203:9967/payall/ws?wsdl`;
 
 // const PAYALL_TRANSACTION_URL = `http://10.128.0.11:8080`;
-// const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
+const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
 
 const createPayallTransaction = async (req, res) => {
   console.log('[CREATE PAYALL TRANSACTION] ', req.body);
