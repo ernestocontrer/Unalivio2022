@@ -16,7 +16,7 @@ const VPN_URL = '10.128.0.11:8080';
 const PAYALL_TRANSACTION_URL = `http://164.52.144.203:9967/payall/ws?wsdl`;
 
 // const PAYALL_TRANSACTION_URL = `http://10.128.0.11:8080`;
-const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
+// const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
 
 const createPayallTransaction = async (req, res) => {
   console.log('[CREATE PAYALL TRANSACTION] ', req.body);
@@ -43,12 +43,12 @@ const createPayallTransaction = async (req, res) => {
   console.log(args);
   try {
     const client = await soap.createClient(PAYALL_TRANSACTION_URL);
-    const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
+    // const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
 
-    console.log({client, client2})
+    console.log({client})
 
     const result = await client.recargar(args);
-    const result2 = await client2.recargar(args);
+    // const result2 = await client2.recargar(args);
 
     console.log({result, result2})
 
