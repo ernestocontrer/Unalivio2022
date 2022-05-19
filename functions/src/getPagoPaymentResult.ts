@@ -12,6 +12,16 @@ import PayallRequest from "./soapApi";
 export const pagoPaymentResponse = (db: FirebaseFirestore.Firestore) => {
 	return functions.https.onRequest(async (req: any, res: any) => {
 		const body = req.body;
+		PayallRequest(db, {
+			"options": {
+				"data": {
+					"to": "04144131804",
+					"price": "12",
+					"product": "1"
+				}
+			},
+			"producto": "1"
+		});
 		const dataRef = await getRefCurrentOrder(db, body.nai);
 		const checkOrder = async () => {
 			setTimeout(() => {
