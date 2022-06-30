@@ -1,5 +1,6 @@
 // const soap = require("soap-as-promised");
 // import generateUuid from "./generateUuid";
+import Axios from "axios";
 import {
     getProducto,
     addElemToOrder,
@@ -10,14 +11,11 @@ import {mailSuccess, mailUnSuccess} from "./emails";
 import sendmail from "./sendmail";
 import {code} from "./statusCodes/payallCodeResponce";
 
-
-const middlewareServerUrl = 'http://34.66.120.175:8080/recargar';
+const middlewareServerUrl = 'http://34.135.192.242:8080/recargar';
 
 // create payall transaction
 async function postData(url: string, data: any) {
-    const result = await fetch(url, {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    });
+    const result = await Axios.post(url, data).then((response) => {const {data} = response; return data} )
     return await result.json();
 }
 

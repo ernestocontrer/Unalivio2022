@@ -13,17 +13,17 @@ app.use(cors());
 const VPN_URL = '10.128.0.11:8080';
 
 
-const PAYALL_TRANSACTION_URL = `http://164.52.144.203:9967/payall/ws?wsdl`;
+const PAYALL_TRANSACTION_URL = `http://172.20.73.215:9967/payall/ws?wsdl`;
 
 // const PAYALL_TRANSACTION_URL = `http://10.128.0.11:8080`;
-// const PAYALL_TRANSACTION_URL2 = `http://10.128.0.11:8080/payall/ws?wsdl`;
+// const PAYALL_TRANSACTION_URL = `http://10.128.0.11:8080/payall/ws?wsdl`;
 
 const createPayallTransaction = async (req, res) => {
-  console.log('[CREATE PAYALL TRANSACTION] ', req.body);
+  console.log(`Body: ${JSON.stringify(req.body)}`)
   const {data, time, id} = req.body.options;
-
-
-  const uuid = generate_UUID("123456789", 17);
+  console.log(`Transaction Data: ${JSON.stringify(data)}`)
+  const uuid = generate_UUID("123456789", 18);
+  console.log(`UUID: ${uuid}`)
 
   const phoneNumber = data.to.replace(/-/g, "");
   const args = {
@@ -34,23 +34,22 @@ const createPayallTransaction = async (req, res) => {
       operadora: data.product,
       // producto: getProducto(data.product),
       producto: req.body.producto,
-      pv: "4348",
-      pin: "81264062",
-      key: "HOcpMcgEDA4FEYX",
+      pv: "157556",
+      pin: "50692340",
+      key: "KPl719_qPULPTev",
       code: "####",
     },
   };
   console.log(args);
   try {
     const client = await soap.createClient(PAYALL_TRANSACTION_URL);
-    // const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
+   //  const client2 = await soap.createClient(PAYALL_TRANSACTION_URL2);
 
-    console.log({client})
 
     const result = await client.recargar(args);
     // const result2 = await client2.recargar(args);
 
-    console.log({result, result2})
+    console.log({result})
 
     const recargarResponse = result.return;
 
@@ -93,17 +92,17 @@ const getPayallBalance = async (req, res) => {
     },
   };
 
-// console.log({args});
+console.log({args});
 
   try {
     // const soapClient = await soap.createClient(PAYALL_TRANSACTION_URL);
     const soapClient2 = await soap.createClient(PAYALL_TRANSACTION_URL);
+    console.log({soapClient2});
 
     // const saldoResponse = await soapClient.saldo(args);
     const saldoResponse2 = await soapClient2.saldo(args);
 
-    saldoResponse2.maxAmount = maxAmount;
-    // console.log({saldoResponse, saldoResponse2});
+    console.log({saldoResponse2});
 
     return saldoResponse2
     // return !(maxAmount * 5 >= saldoResponse.return.saldo_disponible);
